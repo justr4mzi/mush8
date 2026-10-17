@@ -411,7 +411,7 @@ echo "[a16] using $(xcodebuild -version | head -1) ($DEV)"
 W="$CACHE/a16"
 rm -rf "$W"; mkdir -p "$W"
 xcrun metal-lipo -archs "$SRC" || true
-xcrun metal-source -flatbuffers=json "$SRC" -o "$W/src" || { echo "[a16] metal-source failed"; exit 1; }
+xcrun metal-source -flatbuffers=json "$SRC" -o "$W/src" || { unset DEVELOPER_DIR; rm -rf "$W/src"; xcrun metal-source -flatbuffers=json "$SRC" -o "$W/src"; } || { echo "[a16] metal-source failed"; exit 1; }
 find "$W/src" -type f | head -20
 J="$(find "$W/src" -type f -name '*.mtlp-json' | head -1)"
 [ -n "$J" ] || { echo "[a16] no pipeline script in the archive"; exit 1; }
@@ -444,7 +444,13 @@ EOF
 xcrun -sdk iphoneos metal-tt --help 2>&1 | head -80 || true
 date
 # at most 50 minutes, so the build can never run out of time because of this
-perl -e 'alarm shift; exec @ARGV' 3000 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 "$J" -o "$W/all.metalar" || { echo "[a16] metal-tt failed or took too long"; exit 1; }
+if ! perl -e 'alarm shift; exec @ARGV' 2400 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 "$J" -o "$W/all.metalar"; then
+  [ -n "${DEVELOPER_DIR:-}" ] || { echo "[a16] metal-tt failed or took too long"; exit 1; }
+  echo "[a16] newest Xcode failed, retrying with the default Xcode"
+  unset DEVELOPER_DIR
+  xcodebuild -version | head -1
+  perl -e 'alarm shift; exec @ARGV' 2400 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 "$J" -o "$W/all.metalar" || { echo "[a16] metal-tt failed or took too long"; exit 1; }
+fi
 date
 xcrun metal-lipo -archs "$W/all.metalar"
 xcrun metal-lipo -thin applegpu_g15p -output "$OUT" "$W/all.metalar" || { echo "[a16] no applegpu_g15p slice"; exit 1; }
@@ -473,3 +479,34 @@ if ph.exists():
     pathlib.Path("work").mkdir(exist_ok=True)
     pathlib.Path("work/pipelines.tsv").write_text(ph.read_text())
     print("using", ph, "(", len([l for l in ph.read_text().splitlines() if l.strip()]), "pipelines )")
+
+# Safety for NX_TEX_DROP: a texture with dropped mip levels has fewer levels in
+# Metal than in the game, so never blit from/to a level that does not exist
+# (that would be undefined behaviour on the GPU).
+cp_ = pathlib.Path("crates/nxhost/src/nvn/draw/copy.rs")
+c = cp_.read_text()
+old = """        if sw == 0 || sh == 0 || dw == 0 || dh == 0 {
+            return Ok(());
+        }
+        let (slw, slh) = level_size(&src.0, src_level);"""
+assert c.count(old) == 1, "copy() start not found"
+c = c.replace(old, """        if sw == 0 || sh == 0 || dw == 0 || dh == 0 {
+            return Ok(());
+        }
+        if src_level as usize >= src.0.mipmapLevelCount() || dst_level as usize >= dst.0.mipmapLevelCount() {
+            return Ok(());
+        }
+        let (slw, slh) = level_size(&src.0, src_level);""")
+old = """    let [x, y, z, w, h, d] = r.map(|v| v.max(0) as usize);
+    if w == 0 || h == 0 {
+        return Ok(());
+    }
+    let (bw, bh, bpb) = super::super::format_info(nvn_format);"""
+assert c.count(old) == 1, "copy_into() start not found"
+c = c.replace(old, """    let [x, y, z, w, h, d] = r.map(|v| v.max(0) as usize);
+    if w == 0 || h == 0 || level as usize >= src.mipmapLevelCount() {
+        return Ok(());
+    }
+    let (bw, bh, bpb) = super::super::format_info(nvn_format);""")
+cp_.write_text(c)
+print("patched", cp_)
