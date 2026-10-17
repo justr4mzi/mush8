@@ -90,7 +90,7 @@ jobs:
             case "$1" in
               *drive.google.com*)
                 for i in 1 2 3 4 5; do
-                  python3 -m gdown --fuzzy --continue --quiet "$1" -O "$2" && return 0
+                  python3 -m gdown --continue --retries 3 --quiet "$1" -O "$2" && return 0
                   echo "Drive download cut, retry $i"; sleep 10
                 done; return 1 ;;
               *) curl -fsSL --retry 3 "$1" -o "$2" ;;
