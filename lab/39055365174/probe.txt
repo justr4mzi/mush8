@@ -1,0 +1,2 @@
+probe archive written to /Users/runner/work/mush8/mush8/probe.metalar
+metal-source: error: can't read metallib table in 'probe.metalar': Invalid data was encountered while parsing the file
