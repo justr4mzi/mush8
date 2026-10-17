@@ -94,6 +94,7 @@ def func(spec):
     return f"alias:{label}#{g[1]}"
 
 LIMIT = int(os.environ.get("A16_LIMIT", "0"))
+ENABLE = os.environ.get("A16_ENABLE", "supportsFamily(apple8) && !supportsFamily(apple9) && !supportsFamily(mac2)")
 pipes, seen, missing = [], set(), 0
 for l in open(plist):
     if LIMIT and len(pipes) >= LIMIT:
@@ -113,7 +114,9 @@ for l in open(plist):
     depth, stencil = int(f[3], 16), f[4] == "1"
     color_state, channel_mask = int(f[5], 16), int(f[6], 16)
     blend = [int(x, 16) for x in f[7].split(",")]
-    p = {"vertex_function": vs, "fragment_function": fs}
+    # only GPUs of the iPhone 15's family (A15/A16 = apple8): older GPUs cannot
+    # build some of these pipelines (too many buffers) and would fail the run
+    p = {"enable": ENABLE, "vertex_function": vs, "fragment_function": fs}
     atts = []
     last = max((i for i, fmt in enumerate(colors) if fmt), default=-1)
     for i, fmt in enumerate(colors[: last + 1]):
