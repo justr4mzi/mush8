@@ -11,7 +11,7 @@ start = s.index("pub fn wrap_heap(base: u64, size: u64) -> bool {")
 end = s.index("pub fn heap() -> Option<&'static HeapBuffer>")
 
 new = r'''#[cfg(target_os = "ios")]
-fn available_memory() -> u64 {
+pub fn available_memory() -> u64 {
     unsafe extern "C" {
         fn os_proc_available_memory() -> usize;
     }
@@ -19,7 +19,7 @@ fn available_memory() -> u64 {
 }
 
 #[cfg(not(target_os = "ios"))]
-fn available_memory() -> u64 {
+pub fn available_memory() -> u64 {
     0
 }
 
@@ -541,3 +541,52 @@ c = c.replace(old, """    let [x, y, z, w, h, d] = r.map(|v| v.max(0) as usize);
     let (bw, bh, bpb) = super::super::format_info(nvn_format);""")
 cp_.write_text(c)
 print("patched", cp_)
+
+# When iOS is about to run out of memory for the app (less than NX_TRIM_MB,
+# default 400 MB left), drop the textures the game has not used for 5 s.
+# Only textures that can be rebuilt from the game's memory are dropped; they
+# come back (decoded again) the next time the game draws with them.
+# NX_TRIM_MB=0 in env.txt turns it off.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "    uploaded: FastMap<TexKey, ([u64; WINDOWS], u64, u64)>,\n    pub frame: u64,\n}"
+assert y.count(old) == 1, "Textures struct not found"
+y = y.replace(old, "    uploaded: FastMap<TexKey, ([u64; WINDOWS], u64, u64)>,\n    last_used: FastMap<TexKey, u64>,\n    pub frame: u64,\n}")
+old = "        if let Some(t) = self.map.get(&key) {\n            let t = t.clone();\n            let frame = self.frame;\n"
+assert y.count(old) == 1, "texture hit path not found"
+y = y.replace(old, "        if let Some(t) = self.map.get(&key) {\n            let t = t.clone();\n            let frame = self.frame;\n            self.last_used.insert(key, frame);\n")
+old = "    pub fn cached(&self, key: &TexKey)"
+assert y.count(old) == 1
+y = y.replace(old, """    /// Drop textures unused for a while when iOS is close to killing the app.
+    pub fn trim(&mut self) {
+        static LIMIT: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_TRIM_MB").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(400) << 20);
+        if *LIMIT == 0 || gfx::available_memory() == 0 || gfx::available_memory() > *LIMIT {
+            return;
+        }
+        let frame = self.frame;
+        let old: std::collections::HashSet<TexKey> = self
+            .uploaded
+            .keys()
+            .filter(|k| self.last_used.get(*k).map_or(true, |&f| f + 300 < frame))
+            .copied()
+            .collect();
+        if old.is_empty() {
+            return;
+        }
+        self.evict(&|k| old.contains(k));
+        self.last_used.retain(|k, _| !old.contains(k));
+        eprintln!("[mem] low memory ({} MB left): dropped {} unused textures", gfx::available_memory() >> 20, old.len());
+    }
+
+""" + old)
+old = "        self.uploaded.retain(|k, _| !gone(k));\n    }"
+assert y.count(old) == 1
+y = y.replace(old, "        self.uploaded.retain(|k, _| !gone(k));\n        self.last_used.retain(|k, _| !gone(k));\n    }")
+tx.write_text(y)
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = "        e.textures.frame += 1;\n"
+assert z.count(old) == 1, "frame counter not found"
+z = z.replace(old, "        e.textures.frame += 1;\n        if e.textures.frame % 30 == 0 {\n            e.textures.trim();\n        }\n")
+md.write_text(z)
+print("patched", tx, md, "(low-memory texture trim)")

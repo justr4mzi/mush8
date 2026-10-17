@@ -30,17 +30,20 @@ jobs:
           ls -d /Applications/Xcode*.app
           xcrun -sdk iphoneos -f metal-tt || true
           xcrun -sdk iphoneos metal-tt --help 2>&1 | head -60 || true
-          man metal-pipelines-script 2>/dev/null | col -b > out/pipelines-script.txt || true
+          TC="$(dirname "$(dirname "$(xcrun -sdk iphoneos -f metal-tt)")")"
+          echo "toolchain: $TC"
+          find "$TC" -iname '*pipeline*' 2>/dev/null | head -20
+          find "$TC" -path '*man*' -iname '*metal*' 2>/dev/null | head -40
+          M="$(find "$TC" -iname 'metal-pipelines-script*' 2>/dev/null | head -1)"
+          [ -n "$M" ] && (mandoc -T utf8 "$M" 2>/dev/null || man "$M" 2>/dev/null || cat "$M") | col -b > out/pipelines-script.txt
           wc -l out/pipelines-script.txt || true
+          xcrun -sdk iphoneos metal-tt 2>&1 | head -40 || true
 
-      - name: Probe (what Metal itself writes)
+      - name: Probe (what metal-tt keeps)
+        continue-on-error: true
         run: |
           mkdir -p out; exec > >(tee -a out/probe.txt) 2>&1
-          swift a16/probe.swift "$PWD/probe.metalar"
-          xcrun metal-source -flatbuffers=json probe.metalar -o probe-src
-          find probe-src -type f
-          cat "$(find probe-src -type f -name '*.mtlp-json' | head -1)"
-          cp "$(find probe-src -type f -name '*.mtlp-json' | head -1)" out/probe.mtlp-json || true
+          bash a16/probe.sh
 
       - uses: actions/cache/restore@v4
         with:

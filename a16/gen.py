@@ -7,6 +7,27 @@
 # usage: gen.py <shader cache dir> <pipeline list> <metal-enums.json> <out.mtlp-json>
 import json, os, sys
 
+if sys.argv[1] == "--probe":
+    # one pipeline using every key, for a16/probe.sh
+    lib = sys.argv[2]
+    print(json.dumps({
+        "libraries": {"paths": [{"label": "P", "path": lib}]},
+        "pipelines": {"render_pipelines": [{
+            "vertex_function": "alias:P#probe_vs",
+            "fragment_function": "alias:P#probe_fs",
+            "color_attachments": [
+                {"index": 0, "pixel_format": "BGRA8Unorm_sRGB", "write_mask": 9, "blending_enabled": True,
+                 "rgb_blend_operation": "Max", "alpha_blend_operation": "ReverseSubtract",
+                 "source_rgb_blend_factor": "SourceAlpha", "destination_rgb_blend_factor": "OneMinusSourceAlpha",
+                 "source_alpha_blend_factor": "BlendColor", "destination_alpha_blend_factor": "Zero"},
+                {"index": 2, "pixel_format": "RGBA8Uint", "write_mask": 15},
+            ],
+            "depth_attachment_pixel_format": "Depth32Float_Stencil8",
+            "stencil_attachment_pixel_format": "Depth32Float_Stencil8",
+        }]},
+    }, indent=1))
+    sys.exit(0)
+
 cache, plist, enums_path, out = sys.argv[1:5]
 E = json.load(open(enums_path))
 PIXEL = {int(k): v for k, v in E["pixel"].items()}
