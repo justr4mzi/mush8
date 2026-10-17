@@ -1,0 +1,133 @@
+# Build Mush8.ipa on a GitHub macOS runner (for AltStore / SideStore)
+#
+# Required secrets (Settings > Secrets and variables > Actions):
+#   KEYS_URL      direct download link to prod.keys
+#   BASE_URL      direct download link to the base game .nsp
+#   UPDATE_URL    direct download link to the 4.0.1 update .nsp
+#   IPA_PASSWORD  password used to encrypt the IPA (the repo is public, so the artifact is encrypted)
+#
+# Launch: Actions tab > "Build Mush8 IPA" > Run workflow
+
+name: Build Mush8 IPA
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-26
+    timeout-minutes: 360
+    env:
+      TOOLCHAIN: 1.98.1
+
+    steps:
+      - name: Check secrets
+        env:
+          KEYS_URL: ${{ secrets.KEYS_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          UPDATE_URL: ${{ secrets.UPDATE_URL }}
+          IPA_PASSWORD: ${{ secrets.IPA_PASSWORD }}
+        run: |
+          missing=0
+          for v in KEYS_URL BASE_URL UPDATE_URL IPA_PASSWORD; do
+            if [ -z "${!v}" ]; then echo "::error::Secret $v is missing"; missing=1; fi
+          done
+          exit $missing
+
+      - name: Check machine (arm64, Xcode, Metal, disk)
+        run: |
+          uname -m
+          [ "$(uname -m)" = arm64 ] || { echo "::error::Not an Apple Silicon runner"; exit 1; }
+          xcodebuild -version
+          cat > "$RUNNER_TEMP/metal.swift" <<'EOF'
+          import Metal
+          if let d = MTLCreateSystemDefaultDevice() { print("Metal OK: \(d.name)") }
+          else { print("No Metal device"); exit(1) }
+          EOF
+          swift "$RUNNER_TEMP/metal.swift" || { echo "::error::No Metal device on this runner, shaders cannot be precompiled"; exit 1; }
+          df -h /
+
+      - name: Free disk space
+        run: |
+          sudo rm -rf ~/Library/Android ~/.dotnet /usr/local/share/dotnet ~/.ghcup || true
+          xcrun simctl delete all || true
+          df -h /
+
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain and xcodegen
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup toolchain install "$TOOLCHAIN" --profile minimal
+          rustup target add aarch64-apple-ios --toolchain "$TOOLCHAIN"
+          brew install xcodegen sevenzip
+          cargo --version
+
+      - name: Cache Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Cache iOS shaders
+        uses: actions/cache@v4
+        with:
+          path: work/shader_cache_ios.noindex
+          key: shaders-ios-${{ hashFiles('data/pipelines.tsv') }}
+
+      - name: Download game files
+        env:
+          KEYS_URL: ${{ secrets.KEYS_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          UPDATE_URL: ${{ secrets.UPDATE_URL }}
+        run: |
+          python3 -m pip install --quiet --break-system-packages gdown || python3 -m pip install --quiet --user gdown
+          export PATH="$PATH:$(python3 -m site --user-base)/bin"
+          get() {
+            case "$1" in
+              *drive.google.com*)
+                for i in 1 2 3 4 5; do
+                  python3 -m gdown --fuzzy --continue --quiet "$1" -O "$2" && return 0
+                  echo "Drive download cut, retry $i"; sleep 10
+                done; return 1 ;;
+              *) curl -fsSL --retry 3 "$1" -o "$2" ;;
+            esac
+          }
+          get "$KEYS_URL"   prod.keys
+          get "$BASE_URL"   base.nsp
+          get "$UPDATE_URL" upd4-0-1.nsp
+          ls -lh prod.keys base.nsp upd4-0-1.nsp
+          # A Drive error page instead of the file is a few KB of HTML
+          for f in base.nsp upd4-0-1.nsp; do
+            if head -c 200 "$f" | grep -qi "<html"; then echo "::error::$f is an HTML page, not the file: check the Drive link sharing"; exit 1; fi
+          done
+          df -h /
+
+      - name: Build IPA
+        run: |
+          export PATH="$HOME/.cargo/bin:$PATH"
+          ./make-ios.sh --ipa
+        # On failure, show the shader log
+      - name: Shader log (on failure)
+        if: failure()
+        run: tail -50 work/precompile_ios.log || true
+
+      - name: Encrypt IPA
+        env:
+          IPA_PASSWORD: ${{ secrets.IPA_PASSWORD }}
+        run: |
+          7zz a -tzip -mem=AES256 -p"$IPA_PASSWORD" Mush8-ipa.zip build/Mush8.ipa
+          ls -lh Mush8-ipa.zip
+
+      - name: Remove game files
+        if: always()
+        run: rm -f prod.keys base.nsp upd4-0-1.nsp
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Mush8-ipa
+          path: Mush8-ipa.zip
+          retention-days: 3
