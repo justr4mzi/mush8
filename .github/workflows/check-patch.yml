@@ -8,6 +8,9 @@ name: Check patch
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   check:
     runs-on: macos-26
@@ -34,14 +37,24 @@ jobs:
           restore-keys: rust-check-
 
       - name: Apply patches
-        run: python3 patch-heap.py && git diff --stat
+        run: |
+          mkdir -p out; exec > >(tee -a out/patch.txt) 2>&1
+          python3 patch-heap.py && git diff --stat
 
       - name: Compile for macOS (used by the shader precompile step)
-        run: cargo build --release > mac.log 2>&1 || { grep -E -A12 "^error" mac.log | head -300; exit 1; }
+        run: |
+          mkdir -p out
+          cargo build --release > out/mac.log 2>&1 || { grep -E -A12 "^error" out/mac.log | head -300; exit 1; }
 
       - name: Compile for iOS (no game code)
         run: |
-          IPHONEOS_DEPLOYMENT_TARGET=26.0 cargo "+$TOOLCHAIN" build --release -p nxhost --target aarch64-apple-ios --target-dir target/ios > ios.log 2>&1 \
-            || { grep -E -A12 "^error" ios.log | head -300; exit 1; }
-          grep -E -A6 "^warning: unused" ios.log | head -60 || true
+          IPHONEOS_DEPLOYMENT_TARGET=26.0 cargo "+$TOOLCHAIN" build --release -p nxhost --target aarch64-apple-ios --target-dir target/ios > out/ios.log 2>&1 \
+            || { grep -E -A12 "^error" out/ios.log | head -300; exit 1; }
+          grep -E -A6 "^warning: unused" out/ios.log | head -60 || true
           echo "iOS build OK"
+
+      - name: Publish logs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/publish-logs.sh check

@@ -13,6 +13,9 @@ on:
         description: "how many pipelines to translate (0 = all)"
         default: "40"
 
+permissions:
+  contents: write
+
 jobs:
   lab:
     runs-on: macos-26
@@ -22,19 +25,22 @@ jobs:
 
       - name: Tools
         run: |
+          mkdir -p out; exec > >(tee -a out/tools.txt) 2>&1
           xcodebuild -version
           ls -d /Applications/Xcode*.app
           xcrun -sdk iphoneos -f metal-tt || true
           xcrun -sdk iphoneos metal-tt --help 2>&1 | head -60 || true
-          man metal-pipelines-script 2>/dev/null | col -b > pipelines-script.txt || true
-          wc -l pipelines-script.txt; grep -n -i -E "write_mask|blend|pixel_format|color_attach|depth|stencil" pipelines-script.txt | head -80 || true
+          man metal-pipelines-script 2>/dev/null | col -b > out/pipelines-script.txt || true
+          wc -l out/pipelines-script.txt || true
 
       - name: Probe (what Metal itself writes)
         run: |
+          mkdir -p out; exec > >(tee -a out/probe.txt) 2>&1
           swift a16/probe.swift "$PWD/probe.metalar"
           xcrun metal-source -flatbuffers=json probe.metalar -o probe-src
           find probe-src -type f
           cat "$(find probe-src -type f -name '*.mtlp-json' | head -1)"
+          cp "$(find probe-src -type f -name '*.mtlp-json' | head -1)" out/probe.mtlp-json || true
 
       - uses: actions/cache/restore@v4
         with:
@@ -46,10 +52,12 @@ jobs:
         env:
           A16_LIMIT: ${{ inputs.limit }}
         run: |
+          mkdir -p out; exec > >(tee -a out/lab.txt) 2>&1
           C=work/shader_cache_ios.noindex
           ls "$C" | head; ls "$C" | wc -l
           python3 a16/gen.py "$C" "$C/pipelines.all.tsv" a16/metal-enums.json lab.mtlp-json
           head -c 3000 lab.mtlp-json; echo
+          head -c 20000 lab.mtlp-json > out/lab-head.mtlp-json
           date
           perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 lab.mtlp-json -o lab.metalar
           date
@@ -57,3 +65,9 @@ jobs:
           xcrun metal-lipo -thin applegpu_g15p -output lab-a16.metalar lab.metalar
           ls -lh lab.metalar lab-a16.metalar
           rm -f lab.metalar lab-a16.metalar
+
+      - name: Publish logs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/publish-logs.sh lab
