@@ -38,6 +38,9 @@ jobs:
           [ -n "$M" ] && (mandoc -T utf8 "$M" 2>/dev/null || man "$M" 2>/dev/null || cat "$M") | col -b > out/pipelines-script.txt
           wc -l out/pipelines-script.txt || true
           xcrun -sdk iphoneos metal-tt 2>&1 | head -40 || true
+          for m in metal-tt metal-strip metal-lipo metal-pack metal-nt; do
+            f="$(find "$TC" -name "$m.1" | head -1)"; [ -n "$f" ] && (mandoc -T utf8 "$f" 2>/dev/null || cat "$f") | col -b > "out/man-$m.txt"
+          done
 
       - name: Probe (what metal-tt keeps)
         continue-on-error: true
@@ -67,6 +70,8 @@ jobs:
           xcrun metal-lipo -archs lab.metalar
           xcrun metal-lipo -thin applegpu_g15p -output lab-a16.metalar lab.metalar
           ls -lh lab.metalar lab-a16.metalar
+          rm -rf src; xcrun metal-source -flatbuffers=json lab-a16.metalar -o src && du -sh src/* && find src -type f | sed 's|/[^/]*$||' | sort | uniq -c
+          xcrun metal-strip -help 2>&1 | head -20 || true
           rm -f lab.metalar lab-a16.metalar
 
       - name: Publish logs
