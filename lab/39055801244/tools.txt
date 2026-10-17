@@ -1,0 +1,43 @@
+Xcode 26.6
+Build version 17F113
+/Applications/Xcode_26.0.1.app
+/Applications/Xcode_26.0.app
+/Applications/Xcode_26.1.1.app
+/Applications/Xcode_26.1.app
+/Applications/Xcode_26.2.0.app
+/Applications/Xcode_26.2.app
+/Applications/Xcode_26.3.0.app
+/Applications/Xcode_26.3.app
+/Applications/Xcode_26.4.1.app
+/Applications/Xcode_26.4.app
+/Applications/Xcode_26.5.0.app
+/Applications/Xcode_26.5.app
+/Applications/Xcode_26.6.0.app
+/Applications/Xcode_26.6.app
+/Applications/Xcode.app
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/bin/metal-tt
+metal-tt: malformed command line
+unknown argument: --help
+toolchain: /var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man5/metal-pipelines-script.5
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man5/metal4-pipelines-script.5
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/metal/32023/lib/clang/32023.883/include/metal/metal_command_buffer
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man5/metal-pipelines-script.5
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man5/metal4-pipelines-script.5
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-config.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-package.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-arch.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-nm.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-objcopy.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-libtool.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-source.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-tt.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-nt.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-objdump.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-strip.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-lipo.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man1/metal-pack.1
+/var/run/com.apple.security.cryptexd/mnt/com.apple.MobileAsset.MetalToolchain-v17.6.109.0.UEleLF/Metal.xctoolchain/usr/share/man/man7/metal-toolchain.7
+    2062 out/pipelines-script.txt
+metal-tt: not enough input files

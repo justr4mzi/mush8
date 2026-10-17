@@ -1,0 +1,131 @@
+0000.metallib
+0001.metallib
+0002.metallib
+0003.metallib
+0004.metallib
+0005.metallib
+0006.metallib
+0007.metallib
+0008.metallib
+0009.metallib
+     224
+[a16] 843 pipelines in the script, 0 skipped (shader not in the iOS cache), 217 libraries
+{
+ "libraries": {
+  "paths": [
+   {
+    "label": "L0",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0158.metallib"
+   },
+   {
+    "label": "L1",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0110.metallib"
+   },
+   {
+    "label": "L2",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0031.metallib"
+   },
+   {
+    "label": "L3",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0118.metallib"
+   },
+   {
+    "label": "L4",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0057.metallib"
+   },
+   {
+    "label": "L5",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0058.metallib"
+   },
+   {
+    "label": "L6",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0143.metallib"
+   },
+   {
+    "label": "L7",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0003.metallib"
+   },
+   {
+    "label": "L8",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0009.metallib"
+   },
+   {
+    "label": "L9",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0047.metallib"
+   },
+   {
+    "label": "L10",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0129.metallib"
+   },
+   {
+    "label": "L11",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0080.metallib"
+   },
+   {
+    "label": "L12",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0048.metallib"
+   },
+   {
+    "label": "L13",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0108.metallib"
+   },
+   {
+    "label": "L14",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0067.metallib"
+   },
+   {
+    "label": "L15",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0026.metallib"
+   },
+   {
+    "label": "L16",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0050.metallib"
+   },
+   {
+    "label": "L17",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0106.metallib"
+   },
+   {
+    "label": "L18",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0028.metallib"
+   },
+   {
+    "label": "L19",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0005.metallib"
+   },
+   {
+    "label": "L20",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0052.metallib"
+   },
+   {
+    "label": "L21",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0027.metallib"
+   },
+   {
+    "label": "L22",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0010.metallib"
+   },
+   {
+    "label": "L23",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/0079.metallib"
+   },
+   {
+    "label": "L24",
+    "path": "/Users/runner/work/mush8/mush8/work/shader_cache_ios.noindex/
+Sat Oct 17 17:55:57 UTC 2026
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g9p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g11p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g12p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g13p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g13g'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g14g'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g15g'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g16p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g16g'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g17p'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g17g'; an empty object will be generated
+applegpu-nt: warning: no available functions and pipelines for architecture 'applegpu_g18p'; an empty object will be generated
+Sat Oct 17 17:59:02 UTC 2026
+applegpu_g9p applegpu_g11p applegpu_g12p applegpu_g13p applegpu_g13g applegpu_g14p applegpu_g14g applegpu_g15p applegpu_g15g applegpu_g16p applegpu_g16g applegpu_g17p applegpu_g17g applegpu_g18p 
+-rw-r--r--  1 runner  staff   324M Oct 17 17:59 lab-a16.metalar
+-rw-r--r--  1 runner  staff   648M Oct 17 17:59 lab.metalar
