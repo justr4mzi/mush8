@@ -82,7 +82,30 @@ jobs:
           key: shaders-ios-${{ hashFiles('data/pipelines.tsv', 'phone-pipelines.tsv', 'patch-heap.py') }}
           restore-keys: shaders-ios-
 
+      # The game code extracted from the .nsp (a few tens of MB) is kept in the
+      # Actions cache: once it is there, and the shader list did not change,
+      # the 12 GB download is skipped completely.
+      - name: Cache game modules
+        uses: actions/cache@v4
+        with:
+          path: work/v-upd
+          key: modules-${{ hashFiles('crates/nxpatch/**', 'crates/nxfs/**') }}
+          restore-keys: modules-
+
+      - name: Need the game files?
+        id: need
+        run: |
+          C=work/shader_cache_ios.noindex
+          STAMP="$(cat data/pipelines.tsv phone-pipelines.tsv 2>/dev/null | awk 'NF && !seen[$0]++' | shasum | cut -d' ' -f1)"
+          if [ -f work/v-upd/exefs/main ] && [ -f "$C/index.tsv" ] && [ "$(cat "$C/pipelines.stamp" 2>/dev/null)" = "$STAMP" ]; then
+            echo "game modules and shaders are cached: no download needed"
+            echo "download=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "download=yes" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Download game files
+        if: steps.need.outputs.download == 'yes'
         env:
           KEYS_URL: ${{ secrets.KEYS_URL }}
           BASE_URL: ${{ secrets.BASE_URL }}
