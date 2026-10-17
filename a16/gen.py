@@ -16,11 +16,12 @@ if sys.argv[1] == "--probe":
             "vertex_function": "alias:P#probe_vs",
             "fragment_function": "alias:P#probe_fs",
             "color_attachments": [
-                {"index": 0, "pixel_format": "BGRA8Unorm_sRGB", "write_mask": 9, "blending_enabled": True,
+                {"pixel_format": "BGRA8Unorm_sRGB", "write_mask": "Red Alpha", "blending_enabled": True,
                  "rgb_blend_operation": "Max", "alpha_blend_operation": "ReverseSubtract",
                  "source_rgb_blend_factor": "SourceAlpha", "destination_rgb_blend_factor": "OneMinusSourceAlpha",
                  "source_alpha_blend_factor": "BlendColor", "destination_alpha_blend_factor": "Zero"},
-                {"index": 2, "pixel_format": "RGBA8Uint", "write_mask": 15},
+                {},
+                {"pixel_format": "RGBA8Uint", "write_mask": "All"},
             ],
             "depth_attachment_pixel_format": "Depth32Float_Stencil8",
             "stencil_attachment_pixel_format": "Depth32Float_Stencil8",
@@ -49,8 +50,6 @@ K = json.loads(os.environ.get("A16_KEYS", "{}")) or {
     "depth": "depth_attachment_pixel_format",
     "stencil": "stencil_attachment_pixel_format",
 }
-WRITE_MASK_STYLE = os.environ.get("A16_WRITE_MASK", "int")  # "int" or "names"
-GAP_STYLE = os.environ.get("A16_GAPS", "index")  # "index": {"index": i, ...}; "pad": empty dicts
 
 # same tables as state.rs blend_factor / blend_op (NVN value -> Metal enum value)
 NVN_FACTOR = {1: 0, 2: 1, 3: 2, 4: 3, 5: 4, 6: 5, 7: 8, 8: 9, 9: 6, 10: 7, 11: 10,
@@ -64,11 +63,11 @@ def op(n):
     return OP[NVN_OP.get(n, 0)]
 
 def write_mask(m):
-    if WRITE_MASK_STYLE == "int":
-        # MTLColorWriteMask: Red=8, Green=4, Blue=2, Alpha=1
-        return (8 if m & 1 else 0) | (4 if m & 2 else 0) | (2 if m & 4 else 0) | (1 if m & 8 else 0)
+    # metal-pipelines-script(5): space-separated names, "None" or "All"
+    if m & 0xF == 0xF:
+        return "All"
     names = [n for bit, n in [(1, "Red"), (2, "Green"), (4, "Blue"), (8, "Alpha")] if m & bit]
-    return names
+    return " ".join(names) or "None"
 
 index = {}
 for l in open(f"{cache}/index.tsv"):
@@ -116,14 +115,12 @@ for l in open(plist):
     blend = [int(x, 16) for x in f[7].split(",")]
     p = {"vertex_function": vs, "fragment_function": fs}
     atts = []
-    for i, fmt in enumerate(colors):
+    last = max((i for i, fmt in enumerate(colors) if fmt), default=-1)
+    for i, fmt in enumerate(colors[: last + 1]):
         if fmt == 0:
-            if GAP_STYLE == "pad":
-                atts.append({})
+            atts.append({})  # unused slot: defaults (Invalid format), like the runtime descriptor
             continue
         a = {K["pixel_format"]: PIXEL[fmt], K["write_mask"]: write_mask(channel_mask >> (4 * i) & 0xF)}
-        if GAP_STYLE == "index":
-            a = {"index": i, **a}
         if color_state >> (8 + i) & 1:
             w0, w1 = blend[i] & 0xFFFFFFFF, blend[i] >> 32
             a.update({
