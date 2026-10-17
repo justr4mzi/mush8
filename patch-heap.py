@@ -32,7 +32,7 @@ pub fn wrap_heap(base: u64, size: u64) -> bool {
         available_memory()
     );
     let ptr = std::ptr::NonNull::new(base as *mut std::ffi::c_void).unwrap();
-    let mut len = size & !0x3fff;
+    let mut len = size.min(dev.maxBufferLength() as u64) & !0x3fff;
     while len >= 0x1000_0000 {
         let b = unsafe { dev.newBufferWithBytesNoCopy_length_options_deallocator(ptr, len as usize, MTLResourceOptions::StorageModeShared, None) };
         match b {
@@ -61,3 +61,26 @@ pub fn wrap_heap(base: u64, size: u64) -> bool {
 s = s[:start] + new + s[end:]
 p.write_text(s)
 print("patched", p)
+
+# Mii editor applet (0x12): the game opens it when you pick "Mii" with no Mii
+# saved. Mush8 does not implement it and the game aborts. Answer "canceled".
+a = pathlib.Path("crates/nxhost/src/services/am.rs")
+t = a.read_text()
+t = t.replace(
+    "const APPLET_CONTROLLER: u32 = 0x0C;",
+    "const APPLET_CONTROLLER: u32 = 0x0C;\nconst APPLET_MII_EDIT: u32 = 0x12;",
+)
+t = t.replace(
+    "            APPLET_WEB | APPLET_OFFLINE_WEB => Some(web_applet(&input)),",
+    "            APPLET_WEB | APPLET_OFFLINE_WEB => Some(web_applet(&input)),\n"
+    "            APPLET_MII_EDIT => {\n"
+    "                eprintln!(\"[am] Mii editor applet: answering canceled\");\n"
+    "                let mut out = vec![0u8; 0x20];\n"
+    "                out[0..4].copy_from_slice(&1u32.to_le_bytes());\n"
+    "                out[4..8].copy_from_slice(&(-1i32).to_le_bytes());\n"
+    "                Some(out)\n"
+    "            }",
+)
+assert "APPLET_MII_EDIT =>" in t
+a.write_text(t)
+print("patched", a)
