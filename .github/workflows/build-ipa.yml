@@ -76,7 +76,8 @@ jobs:
         uses: actions/cache@v4
         with:
           path: work/shader_cache_ios.noindex
-          key: shaders-ios-${{ hashFiles('data/pipelines.tsv') }}
+          key: shaders-ios-${{ hashFiles('data/pipelines.tsv', 'phone-pipelines.tsv') }}
+          restore-keys: shaders-ios-
 
       - name: Download game files
         env:
@@ -121,6 +122,10 @@ jobs:
       - name: Shader log (on failure)
         if: failure()
         run: tail -50 work/precompile_ios.log || true
+
+      - name: A16 archive log
+        if: always()
+        run: cat work/a16.log || true
 
       - name: Encrypt IPA
         env:
