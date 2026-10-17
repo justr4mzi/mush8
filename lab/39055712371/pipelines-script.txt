@@ -1,0 +1,2062 @@
+METAL-PIPELINES-SCRIPT(5)	     Metal	     METAL-PIPELINES-SCRIPT(5)
+
+NAME
+       metal-pipelines-script - Metal pipelines script JSON file format
+
+DESCRIPTION
+       A Metal pipelines script is used to specify a collection of Metal
+       libraries and pipeline descriptors. metal-nt consumes this information
+       to determine which input file to read and which GPU binaries must be
+       generated and stored in a GPU binaries archive.
+
+       A Metal pipelines script has a JSON based textual representation. Its
+       canonical file extension is .mtlp-json. The script itself is a single
+       object that can have the members:
+
+       libraries
+	      An object describing the input Metal libraries from file or
+	      generated via the function constants specialization process. See
+	      LIBRARIES.
+
+       pipelines
+	      An object describing the compute pipelines, render pipelines,
+	      tile-render, and mesh-render pipelines that need to be compiled
+	      into GPU binaries. See PIPELINES.
+
+       functions
+	      An object describing the intersection functions, and visible
+	      functions that need to be compiled separately into GPU binaries.
+	      See FUNCTIONS.
+
+       named_predicates
+	      An array of objects describing the named predicate definitions.
+	      Predicates can be used to control whether a pipeline should be
+	      compiled or ignored. See PREDICATES.
+
+       named_function_constant_values
+	      An array of objects describing the named function constant
+	      values definitions. These can be referenced by name from
+	      specialized function library definitions. See NAMED FUNCTION
+	      CONSTANT VALUES.
+
+       Both C and C++ style comments are supported.
+
+LIBRARIES
+       The object describing the collection of Metal libraries can have the
+       members:
+
+       paths  An array of objects describing a Metal library on disk. Each
+	      object can define the members:
+
+	      label (required)
+		     Unique identifier for the library in a Metal pipelines
+		     script. The label value is used for the alias: URIs to
+		     reference a function from the library with the given
+		     label. See FUNCTION REFERENCE.
+
+	      path (required)
+		     Path to the Metal library on disk. If the path is
+		     relative, the library is resolved considering the library
+		     search paths provided with the option -L to metal-nt.
+
+       specialized_functions
+	      An array of objects describing a Metal library generated via the
+	      function constants specialization process. Each object can
+	      define the members:
+
+	      label (required)
+		     Unique identifier for the library in a Metal pipelines
+		     script. The label value is used for the alias: URIs to
+		     reference a function from the library with the given
+		     label. See FUNCTION REFERENCE.
+
+	      function (required)
+		     Reference to the function to be specialized. See FUNCTION
+		     REFERENCE for more details about the different syntaxes
+		     to reference a function.
+
+	      specialized_name
+		     Name of the function after specialization. If not
+		     specified, the original name is used.
+
+	      named_constant_values
+		     Name of the named function constant values object to use
+		     for the constant specialization values. See NAMED
+		     FUNCTION CONSTANT VALUES.
+
+	      constant_values
+		     An array of objects describing the constant
+		     specialization values. The constant specialization values
+		     defined in this array overrides the corresponding values
+		     provided by the named function constant values object
+		     specified via named_function_constant_values. See
+		     FUNCTION CONSTANT VALUE.
+
+       stitched_libraries
+	      An array of objects describing a Metal stitched library. Each
+	      object is the equivalent structure of
+	      MTLStitchedLibraryDescriptor in the Metal API, and can define
+	      the members:
+
+	      label (required)
+		     Unique identifier for the library in a Metal pipelines
+		     script. The label value is used for the alias: URIs to
+		     reference a function from the library with the given
+		     label. See FUNCTION REFERENCE.
+
+	      functions
+		     An array of functions. Each element is a reference to a
+		     stitchable function that is used for generating the
+		     functions associated with the function graphs of the
+		     given stitched library.  See FUNCTION REFERENCE for more
+		     details about the different syntaxes to reference a
+		     function.
+
+	      function_graphs
+		     An array of objects describing a function graph. See
+		     FUNCTION GRAPH.
+
+   NAMED FUNCTION CONSTANT VALUES
+       A named function constant values object can define the members:
+
+       name (required)
+	      The name for the named function constant values being defined.
+
+       constant_values (required)
+	      An array of objects describing the constant specialization
+	      values. See FUNCTION CONSTANT VALUE.
+
+   FUNCTION CONSTANT VALUE
+       A function constant value object can define the members:
+
+       id_type (required)
+	      String with one of the following values:
+
+	      • FunctionConstantIndex
+
+	      • FunctionConstantName
+
+       id (required)
+	      If id_type is FunctionConstantIndex then id must be an object
+	      with a single member data whose value must be an integer between
+	      0 and 65535 representing the index of a function constant
+	      variable.
+
+	      If id_type is FunctionConstantName then id must be a string
+	      whose value represents the name of function constant variable.
+
+       value_type (required)
+	      Data type of the function constant value. It must be one of the
+	      following string values:
+
+	      • ConstantBool
+
+	      • ConstantBool2
+
+	      • ConstantBool3
+
+	      • ConstantBool4
+
+	      • ConstantChar
+
+	      • ConstantChar2
+
+	      • ConstantChar3
+
+	      • ConstantChar4
+
+	      • ConstantUChar
+
+	      • ConstantUChar2
+
+	      • ConstantUChar3
+
+	      • ConstantUChar4
+
+	      • ConstantShort
+
+	      • ConstantShort2
+
+	      • ConstantShort3
+
+	      • ConstantShort4
+
+	      • ConstantUShort
+
+	      • ConstantUShort2
+
+	      • ConstantUShort3
+
+	      • ConstantUShort4
+
+	      • ConstantInt
+
+	      • ConstantInt2
+
+	      • ConstantInt3
+
+	      • ConstantInt4
+
+	      • ConstantUInt
+
+	      • ConstantUInt2
+
+	      • ConstantUInt3
+
+	      • ConstantUInt4
+
+	      • ConstantLong
+
+	      • ConstantLong2
+
+	      • ConstantLong3
+
+	      • ConstantLong4
+
+	      • ConstantULong
+
+	      • ConstantULong2
+
+	      • ConstantULong3
+
+	      • ConstantULong4
+
+	      • ConstantFloat
+
+	      • ConstantFloat2
+
+	      • ConstantFloat3
+
+	      • ConstantFloat4
+
+	      • ConstantHalf
+
+	      • ConstantHalf2
+
+	      • ConstantHalf3
+
+	      • ConstantHalf4
+
+       value (required)
+	      An object with a single member data whose value is either a
+	      scalar or array of 2/3/4 integer/floating point values depending
+	      on the value of value_type.
+
+   FUNCTION GRAPH
+       This is the equivalent structure of MTLFunctionStitchingGraph in the
+       Metal API. A function graph object can define the members:
+
+       function_name
+	      The name of the new stitched function.
+
+       nodes  An array of objects describing the nodes in the function's call
+	      graph.  Each object can define the members:
+
+	      node_type (required)
+		     String with one of the following values:
+
+		     • InputNode
+
+		     • FunctionNode
+
+	      node (required)
+		     An object describing the given node.
+
+		     If node_type is InputNode then node must be an object
+		     with a single member index whose value represents the
+		     index of the given input node.
+
+		     If node_type is FunctionNode then node must be an object
+		     with the following members:
+
+		     name (required)
+			    The name of the function associated with the given
+			    function node.
+
+		     arguments
+			    An array of objects representing the node indices
+			    of the arguments used by the given function node.
+			    Each element must be an object with a single
+			    member id whose value is the position of the node
+			    in nodes representing the given argument. Valid
+			    values must be less than the position of the
+			    function node being defined.
+
+		     control_dependencies
+			    An array of objects representing the node indices
+			    of the control dependencies by the given function
+			    node. Each element must be an object with a single
+			    member id whose value is the position of the
+			    function node in nodes representing the given
+			    control dependency.  Valid values must be less
+			    than the position of the function node being
+			    defined.
+
+       output_node
+	      An object with a single member id whose value is the position of
+	      the function node in nodes that produces the return value of the
+	      new stitched function.
+
+       attributes
+	      An array of objects describing function attributes. Each element
+	      must be an object with the following members:
+
+	      attribute_type
+		     String with one of the following values:
+
+		     • AlwaysInlineAttribute
+
+	      attribute
+		     An object describing the given attribute.
+
+		     If attribute_type is AlwaysInlineAttribute then attribute
+		     must be an empty object.
+
+PIPELINES
+       The object describing the collection of Metal pipelines can have the
+       members:
+
+       compute_pipelines
+	      An array of objects describing a Metal compute pipeline. See
+	      COMPUTE PIPELINE DESCRIPTOR.
+
+       render_pipelines
+	      An array of objects describing a Metal render pipeline. See
+	      RENDER PIPELINE DESCRIPTOR.
+
+       tile_render_pipelines
+	      An array of objects describing a Metal tile render pipeline. See
+	      TILE RENDER PIPELINE DESCRIPTOR.
+
+       mesh_render_pipelines
+	      An array of objects describing a Metal mesh render pipeline. See
+	      MESH RENDER PIPELINE DESCRIPTOR.
+
+   COMPUTE PIPELINE DESCRIPTOR
+       This is the equivalent structure of MTLComputePipelineDescriptor in the
+       Metal API. A Metal compute pipeline descriptor object can have the
+       members:
+
+       enable A predicate expression that determines if the pipeline should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       compute_function (required)
+	      Reference to a kernel function. See FUNCTION REFERENCE for more
+	      details about the different syntaxes to reference a function.
+
+       threadgroup_size_is_multiple_of_thread_execution_width
+	      A boolean value that indicates if the threadgroup size is always
+	      a multiple of the thread execution width. The default value is
+	      false.
+
+       max_total_threads_per_threadgroup
+	      The maximum number of threads in a threadgroup when dispatching
+	      a command using this pipeline. If set to 0, the implementation
+	      calculates this value based on the properties of the device and
+	      the compute function. The default value is 0.
+
+       max_call_stack_depth
+	      The maximum function call depth from the compute function. The
+	      default value is 1.
+
+       stage_input_descriptor
+	      The organization of input data for the compute function. See
+	      STAGE INPUT OUTPUT DESCRIPTOR.
+
+       buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the compute function. Each array index corresponds to
+	      the same index in the buffer argument table for the compute
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       linked_functions
+	      The functions linked in the compute pipeline. See LINKED
+	      FUNCTIONS.
+
+       support_indirect_command_buffers
+	      A boolean value that indicates if the resulting pipeline state
+	      can be referenced by commands in an indirect command buffer. The
+	      default value is false.
+
+       support_adding_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to its callable functions list. The default value is false.
+
+   RENDER PIPELINE DESCRIPTOR
+       This is the equivalent structure of MTLRenderPipelineDescriptor in the
+       Metal API. A Metal render pipeline descriptor object can have the
+       members:
+
+       enable A predicate expression that determines if the pipeline should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       vertex_function (required)
+	      Reference to a vertex function. See FUNCTION REFERENCE for more
+	      details about the different syntaxes to reference a function.
+
+       fragment_function
+	      Reference to a fragment function. See FUNCTION REFERENCE for
+	      more details about the different syntaxes to reference a
+	      function.
+
+       max_vertex_call_stack_depth
+	      The maximum function call depth from the vertex function. The
+	      default value is 1.
+
+       max_fragment_call_stack_depth
+	      The maximum function call depth from the fragment function. The
+	      default value is 1.
+
+       vertex_descriptor
+	      The organization of vertex data for the vertex function. See
+	      VERTEX DESCRIPTOR.
+
+       input_primitive_topology
+	      The type of primitive topology the pipeline renders. It must be
+	      one of the following string values:
+
+	      • Unspecified (default)
+
+	      • Point
+
+	      • Line
+
+	      • Triangle
+
+       max_tessellation_factor
+	      The maximum tessellation factor that the tessellator uses when
+	      tessellating patches. The default value is 16.
+
+       tessellation_factor_scale_enabled
+	      A boolean value that determines if the pipeline scales the
+	      tessellation factor. The default value is false.
+
+       tessellation_factor_format
+	      The format of the tessellation factors in the tessellation
+	      factor buffer. It must be one of the following string values:
+
+	      • Half (default)
+
+       tessellation_control_point_index_type
+	      The size of the control point indices in a control point index
+	      buffer. It must be one the following string values:
+
+	      • None (default)
+
+	      • UInt16
+
+	      • UInt32
+
+       tessellation_factor_step_function
+	      The step function for determining the tessellation factors for a
+	      patch from the tessellation factor buffer. It must be one of the
+	      following string values:
+
+	      • Constant (default)
+
+	      • PerPatch
+
+	      • PerInstance
+
+	      • PerPatchAndPerInstance
+
+       tessellation_output_winding_order
+	      The winding order of triangles from the tessellator. It must be
+	      one of the following string values:
+
+	      • Clockwise (default)
+
+	      • CounterClockwise.
+
+       tessellation_partition_mode
+	      The partitioning mode that the tessellator uses to derive the
+	      number and spacing of segments for subdividing a corresponding
+	      edge. It must be one of the following string values:
+
+	      • Pow2 (default)
+
+	      • Integer
+
+	      • FractionalOdd
+
+	      • FractionalEven
+
+       max_vertex_amplification_count
+	      The maximum vertex amplification count you can set when encoding
+	      render commands. The default value is 1.
+
+       rasterization_enabled
+	      A boolean value that determines if the pipeline rasterizes
+	      primitives. The default value is true.
+
+       alpha_to_coverage_enabled
+	      A boolean value that indicates if the alpha channel fragment
+	      output for color attachments is read and used to compute a
+	      sample coverage mask. The default value is false.
+
+       alpha_to_one_enabled
+	      A boolean value that indicates if the alpha channel values for
+	      color attachments are forced to the largest representable value.
+	      The default value is false.
+
+       raster_sample_count
+	      The number of samples in each fragment. The default value is 1.
+
+       color_attachments
+	      An array of objects describing the color data. Each object is
+	      the equivalent structure of
+	      MTLRenderPipelineColorAttachmentDescriptor in the Metal API, and
+	      can define the members:
+
+	      pixel_format
+		     The pixel format of the color attachment's texture. The
+		     default value is Invalid. See PIXEL FORMAT.
+
+	      write_mask
+		     A bitmask that restricts which color channels are written
+		     into the texture.	It must be a string containing one or
+		     more of the following string values separated by space:
+
+		     • None
+
+		     • Red
+
+		     • Green
+
+		     • Blue
+
+		     • Alpha
+
+		     • All (default)
+
+	      blending_enabled
+		     A boolean value that determines if blending is enabled.
+		     The default value is false.
+
+	      alpha_blend_operation
+		     The blend operation assigned for the alpha data. The
+		     default value is Add. See BLEND OPERATION.
+
+	      rgb_blend_operation
+		     The blend operation assigned for the RGB data. The
+		     default value is Add. See BLEND OPERATION.
+
+	      destination_alpha_blend_factor
+		     The destination blend factor used by the alpha blend
+		     operation. The default value is Zero. See BLEND FACTOR.
+
+	      destination_rgb_blend_factor
+		     The destination blend factor used by the RGB blend
+		     operation. The default value is Zero. See BLEND FACTOR.
+
+	      source_alpha_blend_factor
+		     The source blend factor used by the alpha blend
+		     operation. The default value is One. See BLEND FACTOR.
+
+	      source_rgb_blend_factor
+		     The source blend factor used by the RGB blend operation.
+		     The default value is One. See BLEND FACTOR.
+
+       depth_attachment_pixel_format
+	      The pixel format of the attachment that stores depth data. The
+	      default value is Invalid. See PIXEL FORMAT.
+
+       stencil_attachment_pixel_format
+	      The pixel format of the attachment that stores stencil data. The
+	      default value is Invalid. See PIXEL FORMAT.
+
+       vertex_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the vertex function. Each array index corresponds to
+	      the same index in the buffer argument table for the vertex
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       fragment_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the fragment function. Each array index corresponds
+	      to the same index in the buffer argument table for the fragment
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       vertex_linked_functions
+	      The functions linked in the vertex stage of the render pipeline.
+	      See LINKED FUNCTIONS.
+
+       fragment_linked_functions
+	      The functions linked in the fragment stage of the render
+	      pipeline. See LINKED FUNCTIONS.
+
+       support_indirect_command_buffers
+	      A boolean value that indicates if the resulting pipeline state
+	      can be referenced by commands in an indirect command buffer. The
+	      default value is false.
+
+       support_adding_vertex_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to the vertex callable functions list. The default value is
+	      false.
+
+       support_adding_fragment_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to the fragment callable functions list. The default value is
+	      false.
+
+   TILE RENDER PIPELINE DESCRIPTOR
+       This is the equivalent structure of MTLTileRenderPipelineDescriptor in
+       the Metal API. A Metal tile render pipeline descriptor object can have
+       the members:
+
+       enable A predicate expression that determines if the pipeline should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       tile_function (required)
+	      Reference to a kernel or fragment function. See FUNCTION
+	      REFERENCE for more details about the different syntaxes to
+	      reference a function.
+
+       threadgroup_size_matches_tile_size
+	      A boolean value that indicates if all threadgroups completely
+	      cover tiles.  The default value is false.
+
+       max_total_threads_per_threadgroup
+	      The maximum number of threads in a threadgroup when dispatching
+	      a command using this pipeline.  If set to 0, the implementation
+	      calculates this value based on the properties of the device and
+	      the tile function. The default value is 0.
+
+       max_call_stack_depth
+	      The maximum function call depth from the tile function. The
+	      default value is 1.
+
+       raster_sample_count
+	      The number of samples in each fragment. The default value is 1.
+
+       color_attachments
+	      An array of objects describing the color data. Each object is
+	      the equivalent structure of
+	      MTLTileRenderPipelineColorAttachmentDescriptor in the Metal API,
+	      and can define the members:
+
+	      pixel_format
+		     The pixel format associated with the tile shading render
+		     pipeline. The default value is Invalid. See PIXEL FORMAT.
+
+       tile_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the tile function. Each array index corresponds to
+	      the same index in the buffer argument table for the tile
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       linked_functions
+	      The functions linked in the tile render pipeline. See LINKED
+	      FUNCTIONS.
+
+       support_adding_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to its callable functions list. The default value is false.
+
+   MESH RENDER PIPELINE DESCRIPTOR
+       This is the equivalent structure of MTLMeshRenderPipelineDescriptor in
+       the Metal API. A Metal mesh render pipeline descriptor object can have
+       the members:
+
+       enable A predicate expression that determines if the pipeline should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       object_function
+	      Reference to an object function. See FUNCTION REFERENCE for more
+	      details about the different syntaxes to reference a function.
+
+       mesh_function (required)
+	      Reference to a mesh function. See FUNCTION REFERENCE for more
+	      details about the different syntaxes to reference a function.
+
+       fragment_function
+	      Reference to a fragment function. See FUNCTION REFERENCE for
+	      more details about the different syntaxes to reference a
+	      function.
+
+       object_threadgroup_size_is_multiple_of_thread_execution_width
+	      A boolean value that indicates if the object threadgroup size is
+	      always a multiple of the thread execution width. The default
+	      value is false.
+
+       mesh_threadgroup_size_is_multiple_of_thread_execution_width
+	      A boolean value that indicates if the mesh threadgroup size is
+	      always a multiple of the thread execution width. The default
+	      value is false.
+
+       max_total_threads_per_object_threadgroup
+	      The maximum number of threads in an object threadgroup when
+	      dispatching a command using this pipeline. If set to 0, the
+	      implementation calculates this value based on the properties of
+	      the device and the object function.  The default value is 0.
+
+       max_total_threads_per_mesh_threadgroup
+	      The maximum number of threads in a mesh threadgroup when
+	      dispatching a command using this pipeline. If set to 0, the
+	      implementation calculates this value based on the properties of
+	      the device and the mesh function.  The default value is 0.
+
+       payload_memory_length
+	      The size in bytes of the buffer indicated by [[payload]] in the
+	      object and mesh functions. If the value is 0, the size of the
+	      dereferenced type declared in the object function is used. The
+	      default value is 0.
+
+       max_total_threadgroups_per_mesh_grid
+	      The maximum value of the product of the vector elements that the
+	      object function may pass to
+	      mesh_grid_properties::set_threadgroups_per_grid.	If set to 0,
+	      the implementation calculates this value based on the property
+	      of the device and the object function.  The default value is 0.
+
+       max_object_call_stack_depth
+	      The maximum function call depth from the object function. The
+	      default value is 1.
+
+       max_mesh_call_stack_depth
+	      The maximum function call depth from the mesh function. The
+	      default value is 1.
+
+       max_fragment_call_stack_depth
+	      The maximum function call depth from the fragment function. The
+	      default value is 1.
+
+       max_vertex_amplification_count
+	      The maximum vertex amplification count you can set when encoding
+	      render commands. The default value is 1.
+
+       rasterization_enabled
+	      A boolean value that determines if the pipeline rasterizes
+	      primitives. The default value is true.
+
+       alpha_to_coverage_enabled
+	      A boolean value that indicates if the alpha channel fragment
+	      output for color attachments is read and used to compute a
+	      sample coverage mask. The default value is false.
+
+       alpha_to_one_enabled
+	      A boolean value that indicates if the alpha channel values for
+	      color attachments are forced to the largest representable value.
+	      The default value is false.
+
+       raster_sample_count
+	      The number of samples in each fragment. The default value is 1.
+
+       color_attachments
+	      An array of objects describing the color data. Each object is
+	      the equivalent structure of
+	      MTLRenderPipelineColorAttachmentDescriptor in the Metal API, and
+	      can define the members:
+
+	      pixel_format
+		     The pixel format of the color attachment's texture. The
+		     default value is Invalid. See PIXEL FORMAT.
+
+	      write_mask
+		     A bitmask that restricts which color channels are written
+		     into the texture.	It must be a string containing one or
+		     more of the following string values separated by space:
+
+		     • None
+
+		     • Red
+
+		     • Green
+
+		     • Blue
+
+		     • Alpha
+
+		     • All (default)
+
+	      blending_enabled
+		     A boolean value that determines if blending is enabled.
+		     The default value is false.
+
+	      alpha_blend_operation
+		     The blend operation assigned for the alpha data. The
+		     default value is Add. See BLEND OPERATION.
+
+	      rgb_blend_operation
+		     The blend operation assigned for the RGB data. The
+		     default value is Add. See BLEND OPERATION.
+
+	      destination_alpha_blend_factor
+		     The destination blend factor used by the alpha blend
+		     operation. The default value is Zero. See BLEND FACTOR.
+
+	      destination_rgb_blend_factor
+		     The destination blend factor used by the RGB blend
+		     operation. The default value is Zero. See BLEND FACTOR.
+
+	      source_alpha_blend_factor
+		     The source blend factor used by the alpha blend
+		     operation. The default value is One. See BLEND FACTOR.
+
+	      source_rgb_blend_factor
+		     The source blend factor used by the RGB blend operation.
+		     The default value is One. See BLEND FACTOR.
+
+       depth_attachment_pixel_format
+	      The pixel format of the attachment that stores depth data. The
+	      default value is Invalid. See PIXEL FORMAT.
+
+       stencil_attachment_pixel_format
+	      The pixel format of the attachment that stores stencil data. The
+	      default value is Invalid. See PIXEL FORMAT.
+
+       object_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the object function. Each array index corresponds to
+	      the same index in the buffer argument table for the object
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       mesh_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the mesh function. Each array index corresponds to
+	      the same index in the buffer argument table for the mesh
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       fragment_buffers
+	      This is an array of objects describing the buffer mutability
+	      option for the fragment function. Each array index corresponds
+	      to the same index in the buffer argument table for the fragment
+	      function. See PIPELINE BUFFER DESCRIPTOR.
+
+       object_linked_functions
+	      The functions linked in the object stage of the mesh render
+	      pipeline. See LINKED FUNCTIONS.
+
+       mesh_linked_functions
+	      The functions linked in the mesh stage of the mesh render
+	      pipeline. See LINKED FUNCTIONS.
+
+       fragment_linked_functions
+	      The functions linked in the fragment stage of the mesh render
+	      pipeline. See LINKED FUNCTIONS.
+
+       support_indirect_command_buffers
+	      A boolean value that indicates if the resulting pipeline state
+	      can be referenced by commands in an indirect command buffer. The
+	      default value is false.
+
+       support_adding_object_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to the object callable functions list. The default value is
+	      false.
+
+       support_adding_mesh_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to the mesh callable functions list. The default value is false.
+
+       support_adding_fragment_binary_functions
+	      A boolean value that indicates if the resulting pipeline state
+	      can be used to create new pipelines by adding binary functions
+	      to the fragment callable functions list. The default value is
+	      false.
+
+   STAGE INPUT OUTPUT DESCRIPTOR
+       This is the equivalent structure of MTLStageInputOutputDescriptor in
+       the Metal API. A Metal stage/output descriptor object can have the
+       members:
+
+       attributes
+	      An array of objects describing where and how to fetch data for
+	      the function.  Each object is the equivalent structure of
+	      MTLAttributeDescriptor in the Metal API, and can define the
+	      members:
+
+	      buffer_index
+		     The index in the argument table for the buffer that
+		     contains the data for the attribute.
+
+	      offset The byte offset of the data from the start of the buffer
+		     data.
+
+	      format The format of the attribute's data. See ATTRIBUTE FORMAT.
+
+       layouts
+	      An array of objects describing how a function fetches input data
+	      for attributes from buffers. Each array index corresponds to the
+	      same index in the buffer argument table for the function. Each
+	      object is the equivalent structure of MTLBufferLayoutDescriptor
+	      in the Metal API, and can define the members:
+
+	      stride The distance in bytes between entries in the buffer for
+		     the attributes.
+
+	      step_function
+		     Determines which aspect of command execution triggers
+		     data fetches. It must be one of the following string
+		     values:
+
+		     • Constant
+
+		     • PerInstance
+
+		     • PerPatch
+
+		     • PerPatchControlPoint
+
+		     • PerVertex
+
+		     • ThreadPositionInGridX
+
+		     • ThreadPositionInGridY
+
+		     • ThreadPositionInGridXIndexed
+
+		     • ThreadPositionInGridYIndexed
+
+	      step_rate
+		     The rate at which data is fetched by the step function.
+
+       index_buffer_index
+	      The location of the index buffer for a compute function using
+	      indexed thread addressing.
+
+       index_type
+	      The data type of the indices stored in the index buffer. It must
+	      be one of the following string values:
+
+	      • UInt16
+
+	      • UInt32
+
+   VERTEX DESCRIPTOR
+       This is the equivalent structure of MTLVertexDescriptor in the Metal
+       API. A Metal vertex descriptor object can have the members:
+
+       attributes
+	      An array of objects describing where and how to fetch data for
+	      the function.  Each object is the equivalent structure of
+	      MTLVertexAttributeDescriptor in the Metal API, and can define
+	      the members:
+
+	      buffer_index
+		     The index in the argument table for the buffer that
+		     contains the data for the attribute.
+
+	      offset The byte offset of the data from the start of the buffer
+		     data.
+
+	      format The format of the attribute's data. See ATTRIBUTE FORMAT.
+
+       layouts
+	      An array of objects describing how a function fetches input data
+	      for attributes from buffers. Each array index corresponds to the
+	      same index in the buffer argument table for the function. Each
+	      object is the equivalent structure of
+	      MTLVertexBufferLayoutDescriptor in the Metal API and can define
+	      the members:
+
+	      stride The distance in bytes between entries in the buffer for
+		     the attributes.
+
+	      step_function
+		     Determines which aspect of command execution triggers
+		     data fetches. It must be one of the following string
+		     values:
+
+		     • Constant
+
+		     • PerInstance
+
+		     • PerPatch
+
+		     • PerPatchControlPoint
+
+		     • PerVertex (default)
+
+	      step_rate
+		     The rate at which data is fetched by the step function.
+
+   PIPELINE BUFFER DESCRIPTOR
+       This is the equivalent structure of MTLPipelineBufferDescriptor in the
+       Metal API. A Metal pipeline buffer descriptor can define the members:
+
+       mutability
+	      A mutability option that determines if a buffer's contents can
+	      be updated before related commands use the buffer. It must be
+	      one of the following string values:
+
+	      • Default (default)
+
+	      • Mutable
+
+	      • Immutable
+
+   LINKED FUNCTIONS
+       This is the equivalent structure of MTLLinkedFunctions in the Metal
+       API. A Metal linked functions object can have the members:
+
+       functions
+	      An array of functions. Each element is a reference to a visible
+	      or intersection function that is linked into the given pipeline
+	      stage.  See FUNCTION REFERENCE for more details about the
+	      different syntaxes to reference a function.
+
+       private_functions
+	      An array of functions. Each element is a reference to a visible
+	      or intersection function that is linked into the given pipeline
+	      stage without exporting the function publicly. See FUNCTION
+	      REFERENCE for more details about the different syntaxes to
+	      reference a function.
+
+       binary_functions
+	      An array of binary functions. Each element is the name of a
+	      binary function linked to the given pipeline stage.
+
+       groups An array of objects describing a group of functions. These
+	      describe the definition of groups referenced in a Metal program
+	      via the [[function_groups(...)]] attribute. Each object can
+	      define the members:
+
+	      name (required)
+
+	      The name of the group of functions.
+
+	      functions
+
+	      An array of functions. Each element is the name of function
+	      listed in the functions array.
+
+   ATTRIBUTE FORMAT
+       This is the equivalent of MTLVertexFormat and MTLAttributeFormat in the
+       Metal API. It must be one of the following string values:
+
+       • Invalid
+
+       • Char
+
+       • Char2
+
+       • Char3
+
+       • Char4
+
+       • UChar
+
+       • UChar2
+
+       • UChar3
+
+       • UChar4
+
+       • UCharNormalized
+
+       • UChar2Normalized
+
+       • UChar3Normalized
+
+       • UChar4Normalized
+
+       • CharNormalized
+
+       • Char2Normalized
+
+       • Char3Normalized
+
+       • Char4Normalized
+
+       • Short
+
+       • Short2
+
+       • Short3
+
+       • Short4
+
+       • UShort
+
+       • UShort2
+
+       • UShort3
+
+       • UShort4
+
+       • ShortNormalized
+
+       • Short2Normalized
+
+       • Short3Normalized
+
+       • Short4Normalized
+
+       • UShortNormalized
+
+       • UShort2Normalized
+
+       • UShort3Normalized
+
+       • UShort4Normalized
+
+       • Int
+
+       • Int2
+
+       • Int3
+
+       • Int4
+
+       • UInt
+
+       • UInt2
+
+       • UInt3
+
+       • UInt4
+
+       • Int1010102Normalized
+
+       • UInt1010102Normalized
+
+       • UChar4Normalized_BGRA
+
+       • Half
+
+       • Half2
+
+       • Half3
+
+       • Half4
+
+       • Float
+
+       • Float2
+
+       • Float3
+
+       • Float4
+
+   PIXEL FORMAT
+       This is the equivalent of MTLPixelFormat in the Metal API. It must be
+       one of the following string values:
+
+       • Invalid
+
+       • A8Unorm
+
+       • R8Unorm
+
+       • R8Unorm_sRGB
+
+       • R8Snorm
+
+       • R8Uint
+
+       • R8Sint
+
+       • R16Unorm
+
+       • R16Snorm
+
+       • R16Uint
+
+       • R16Sint
+
+       • R16Float
+
+       • RG8Unorm
+
+       • RG8Unorm_sRGB
+
+       • RG8Snorm
+
+       • RG8Uint
+
+       • RG8Sint
+
+       • B5G6R5Unorm
+
+       • A1BGR5Unorm
+
+       • ABGR4Unorm
+
+       • BGR5A1Unorm
+
+       • R32Uint
+
+       • R32Sint
+
+       • R32Float
+
+       • RG16Unorm
+
+       • RG16Snorm
+
+       • RG16Uint
+
+       • RG16Sint
+
+       • RG16Float
+
+       • RGBA8Unorm
+
+       • RGBA8Unorm_sRGB
+
+       • RGBA8Snorm
+
+       • RGBA8Uint
+
+       • RGBA8Sint
+
+       • BGRA8Unorm
+
+       • BGRA8Unorm_sRGB
+
+       • RGB10A2Unorm
+
+       • RGB10A2Uint
+
+       • RG11B10Float
+
+       • RGB9E5Float
+
+       • BGR10A2Unorm
+
+       • RG32Uint
+
+       • RG32Sint
+
+       • RG32Float
+
+       • RGBA16Unorm
+
+       • RGBA16Snorm
+
+       • RGBA16Uint
+
+       • RGBA16Sint
+
+       • RGBA16Float
+
+       • RGBA32Uint
+
+       • RGBA32Sint
+
+       • RGBA32Float
+
+       • BC1_RGBA
+
+       • BC1_RGBA_sRGB
+
+       • BC2_RGBA
+
+       • BC2_RGBA_sRGB
+
+       • BC3_RGBA
+
+       • BC3_RGBA_sRGB
+
+       • BC4_RUnorm
+
+       • BC4_RSnorm
+
+       • BC5_RGUnorm
+
+       • BC5_RGSnorm
+
+       • BC6H_RGBFloat
+
+       • BC6H_RGBUfloat
+
+       • BC7_RGBAUnorm
+
+       • BC7_RGBAUnorm_sRGB
+
+       • PVRTC_RGB_2BPP
+
+       • PVRTC_RGB_2BPP_sRGB
+
+       • PVRTC_RGB_4BPP
+
+       • PVRTC_RGB_4BPP_sRGB
+
+       • PVRTC_RGBA_2BPP
+
+       • PVRTC_RGBA_2BPP_sRGB
+
+       • PVRTC_RGBA_4BPP
+
+       • PVRTC_RGBA_4BPP_sRGB
+
+       • EAC_R11Unorm
+
+       • EAC_R11Snorm
+
+       • EAC_RG11Unorm
+
+       • EAC_RG11Snorm
+
+       • EAC_RGBA8
+
+       • EAC_RGBA8_sRGB
+
+       • ETC2_RGB8
+
+       • ETC2_RGB8_sRGB
+
+       • ETC2_RGB8A1
+
+       • ETC2_RGB8A1_sRGB
+
+       • ASTC_4x4_sRGB
+
+       • ASTC_5x4_sRGB
+
+       • ASTC_5x5_sRGB
+
+       • ASTC_6x5_sRGB
+
+       • ASTC_6x6_sRGB
+
+       • ASTC_8x5_sRGB
+
+       • ASTC_8x6_sRGB
+
+       • ASTC_8x8_sRGB
+
+       • ASTC_10x5_sRGB
+
+       • ASTC_10x6_sRGB
+
+       • ASTC_10x8_sRGB
+
+       • ASTC_10x10_sRGB
+
+       • ASTC_12x10_sRGB
+
+       • ASTC_12x12_sRGB
+
+       • ASTC_4x4_LDR
+
+       • ASTC_5x4_LDR
+
+       • ASTC_5x5_LDR
+
+       • ASTC_6x5_LDR
+
+       • ASTC_6x6_LDR
+
+       • ASTC_8x5_LDR
+
+       • ASTC_8x6_LDR
+
+       • ASTC_8x8_LDR
+
+       • ASTC_10x5_LDR
+
+       • ASTC_10x6_LDR
+
+       • ASTC_10x8_LDR
+
+       • ASTC_10x10_LDR
+
+       • ASTC_12x10_LDR
+
+       • ASTC_12x12_LDR
+
+       • ASTC_4x4_HDR
+
+       • ASTC_5x4_HDR
+
+       • ASTC_5x5_HDR
+
+       • ASTC_6x5_HDR
+
+       • ASTC_6x6_HDR
+
+       • ASTC_8x5_HDR
+
+       • ASTC_8x6_HDR
+
+       • ASTC_8x8_HDR
+
+       • ASTC_10x5_HDR
+
+       • ASTC_10x6_HDR
+
+       • ASTC_10x8_HDR
+
+       • ASTC_10x10_HDR
+
+       • ASTC_12x10_HDR
+
+       • ASTC_12x12_HDR
+
+       • GBGR422
+
+       • BGRG422
+
+       • Depth16Unorm
+
+       • Depth32Float
+
+       • Stencil8
+
+       • Depth24Unorm_Stencil8
+
+       • Depth32Float_Stencil8
+
+       • X32_Stencil8
+
+       • X24_Stencil8
+
+       • BGRA10_XR
+
+       • BGRA10_XR_sRGB
+
+       • BGR10_XR
+
+       • BGR10_XR_sRGB
+
+       • BGRA10Uint
+
+       • BGRA10Unorm
+
+       • BGRA10Unorm_sRGB
+
+       • BGRA10Unorm_HLG
+
+       • BGRA10Unorm_PQ
+
+   BLEND OPERATION
+       This is the equivalent of MTLBlendOperation in the Metal API. It must
+       be one of the following string values:
+
+       • Add
+
+       • Subtract
+
+       • ReverseSubtract
+
+       • Min
+
+       • Max
+
+   BLEND FACTOR
+       This is the equivalent of MTLBlendFactor in the Metal API. It must be
+       one of the following string values:
+
+       • Zero
+
+       • One
+
+       • SourceColor
+
+       • OneMinusSourceColor
+
+       • SourceAlpha
+
+       • OneMinusSourceAlpha
+
+       • DestinationColor
+
+       • OneMinusDestinationColor
+
+       • DestinationAlpha
+
+       • OneMinusDestinationAlpha
+
+       • SourceAlphaSaturated
+
+       • BlendColor
+
+       • OneMinusBlendColor
+
+       • BlendAlpha
+
+       • OneMinusBlendAlpha
+
+       • Source1Color
+
+       • OneMinusSource1Color
+
+       • Source1Alpha
+
+       • OneMinusSource1Alpha
+
+FUNCTIONS
+       The object describing the collection of Metal binary functions can have
+       the members:
+
+       intersection_functions
+	      An array of objects describing a Metal binary intersection
+	      function. See INTERSECTION FUNCTION DESCRIPTOR.
+
+       visible_functions
+	      An array of objects describing a Metal binary visible function.
+	      See VISIBLE FUNCTION DESCRIPTOR.
+
+   INTERSECTION FUNCTION DESCRIPTOR
+       A Metal binary intersection function descriptor object can have the
+       members:
+
+       enable A predicate expression that determines if the function should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       function (required)
+	      Reference to an intersection function. See FUNCTION REFERENCE
+	      for more details about the different syntaxes to reference a
+	      function.
+
+   VISIBLE FUNCTION DESCRIPTOR
+       A Metal binary visible function descriptor object can have the members:
+
+       enable A predicate expression that determines if the function should be
+	      compiled or ignored. The default value is the empty expression.
+	      See PREDICATES.
+
+       function (required)
+	      Reference to a visible function. See FUNCTION REFERENCE for more
+	      details about the different syntaxes to reference a function.
+
+FUNCTION REFERENCE
+       Referencing functions in Metal libraries can be done in different ways
+       based on the kind of library being referenced.
+
+   FUNCTION NAME
+       The function name shall be used in the case the desired function is
+       part of the input library specified as a command line argument to
+       metal-nt.
+
+	  {
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "my_kernel_function"
+		}
+	      ]
+	    }
+	  }
+
+   ALIAS URI
+       The syntax alias:<library-identifier>#<function-name> shall be used in
+       the case the desired function is part of a library defined in the
+       libraries object of the Metal pipelines script.
+
+	  {
+	    "libraries": {
+	      "paths": [
+		{
+		  "label": "lib1",
+		  "path": "path/to/lib1.metallib"
+		}
+	      ]
+	    },
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "alias:lib1#my_kernel_function"
+		}
+	      ]
+	    }
+	  }
+
+   FILE URI
+       The syntax file:<path-to-library-file>#<function-name> shall be used in
+       the case the desired function is part of a library file on disk.
+
+       Paths can either be absolute or relative. Relative paths are always
+       resolved using the library search paths provided with the option -L to
+       metal-nt.
+
+	  {
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "file:path/to/lib1.metallib#my_kernel_function"
+		}
+	      ]
+	    }
+	  }
+
+PREDICATES
+       A predicate expression is an arbitrary boolean expression combining
+       builtin predicates and user defined named predicates with the operator
+       && (logical AND), || (logical OR), and ! (logical NOT). If a predicate
+       expression is empty it is evaluated to true.
+
+   BUILTIN PREDICATES
+
+       supportsFamily(<family>)
+	      The supportsFamily(<family>) predicate evaluates to true if the
+	      target architecture specified with the option -arch to metal-nt
+	      supports the specified family. The supported <family> values
+	      are:
+
+	      • apple1
+
+	      • apple2
+
+	      • apple3
+
+	      • apple4
+
+	      • apple5
+
+	      • apple6
+
+	      • apple7
+
+	      • apple8
+
+	      • apple9
+
+	      • mac2
+
+	      • common1
+
+	      • common2
+
+	      • common3
+
+	      • metal3
+
+   NAMED PREDICATE
+       It is possible to define named predicates in a Metal pipelines script.
+       Each object describing a named predicate can define the members:
+
+       name (required)
+	      The name for the predicate being defined.
+
+       predicate (required)
+	      Predicate expression. It can reference other named predicates
+	      previously defined.
+
+       A named predicate can be referenced in an expression with the syntax
+       $<predicate-name>().
+
+	  {
+	    "named_predicates": [
+	      {
+		"name": "myPredicate1",
+		"predicate": "supportsFamily(apple6) || supportsFamily(mac2)"
+	      },
+	      {
+		"name": "myPredicate2",
+		"predicate": "$myPredicate1() && !supportsFamily(common1)"
+	      }
+	    ],
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "my_kernel_basic"
+		},
+		{
+		  "enable": "$myPredicate1()",
+		  "compute_function": "my_kernel_advanced"
+		},
+		{
+		  "enable": "$myPredicate2() || supportsFamily(apple8) || supportsFamily(metal3)",
+		  "compute_function": "my_kernel_more_advanced"
+		}
+	      ]
+	    }
+	  }
+
+EXAMPLES
+   Implicit input library
+       This example shows a Metal pipelines script with two compute pipelines
+       and three render pipelines. All the functions are from the input
+       library provided as a command line argument to metal-nt.
+
+	  {
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "my_kernel_1"
+		},
+		{
+		  "compute_function": "my_kernel_2"
+		}
+	      ],
+	      "render_pipelines": [
+		{
+		  "vertex_function": "my_vertex",
+		  "fragment_function": "my_fragment_1",
+		  "color_attachments": [
+		    {
+		      "pixel_format": "BGRA8Unorm"
+		    }
+		  ]
+		},
+		{
+		  "vertex_function": "my_vertex",
+		  "fragment_function": "my_fragment_2",
+		  "color_attachments": [
+		    {
+		      "pixel_format": "BGRA8Unorm"
+		    }
+		  ]
+		},
+		{
+		  "vertex_function": "my_vertex_side_effects",
+		  "rasterization_enabled": false
+		}
+	      ]
+	    }
+	  }
+
+   Specialized functions
+       This example shows a Metal pipelines script with two render pipelines.
+       The fragment functions used in these render pipelines are specialized
+       functions, hence the script contains a description of the
+       specialization process. Since the only way to reference the specialized
+       function libraries is via the library unique identifier, the ALIAS URI
+       syntax is used to reference the specialized functions.
+
+	  {
+	    "named_function_constant_values": [
+	      {
+		"name": "my_common_fc_values",
+		"constant_values": [
+		  {
+		    "id_type": "FunctionConstantIndex",
+		    "id": {
+		      "data": 0
+		    },
+		    "value_type": "ConstantUInt",
+		    "value": {
+		      "data": 42
+		    }
+		  },
+		  {
+		    "id_type": "FunctionConstantName",
+		    "id": "base_color",
+		    "value_type": "ConstantFloat4",
+		    "value": {
+		      "data": [0.5, 0.22, 0.25, 1.0]
+		    }
+		  }
+		]
+	      }
+	    ],
+	    "libraries": {
+	      "specialized_functions": [
+		{
+		  "label": "fragment_1_lib",
+		  "function": "my_fragment",
+		  "named_constant_values": "my_common_fc_values",
+		  "constant_values": [
+		    {
+		      "id_type": "FunctionConstantName",
+		      "id": "base_color",
+		      "value_type": "ConstantFloat4",
+		      "value": {
+			"data": [0.25, 0.25, 0.5, 1.0]
+		      }
+		    },
+		  ]
+		},
+		{
+		  "label": "fragment_2_lib",
+		  "function": "my_fragment",
+		  "named_constant_values": "my_common_fc_values",
+		  "constant_values": [
+		    {
+		      "id_type": "FunctionConstantIndex",
+		      "id": {
+			"data": 0
+		      },
+		      "value_type": "ConstantUInt",
+		      "value": {
+			"data": 23
+		      }
+		    }
+		  ]
+		}
+	      ]
+	    },
+	    "pipelines": {
+	      "render_pipelines": [
+		{
+		  "vertex_function": "my_vertex",
+		  "fragment_function": "alias:fragment_1_lib#my_fragment",
+		  "color_attachments": [
+		    {
+		      "pixel_format": "BGRA8Unorm"
+		    }
+		  ]
+		},
+		{
+		  "vertex_function": "my_vertex",
+		  "fragment_function": "alias:fragment_2_lib#my_fragment",
+		  "color_attachments": [
+		    {
+		      "pixel_format": "BGRA8Unorm"
+		    }
+		  ]
+		}
+	      ]
+	    }
+	  }
+
+       Note that in fragment_1_lib the function constant value for the
+       variable base_color provided by my_common_fc_values is overridden
+       locally. Similarly in fragment_2_lib the function constant value for
+       the variable with index 0 provided by my_common_fc_values is overridden
+       locally.
+
+   Explicit Metal libraries on disk
+       This example shows a Metal pipelines script with three compute
+       pipelines where functions are from libraries either defined as input
+       libraries on disk in the Metal pipelines script (see paths), or
+       directly referenced using the FILE URI syntax, or from specialized
+       function libraries using the ALIAS URI syntax.
+
+	  {
+	    "libraries": {
+	      "paths": [
+		{
+		  "label": "lib1",
+		  "path": "libraries/lib1.metallib"
+		}
+	      ],
+	      "specialized_functions": [
+		{
+		  "label": "kernel_42_lib",
+		  "function": "alias:lib1#my_kernel",
+		  "specialized_name": "my_specialized_kernel",
+		  "constant_values": [
+		    {
+		      "id_type": "FunctionConstantIndex",
+		      "id": {
+			"data": 0
+		      },
+		      "value_type": "ConstantUInt",
+		      "value": {
+			"data": 42
+		      }
+		    }
+		  ]
+		}
+	      ]
+	    },
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "alias:kernel_42_lib#my_specialized_kernel"
+		},
+		{
+		  "compute_function": "file:/path/to/custom/lib.metallib#custom_kernel"
+		},
+		{
+		  "compute_function": "alias:lib1#base_kernel"
+		}
+	      ]
+	    }
+	  }
+
+   Linked functions
+       This example shows a Metal pipelines script with a compute pipeline
+       with a linked_functions object.
+
+	  {
+	    "libraries": {
+	      "paths": [
+		{
+		  "label": "visible_functions",
+		  "path": "libraries/visible_fns.metallib"
+		},
+		{
+		  "label": "intersection_functions",
+		  "path": "libraries/intersection_fns.metallib"
+		}
+	      ]
+	    },
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "my_kernel",
+		  "linked_functions": {
+		    "functions": [
+		      "my_visible_1",
+		      "alias:visible_functions#helper_visible_1",
+		      "alias:visible_functions#helper_visible_2",
+		      "alias:visible_functions#helper_visible_3",
+		      "alias:intersection_functions#triangle_intersection_1",
+		      "alias:intersection_functions#triangle_intersection_2",
+		      "alias:intersection_functions#triangle_intersection_3"
+		    ],
+		    "binary_functions": [
+		      "bounding_box_intersection_1",
+		      "bounding_box_intersection_2",
+		      "bounding_box_intersection_3"
+		    ],
+		    "groups": [
+		      {
+			"name": "helpers_group_1",
+			"functions": ["helper_visible_1", "helper_visible_2"]
+		      },
+		      {
+			"name": "helpers_group_2",
+			"functions": ["helper_visible_3"]
+		      }
+		    ]
+		  }
+		}
+	      ]
+	    }
+	  }
+
+       Note that the elements in binary_functions array are simple function
+       names, while the elements in the functions array can be any form of
+       function reference.
+
+   Separately compiled functions
+       This example shows a Metal pipelines script with separately compiled
+       visible and intersection functions.
+
+	  {
+	    "libraries": {
+	      "paths": [
+		{
+		  "label": "visible_functions",
+		  "path": "libraries/visible_fns.metallib"
+		},
+		{
+		  "label": "intersection_functions",
+		  "path": "libraries/intersection_fns.metallib"
+		}
+	      ]
+	    },
+	    "functions": {
+	      "visible_functions": [
+		{
+		  "function": "file:/path/to/other.metallib#my_visible_1",
+		},
+		{
+		  "function": "my_visible_2",
+		},
+		{
+		  "function": "alias:visible_functions#my_visible_1",
+		}
+	      ],
+	      "intersection_functions": [
+		{
+		  "function": "my_intersection_1",
+		},
+		{
+		  "function": "alias:intersection_functions#my_intersection_2",
+		},
+		{
+		  "function": "file:/path/to/other.metallib#my_intersection_1",
+		}
+	      ]
+	    }
+	  }
+
+   Stitched libraries
+       This example shows a Metal pipelines script with a compute pipeline and
+       separately compiled visible function using a stitched function.	The
+       only way to reference the stitched libraries is via the library unique
+       identifier, the ALIAS URI syntax is used to reference the stitched
+       functions.
+
+	  {
+	    "libraries": {
+	      "stitched_libraries": [
+		{
+		  "label": "stitched_functions",
+		  "functions": [
+		    "mul",
+		    "add"
+		  ],
+		  "function_graphs": [
+		    {
+		      "function_name": "muladd",
+		      "nodes": [
+			{
+			  "node_type": "InputNode",
+			  "node": {
+			    "index": 0
+			  }
+			},
+			{
+			  "node_type": "InputNode",
+			  "node": {
+			    "index": 1
+			  }
+			},
+			{
+			  "node_type": "FunctionNode",
+			  "node": {
+			    "name": "mul",
+			    "arguments": [
+			      {
+				"id": 0
+			      },
+			      {
+				"id": 1
+			      }
+			    ]
+			  }
+			},
+			{
+			  "node_type": "InputNode",
+			  "node": {
+			    "index": 2
+			  }
+			},
+			{
+			  "node_type": "FunctionNode",
+			  "node": {
+			    "name": "add",
+			    "arguments": [
+			      {
+				"id": 2
+			      },
+			      {
+				"id": 3
+			      }
+			    ]
+			  }
+			}
+		      ],
+		      "output_node": {
+			"id": 4
+		      }
+		    }
+		  ]
+		}
+	      ]
+	    },
+	    "pipelines": {
+	      "compute_pipelines": [
+		{
+		  "compute_function": "my_kernel",
+		  "linked_functions": {
+		    "functions": [
+		      "alias:stitched_functions#muladd",
+		    ]
+		  }
+		}
+	      ]
+	    },
+	    "functions": {
+	      "visible_functions": [
+		{
+		  "function": "alias:stitched_functions#muladd",
+		}
+	      ]
+	    }
+	  }
+
+COPYRIGHT
+       2014-2025, The Metal Team
+
+32023				October 2, 2025      METAL-PIPELINES-SCRIPT(5)
