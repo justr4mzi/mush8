@@ -65,7 +65,7 @@ jobs:
           head -c 3000 lab.mtlp-json; echo
           head -c 20000 lab.mtlp-json > out/lab-head.mtlp-json
           date
-          perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 lab.mtlp-json -o lab.metalar
+          perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 -arch applegpu_g15p -compress-resources lab.mtlp-json -o lab.metalar
           date
           xcrun metal-lipo -archs lab.metalar
           xcrun metal-lipo -thin applegpu_g15p -output lab-a16.metalar lab.metalar
