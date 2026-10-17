@@ -109,6 +109,10 @@ jobs:
           done
           df -h /
 
+      - name: Apply experimental patches (if any)
+        run: |
+          if [ -f patch-heap.py ]; then python3 patch-heap.py; else echo "no patch-heap.py, building stock Mush8"; fi
+
       - name: Build IPA
         run: |
           export PATH="$HOME/.cargo/bin:$PATH"
