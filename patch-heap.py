@@ -23,7 +23,38 @@ fn available_memory() -> u64 {
     0
 }
 
+/// Physical memory the app uses, as iOS counts it for its memory limit.
+fn footprint() -> u64 {
+    unsafe extern "C" {
+        fn proc_pid_rusage(pid: i32, flavor: i32, buffer: *mut u64) -> i32;
+    }
+    let mut info = [0u64; 64];
+    // RUSAGE_INFO_V0: 16-byte uuid, then user_time, system_time, pkg_idle_wkups,
+    // interrupt_wkups, pageins, wired_size, resident_size, phys_footprint
+    if unsafe { proc_pid_rusage(std::process::id() as i32, 0, info.as_mut_ptr()) } == 0 { info[9] } else { 0 }
+}
+
+/// Every 10 s: memory used by the app and memory iOS still allows (NX_NO_MEMLOG=1 to turn off).
+fn start_memlog() {
+    static ONCE: std::sync::Once = std::sync::Once::new();
+    if std::env::var_os("NX_NO_MEMLOG").is_some() || ONCE.is_completed() {
+        return;
+    }
+    ONCE.call_once(|| {});
+    let _ = std::thread::Builder::new().name("memlog".into()).spawn(|| {
+        let t0 = std::time::Instant::now();
+        let mut low = u64::MAX;
+        loop {
+            std::thread::sleep(std::time::Duration::from_secs(10));
+            let (used, left) = (footprint(), available_memory());
+            low = low.min(left);
+            eprintln!("[mem] {:.0} s: app uses {} MB, iOS still allows {} MB (lowest so far {} MB)", t0.elapsed().as_secs_f32(), used >> 20, left >> 20, low >> 20);
+        }
+    });
+}
+
 pub fn wrap_heap(base: u64, size: u64) -> bool {
+    start_memlog();
     let dev = &gpu().device.0;
     eprintln!(
         "[gfx] wrap_heap: request {size:#x}, maxBufferLength {:#x}, recommendedMaxWorkingSetSize {:#x}, available memory {:#x}",

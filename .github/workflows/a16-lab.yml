@@ -1,0 +1,59 @@
+# Test bench for the A16 pipeline archive. Needs no game files: it reuses the
+# iOS shader cache the last "Build Mush8 IPA" run saved. Prints logs only
+# (nothing game-derived is uploaded, the repo is public).
+#
+# Launch: Actions tab > "A16 lab" > Run workflow (limit 0 = all pipelines)
+
+name: A16 lab
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "how many pipelines to translate (0 = all)"
+        default: "40"
+
+jobs:
+  lab:
+    runs-on: macos-26
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Tools
+        run: |
+          xcodebuild -version
+          ls -d /Applications/Xcode*.app
+          xcrun -sdk iphoneos -f metal-tt || true
+          xcrun -sdk iphoneos metal-tt --help 2>&1 | head -60 || true
+          man metal-pipelines-script 2>/dev/null | col -b > pipelines-script.txt || true
+          wc -l pipelines-script.txt; grep -n -i -E "write_mask|blend|pixel_format|color_attach|depth|stencil" pipelines-script.txt | head -80 || true
+
+      - name: Probe (what Metal itself writes)
+        run: |
+          swift a16/probe.swift "$PWD/probe.metalar"
+          xcrun metal-source -flatbuffers=json probe.metalar -o probe-src
+          find probe-src -type f
+          cat "$(find probe-src -type f -name '*.mtlp-json' | head -1)"
+
+      - uses: actions/cache/restore@v4
+        with:
+          path: work/shader_cache_ios.noindex
+          key: shaders-ios-none
+          restore-keys: shaders-ios-
+
+      - name: Generate and translate
+        env:
+          A16_LIMIT: ${{ inputs.limit }}
+        run: |
+          C=work/shader_cache_ios.noindex
+          ls "$C" | head; ls "$C" | wc -l
+          python3 a16/gen.py "$C" "$C/pipelines.all.tsv" a16/metal-enums.json lab.mtlp-json
+          head -c 3000 lab.mtlp-json; echo
+          date
+          perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 lab.mtlp-json -o lab.metalar
+          date
+          xcrun metal-lipo -archs lab.metalar
+          xcrun metal-lipo -thin applegpu_g15p -output lab-a16.metalar lab.metalar
+          ls -lh lab.metalar lab-a16.metalar
+          rm -f lab.metalar lab-a16.metalar

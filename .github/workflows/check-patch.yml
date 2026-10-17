@@ -1,0 +1,47 @@
+# Compile Mush8 with patch-heap.py applied, for macOS and iOS, WITHOUT the game
+# files. Catches code errors in ~10 min before a real "Build Mush8 IPA" run.
+#
+# Launch: Actions tab > "Check patch" > Run workflow
+
+name: Check patch
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: macos-26
+    timeout-minutes: 60
+    env:
+      TOOLCHAIN: 1.98.1
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        run: |
+          rustup toolchain install stable --profile minimal
+          rustup toolchain install "$TOOLCHAIN" --profile minimal
+          rustup target add aarch64-apple-ios --toolchain "$TOOLCHAIN"
+
+      - name: Cache Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: rust-check-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+          restore-keys: rust-check-
+
+      - name: Apply patches
+        run: python3 patch-heap.py && git diff --stat
+
+      - name: Compile for macOS (used by the shader precompile step)
+        run: cargo build --release > mac.log 2>&1 || { grep -E -A12 "^error" mac.log | head -300; exit 1; }
+
+      - name: Compile for iOS (no game code)
+        run: |
+          IPHONEOS_DEPLOYMENT_TARGET=26.0 cargo "+$TOOLCHAIN" build --release -p nxhost --target aarch64-apple-ios --target-dir target/ios > ios.log 2>&1 \
+            || { grep -E -A12 "^error" ios.log | head -300; exit 1; }
+          grep -E -A6 "^warning: unused" ios.log | head -60 || true
+          echo "iOS build OK"
