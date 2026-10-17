@@ -1,0 +1,75 @@
+Failed to retrieve file url:
+
+	Too many users have viewed or downloaded this file recently. Please
+	try accessing the file again later. If the file you are trying to
+	access is particularly large or is shared with many people, it may
+	take up to 24 hours to be able to view or download the file. If you
+	still can't access a file after 24 hours, contact your domain
+	administrator.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1IU_3Qy7vSkTU8W_gZUzUKsBgtybJPxmF
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 1
+Failed to retrieve file url:
+
+	Too many users have viewed or downloaded this file recently. Please
+	try accessing the file again later. If the file you are trying to
+	access is particularly large or is shared with many people, it may
+	take up to 24 hours to be able to view or download the file. If you
+	still can't access a file after 24 hours, contact your domain
+	administrator.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1IU_3Qy7vSkTU8W_gZUzUKsBgtybJPxmF
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 2
+Failed to retrieve file url:
+
+	Too many users have viewed or downloaded this file recently. Please
+	try accessing the file again later. If the file you are trying to
+	access is particularly large or is shared with many people, it may
+	take up to 24 hours to be able to view or download the file. If you
+	still can't access a file after 24 hours, contact your domain
+	administrator.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1IU_3Qy7vSkTU8W_gZUzUKsBgtybJPxmF
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 3
+Failed to retrieve file url:
+
+	Too many users have viewed or downloaded this file recently. Please
+	try accessing the file again later. If the file you are trying to
+	access is particularly large or is shared with many people, it may
+	take up to 24 hours to be able to view or download the file. If you
+	still can't access a file after 24 hours, contact your domain
+	administrator.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1IU_3Qy7vSkTU8W_gZUzUKsBgtybJPxmF
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 4
+Failed to retrieve file url:
+
+	Too many users have viewed or downloaded this file recently. Please
+	try accessing the file again later. If the file you are trying to
+	access is particularly large or is shared with many people, it may
+	take up to 24 hours to be able to view or download the file. If you
+	still can't access a file after 24 hours, contact your domain
+	administrator.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1IU_3Qy7vSkTU8W_gZUzUKsBgtybJPxmF
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 5
