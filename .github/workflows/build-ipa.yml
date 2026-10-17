@@ -93,6 +93,9 @@ jobs:
                   python3 -m gdown --continue --retries 3 --quiet "$1" -O "$2" && return 0
                   echo "Drive download cut, retry $i"; sleep 10
                 done; return 1 ;;
+              *dropbox.com*)
+                u="${1/dl=0/dl=1}"; case "$u" in *dl=1*) ;; *\?*) u="$u&dl=1" ;; *) u="$u?dl=1" ;; esac
+                curl -fsSL --retry 5 --retry-all-errors -C - "$u" -o "$2" ;;
               *) curl -fsSL --retry 3 "$1" -o "$2" ;;
             esac
           }
@@ -102,7 +105,7 @@ jobs:
           ls -lh prod.keys base.nsp upd4-0-1.nsp
           # A Drive error page instead of the file is a few KB of HTML
           for f in base.nsp upd4-0-1.nsp; do
-            if head -c 200 "$f" | grep -qi "<html"; then echo "::error::$f is an HTML page, not the file: check the Drive link sharing"; exit 1; fi
+            if head -c 200 "$f" | grep -qi "<html"; then echo "::error::$f is an HTML page, not the file: check the link sharing"; exit 1; fi
           done
           df -h /
 
