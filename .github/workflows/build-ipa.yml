@@ -88,6 +88,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           UPDATE_URL: ${{ secrets.UPDATE_URL }}
         run: |
+          mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
           python3 -m pip install --quiet --break-system-packages gdown || python3 -m pip install --quiet --user gdown
           export PATH="$PATH:$(python3 -m site --user-base)/bin"
           get() {
