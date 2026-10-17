@@ -416,77 +416,23 @@ print("patched", md, "(NX_TEX_DROP)")
 # Put NX_NO_PIPELINE_ARCHIVE=1 in env.txt to ignore it on the phone.
 tt = pathlib.Path("tt-a16.sh")
 tt.write_text(r'''#!/bin/sh
+# Build A16 (applegpu_g15p) GPU binaries for every recorded pipeline with
+# Apple's metal-tt, from a pipeline script written by a16/gen.py.
 CACHE="$1"
-SRC="$CACHE/pipelines.metalar"
 OUT="$CACHE/pipelines-a16.metalar"
-[ -f "$SRC" ] || { echo "[a16] no $SRC, nothing to translate"; exit 0; }
-STAMP="$(shasum "$SRC" | cut -d' ' -f1)"
-if [ -f "$OUT" ] && [ "$(cat "$OUT.stamp" 2>/dev/null)" = "$STAMP" ]; then echo "[a16] up to date"; exit 0; fi
-# newest installed Xcode for metal-tt: its GPU compiler is the closest to the iPhone's iOS
-DEV="$(python3 - <<'EOF'
-import glob, plistlib
-best = None
-for app in glob.glob("/Applications/Xcode*.app"):
-    try:
-        v = plistlib.load(open(app + "/Contents/Info.plist", "rb"))["CFBundleShortVersionString"]
-        k = tuple(int(x) for x in v.split(".") if x.isdigit())
-        if best is None or k > best[0]:
-            best = (k, app)
-    except Exception:
-        pass
-print(best[1] + "/Contents/Developer" if best else "")
-EOF
-)"
-[ -n "$DEV" ] && export DEVELOPER_DIR="$DEV"
-echo "[a16] using $(xcodebuild -version | head -1) ($DEV)"
-W="$CACHE/a16"
-rm -rf "$W"; mkdir -p "$W"
-xcrun metal-lipo -archs "$SRC" || true
-xcrun metal-source -flatbuffers=json "$SRC" -o "$W/src" || { unset DEVELOPER_DIR; rm -rf "$W/src"; xcrun metal-source -flatbuffers=json "$SRC" -o "$W/src"; } || { echo "[a16] metal-source failed"; exit 1; }
-find "$W/src" -type f | head -20
-J="$(find "$W/src" -type f -name '*.mtlp-json' | head -1)"
-[ -n "$J" ] || { echo "[a16] no pipeline script in the archive"; exit 1; }
-python3 - "$J" "$CACHE" "$W/src" <<'EOF' || exit 1
-import glob, hashlib, json, os, sys
-j, cache, src = sys.argv[1:]
-d = json.load(open(j))
-print("[a16] script keys:", list(d.keys()))
-by_hash = {}
-for f in glob.glob(cache + "/*.metallib") + glob.glob(src + "/**/*", recursive=True):
-    if os.path.isfile(f) and not f.endswith("mtlp-json"):
-        by_hash[hashlib.sha256(open(f, "rb").read()).hexdigest().upper()] = os.path.abspath(f)
-libs = d.get("libraries", {}).get("paths", [])
-ok = 0
-for lib in libs:
-    label, path = lib.get("label", ""), lib.get("path", "")
-    cand = [path, os.path.join(os.path.dirname(j), path), os.path.join(src, path), os.path.join(cache, os.path.basename(path))]
-    hit = next((os.path.abspath(c) for c in cand if c and os.path.isfile(c)), None) or by_hash.get(label.upper())
-    if not hit:
-        hit = next((f for f in glob.glob(src + "/**/*" + label + "*", recursive=True) if os.path.isfile(f)), None)
-    if hit:
-        lib["path"] = hit
-        ok += 1
-    else:
-        print("[a16] library not found:", label, path)
-print(f"[a16] {ok}/{len(libs)} libraries found")
-print("[a16] script sizes:", {k: (len(v) if isinstance(v, (list, dict)) else v) for k, v in d.items()})
-json.dump(d, open(j, "w"))
-EOF
-xcrun -sdk iphoneos metal-tt --help 2>&1 | head -80 || true
+LIST="$CACHE/pipelines.all.tsv"
+[ -f "$LIST" ] && [ -f "$CACHE/index.tsv" ] || { echo "[a16] no shader cache yet"; exit 0; }
+STAMP="$(cat "$LIST" "$CACHE/index.tsv" "$CACHE/guest.tsv" a16/gen.py | shasum | cut -d' ' -f1)"
+if [ -f "$OUT" ] && [ "$(cat "$OUT.stamp" 2>/dev/null)" = "$STAMP" ]; then echo "[a16] up to date"; ls -lh "$OUT"; exit 0; fi
+rm -f "$OUT" "$OUT.stamp"
+python3 a16/gen.py "$CACHE" "$LIST" a16/metal-enums.json "$CACHE/a16.mtlp-json" || exit 1
 date
-# at most 50 minutes, so the build can never run out of time because of this
-if ! perl -e 'alarm shift; exec @ARGV' 2400 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 "$J" -o "$W/all.metalar"; then
-  [ -n "${DEVELOPER_DIR:-}" ] || { echo "[a16] metal-tt failed or took too long"; exit 1; }
-  echo "[a16] newest Xcode failed, retrying with the default Xcode"
-  unset DEVELOPER_DIR
-  xcodebuild -version | head -1
-  perl -e 'alarm shift; exec @ARGV' 2400 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 "$J" -o "$W/all.metalar" || { echo "[a16] metal-tt failed or took too long"; exit 1; }
-fi
+perl -e 'alarm shift; exec @ARGV' 2400 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 -arch applegpu_g15p -compress-resources "$CACHE/a16.mtlp-json" -o "$OUT.tmp" || { rm -f "$OUT.tmp"; echo "[a16] metal-tt failed"; exit 1; }
 date
-xcrun metal-lipo -archs "$W/all.metalar"
-xcrun metal-lipo -thin applegpu_g15p -output "$OUT" "$W/all.metalar" || { echo "[a16] no applegpu_g15p slice"; exit 1; }
+rm -f "$CACHE/a16.mtlp-json"
+mv "$OUT.tmp" "$OUT"
 echo "$STAMP" > "$OUT.stamp"
-rm -rf "$W"
+xcrun metal-lipo -archs "$OUT"
 ls -lh "$OUT"
 echo "[a16] done"
 ''')
