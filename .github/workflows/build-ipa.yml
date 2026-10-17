@@ -13,6 +13,9 @@ name: Build Mush8 IPA
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-26
@@ -116,6 +119,7 @@ jobs:
 
       - name: Build IPA
         run: |
+          mkdir -p out; exec > >(tee -a out/build.txt) 2>&1
           export PATH="$HOME/.cargo/bin:$PATH"
           ./make-ios.sh --ipa
         # On failure, show the shader log
@@ -127,6 +131,7 @@ jobs:
         if: always()
         run: |
           cat work/a16.log || true
+          mkdir -p out; cp work/a16.log out/ 2>/dev/null || true
           # temp files of a failed A16 step must not end up in the shader cache
           rm -rf work/shader_cache_ios.noindex/a16
 
@@ -140,6 +145,12 @@ jobs:
       - name: Remove game files
         if: always()
         run: rm -f prod.keys base.nsp upd4-0-1.nsp
+
+      - name: Publish logs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/publish-logs.sh build
 
       - uses: actions/upload-artifact@v4
         with:
