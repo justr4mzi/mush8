@@ -1,0 +1,23 @@
+patched crates/nxhost/src/gfx/mod.rs
+patched crates/nxhost/src/services/am.rs
+patched crates/nxhost/src/nvn/draw/state.rs
+patched crates/nxhost/src/kernel.rs
+patched crates/nxhost/src/nvn/draw/shaders.rs
+patched crates/nxhost/src/nvn/draw/exec.rs
+patched crates/nxhost/src/nvn/draw/state.rs (device pipeline archive)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP)
+patched crates/nxhost/src/nvn/draw/mod.rs (NX_TEX_DROP)
+wrote tt-a16.sh
+patched make-ios.sh
+patched crates/nxhost/src/nvn/draw/copy.rs
+ crates/nxhost/src/gfx/mod.rs           |  82 +++++++++++++++++---
+ crates/nxhost/src/kernel.rs            |   3 +
+ crates/nxhost/src/nvn/draw/copy.rs     |   5 +-
+ crates/nxhost/src/nvn/draw/exec.rs     |   2 +-
+ crates/nxhost/src/nvn/draw/mod.rs      |   8 ++
+ crates/nxhost/src/nvn/draw/shaders.rs  |   3 +
+ crates/nxhost/src/nvn/draw/state.rs    | 132 +++++++++++++++++++++++++++------
+ crates/nxhost/src/nvn/draw/textures.rs |  36 ++++++++-
+ crates/nxhost/src/services/am.rs       |   8 ++
+ make-ios.sh                            |   4 +
+ 10 files changed, 243 insertions(+), 40 deletions(-)
