@@ -1,0 +1,75 @@
+# Check the Google Drive links in your secrets before a long build.
+# Runs on a free Linux runner in about 1 minute and downloads nothing big.
+#
+# Launch: Actions tab > "Check Drive links" > Run workflow
+
+name: Check Drive links
+
+on:
+  workflow_dispatch:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check the 3 links
+        env:
+          KEYS_URL: ${{ secrets.KEYS_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          UPDATE_URL: ${{ secrets.UPDATE_URL }}
+        shell: python3 {0}
+        run: |
+          import os, re, sys, urllib.request
+
+          def file_id(url):
+              if "/folders/" in url:
+                  return None, "this is a FOLDER link: share the file itself (link with /file/d/)"
+              m = re.search(r"/file/d/([\w-]+)", url) or re.search(r"[?&]id=([\w-]+)", url)
+              if not m:
+                  return None, "not a Google Drive file link"
+              return m.group(1), None
+
+          def probe(fid):
+              url = f"https://drive.usercontent.google.com/download?id={fid}&export=download&confirm=t"
+              req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+              r = urllib.request.urlopen(req, timeout=60)
+              head = r.read(4096)
+              info = {
+                  "type": r.headers.get("Content-Type", ""),
+                  "size": int(r.headers.get("Content-Length") or 0),
+                  "name": re.findall(r'filename="?([^";]+)', r.headers.get("Content-Disposition", "")),
+                  "head": head,
+              }
+              r.close()
+              return info
+
+          ok = True
+          for label, var, min_size in [("prod.keys", "KEYS_URL", 1), ("base game", "BASE_URL", 1 << 30), ("update", "UPDATE_URL", 1 << 20)]:
+              url = os.environ.get(var, "").strip()
+              print(f"\n== {label} ({var})")
+              if not url:
+                  print("  FAIL: secret is empty or missing"); ok = False; continue
+              fid, err = file_id(url)
+              if err:
+                  print(f"  FAIL: {err}"); ok = False; continue
+              try:
+                  i = probe(fid)
+              except Exception as e:
+                  print(f"  FAIL: download refused ({e}). Set sharing to 'Anyone with the link'."); ok = False; continue
+              if "text/html" in i["type"] or i["head"].lstrip().lower().startswith((b"<!doctype", b"<html")):
+                  print("  FAIL: Google returned a web page, not the file. Set sharing to 'Anyone with the link'.")
+                  ok = False; continue
+              name = i["name"][0] if i["name"] else "?"
+              size = i["size"]
+              print(f"  file: {name}, {size / 1e9:.2f} GB" if size else f"  file: {name}, size unknown")
+              if label == "prod.keys":
+                  lines = i["head"].decode("utf-8", "replace").splitlines()
+                  if not any(re.match(r"^\s*\w+\s*=\s*[0-9a-fA-F]{16,}", l) for l in lines):
+                      print("  FAIL: this does not look like a prod.keys file"); ok = False; continue
+              elif size and size < min_size:
+                  print(f"  FAIL: file is too small for the {label}"); ok = False; continue
+              print("  OK")
+
+          print("\nAll good, you can run 'Build Mush8 IPA'." if ok else "\nFix the FAIL lines, then run this check again.")
+          sys.exit(0 if ok else 1)
