@@ -343,8 +343,18 @@ y = y.replace(old, """fn tex_drop(key: &TexKey, height: u32, levels: u32, render
     static DROP: std::sync::LazyLock<u32> = std::sync::LazyLock::new(|| std::env::var("NX_TEX_DROP").ok().and_then(|v| v.trim().parse::<u32>().ok()).unwrap_or(0).min(3));
     static MIN: std::sync::LazyLock<u32> = std::sync::LazyLock::new(|| std::env::var("NX_TEX_DROP_MIN").ok().and_then(|v| v.trim().parse::<u32>().ok()).unwrap_or(128).max(64));
     let n = *DROP;
-    if n == 0 || render_target || depth_format || gfx::bc::soft(key.format).is_none() || matches!(key.target, 2 | 3 | 10) {
+    if n == 0 || render_target || depth_format || matches!(key.target, 2 | 3 | 10) {
         return 0;
+    }
+    // Lighting data must keep its exact size: cube maps (reflections, sky light) and
+    // BC6 HDR textures (light maps, environment) turn whole tracks black when shrunk.
+    // NX_TEX_DROP_ALL=1 shrinks them too.
+    static ALL: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TEX_DROP_ALL").is_some());
+    match gfx::bc::soft(key.format) {
+        None => return 0,
+        Some(gfx::bc::Kind::Bc6(_)) if !*ALL => return 0,
+        _ if matches!(key.target, 8 | 9) && !*ALL => return 0,
+        _ => {}
     }
     if levels <= n || (key.width >> n) < *MIN || (height >> n) < *MIN {
         return 0;
