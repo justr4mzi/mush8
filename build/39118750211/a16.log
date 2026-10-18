@@ -1,0 +1,6 @@
+[a16] 843 pipelines in the script, 0 skipped (shader not in the iOS cache), 217 libraries
+Sun Oct 18 10:33:05 UTC 2026
+Sun Oct 18 10:34:25 UTC 2026
+applegpu_g15p 
+-rw-r--r--  1 runner  staff   324M Oct 18 10:34 work/shader_cache_ios.noindex/pipelines-a16.metalar
+[a16] done
