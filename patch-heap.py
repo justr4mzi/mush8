@@ -2,7 +2,7 @@
 # Experimental patch for Mush8: when iOS refuses to give the GPU the whole
 # guest heap in one buffer, retry with smaller sizes instead of giving up,
 # and log the Metal / memory limits so we know exactly what iOS allows.
-import pathlib, sys
+import os, pathlib, sys
 
 p = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
 s = p.read_text()
@@ -190,7 +190,7 @@ fn open_archive(path: Option<&str>) -> Option<Retained<Archive>> {
 
 static ARCHIVES: LazyLock<Option<Shared<NSArray<Archive>>>> = LazyLock::new(|| {
     let mut paths: Vec<String> = Vec::new();
-    if std::env::var_os("NX_NO_PIPELINE_ARCHIVE").is_none() {
+    if std::env::var_os("NX_PIPELINE_ARCHIVE").is_some() {
         let dir = super::shaders::aot_dir();
         let mut files: Vec<String> = std::fs::read_dir(dir)
             .map(|r| {
@@ -237,7 +237,16 @@ fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {
                         Ok(d) => {
                             objc2::rc::autoreleasepool(|_| {
                                 d.0.setBinaryArchives(None);
-                                if add(&archive, &d.0) {
+                                // some pipelines (e.g. without a usable fragment stage) make the
+                                // whole archive fail to serialize: check each one alone first
+                                let ok = open_archive(None).is_some_and(|t| {
+                                    let t = Shared(t);
+                                    let probe = format!("{DEVICE_ARCHIVE}.probe");
+                                    let r = add(&t, &d.0) && t.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&probe))).is_ok();
+                                    let _ = std::fs::remove_file(&probe);
+                                    r
+                                });
+                                if ok && add(&archive, &d.0) {
                                     added += 1;
                                     pending += 1;
                                 }
@@ -445,7 +454,10 @@ assert m.count(old) == 1, "make-ios.sh build line not found"
 m = m.replace(old, 'sh ./tt-a16.sh "$CACHE" > work/a16.log 2>&1 || echo "A16 pipeline archive failed, building without it"\ntail -5 work/a16.log || true\n\n' + old)
 old = 'cp "$LIST" "$RES/shaders/pipelines.tsv"\n'
 assert m.count(old) == 1, "make-ios.sh copy line not found"
-m = m.replace(old, old + 'if [ -f "$CACHE/pipelines-a16.metalar" ]; then cp "$CACHE/pipelines-a16.metalar" "$RES/shaders/"; fi\n')
+# Not shipped for now: on iOS 27 the Metal driver crashes loading this archive
+# (built with the Xcode 26.6 toolchain). Set SHIP_A16=1 to ship it anyway.
+if os.environ.get("SHIP_A16"):
+    m = m.replace(old, old + 'if [ -f "$CACHE/pipelines-a16.metalar" ]; then cp "$CACHE/pipelines-a16.metalar" "$RES/shaders/"; fi\n')
 mk.write_text(m)
 print("patched", mk)
 
