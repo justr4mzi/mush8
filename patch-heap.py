@@ -558,3 +558,157 @@ assert z.count(old) == 1, "frame counter not found"
 z = z.replace(old, "        e.textures.frame += 1;\n        if e.textures.frame % 30 == 0 {\n            e.textures.trim();\n        }\n")
 md.write_text(z)
 print("patched", tx, md, "(low-memory texture trim)")
+
+# ---------------------------------------------------------------------------
+# Profiling ([prof] line next to [fps], when NX_FPS=1), frameskip
+# (NX_FRAMESKIP=N) and less frequent texture change checks (NX_HASH_EVERY=N).
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "pub mod bc;\n"
+assert g.count(old) == 1
+g = g.replace(old, old + '''pub mod prof {
+    //! Time counters, printed once per second by nvn::draw::count_fps (NX_FPS=1).
+    use std::sync::atomic::{AtomicU64, Ordering::Relaxed};
+    pub static SUBMIT_NS: AtomicU64 = AtomicU64::new(0);
+    pub static UPLOAD_NS: AtomicU64 = AtomicU64::new(0);
+    pub static PRESENT_WAIT_NS: AtomicU64 = AtomicU64::new(0);
+    pub static PIPE_NS: AtomicU64 = AtomicU64::new(0);
+    pub static DRAWS: AtomicU64 = AtomicU64::new(0);
+    pub static SKIPPED: AtomicU64 = AtomicU64::new(0);
+    pub struct Timer(&'static AtomicU64, std::time::Instant);
+    impl Timer {
+        pub fn new(a: &'static AtomicU64) -> Self {
+            Timer(a, std::time::Instant::now())
+        }
+    }
+    impl Drop for Timer {
+        fn drop(&mut self) {
+            self.0.fetch_add(self.1.elapsed().as_nanos() as u64, Relaxed);
+        }
+    }
+    pub fn take_ms(a: &AtomicU64) -> f64 {
+        a.swap(0, Relaxed) as f64 / 1e6
+    }
+}
+''')
+old = "    let Some(drawable) = layer.0.nextDrawable() else { return };\n"
+assert g.count(old) == 1
+g = g.replace(old, "    let drawable = { let _t = prof::Timer::new(&prof::PRESENT_WAIT_NS); layer.0.nextDrawable() };\n    let Some(drawable) = drawable else { return };\n")
+gm.write_text(g)
+
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = "pub fn submit(handles: &[u64]) {\n    gfx::wait_foreground();\n"
+assert z.count(old) == 1
+z = z.replace(old, old + "    let _prof = gfx::prof::Timer::new(&gfx::prof::SUBMIT_NS);\n")
+old = "        e.last_submit = Some(cb);\n"
+assert z.count(old) == 1
+z = z.replace(old, '''        if prof_on() {
+            let mut v = GPU_CBS.lock().unwrap();
+            if v.len() < 2000 {
+                v.push(cb.clone());
+            }
+        }
+''' + old)
+old = '''                Cmd::Draw(d) => {
+                    let _ = self.draw(d);
+                }'''
+assert z.count(old) == 1
+z = z.replace(old, '''                Cmd::Draw(d) => {
+                    if skip_frame() {
+                        continue;
+                    }
+                    gfx::prof::DRAWS.fetch_add(1, Relaxed);
+                    let _ = self.draw(d);
+                }''')
+old = "fn count_fps() {\n"
+assert z.count(old) == 1
+z = z.replace(old, '''fn prof_on() -> bool {
+    static ON: LazyLock<bool> = LazyLock::new(|| std::env::var_os("NX_FPS").is_some());
+    *ON
+}
+
+static GPU_CBS: Mutex<Vec<Shared<gfx::CommandBuffer>>> = Mutex::new(Vec::new());
+
+/// GPU time (ms) of the finished frame command buffers since the last call.
+fn gpu_ms() -> f64 {
+    let mut t = 0.0;
+    GPU_CBS.lock().unwrap().retain(|cb| {
+        if cb.0.status() == MTLCommandBufferStatus::Completed {
+            t += (cb.0.GPUEndTime() - cb.0.GPUStartTime()).max(0.0);
+            false
+        } else {
+            cb.0.status() != MTLCommandBufferStatus::Error
+        }
+    });
+    t * 1000.0
+}
+
+static FRAME: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+/// NX_FRAMESKIP=N: draw and show 1 frame out of N+1; the game itself still runs every frame.
+fn skip_frame() -> bool {
+    static N: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0).min(4));
+    *N > 0 && FRAME.load(Relaxed) % (*N + 1) != 0
+}
+
+''' + old)
+old = '''        eprintln!("[fps] {:.1} fps, worst frame {worst:.1} ms", *n as f32 / now.duration_since(*start).as_secs_f32());
+'''
+assert z.count(old) == 1
+z = z.replace(old, old + '''        let secs = now.duration_since(*start).as_secs_f64() * 1000.0;
+        let frames = (*n).max(1) as f64;
+        let (submit, upload, wait, pipe) = (
+            gfx::prof::take_ms(&gfx::prof::SUBMIT_NS),
+            gfx::prof::take_ms(&gfx::prof::UPLOAD_NS),
+            gfx::prof::take_ms(&gfx::prof::PRESENT_WAIT_NS),
+            gfx::prof::take_ms(&gfx::prof::PIPE_NS),
+        );
+        let gpu = gpu_ms();
+        let draws = gfx::prof::DRAWS.swap(0, Relaxed);
+        let skipped = gfx::prof::SKIPPED.swap(0, Relaxed);
+        eprintln!(
+            "[prof] per frame: game/other {:.1} ms, gfx cpu {:.1} ms (texture uploads {:.1}), waiting for display {:.1} ms, gpu {:.1} ms, {} draws | pipeline builds {:.0} ms/s, frames not shown {}",
+            ((secs - submit - wait) / frames).max(0.0),
+            submit / frames,
+            upload / frames,
+            wait / frames,
+            gpu / frames,
+            draws / (*n).max(1) as u64,
+            pipe * 1000.0 / secs,
+            skipped
+        );
+''')
+old = "pub fn present(texture: u64) {\n    count_fps();\n"
+assert z.count(old) == 1
+z = z.replace(old, '''pub fn present(texture: u64) {
+    count_fps();
+    let skip = skip_frame();
+    FRAME.fetch_add(1, Relaxed);
+    if skip {
+        gfx::prof::SKIPPED.fetch_add(1, Relaxed);
+        return;
+    }
+''')
+md.write_text(z)
+
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "fn upload(b: &TexBuilder, key: &TexKey, tex: &Texture, levels: u32) {\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "    let _prof = gfx::prof::Timer::new(&gfx::prof::UPLOAD_NS);\n")
+# NX_HASH_EVERY=N: look for game-side texture changes every N frames instead of every frame
+old = "                    if checked != frame {\n"
+assert y.count(old) == 1
+y = y.replace(old, '''                    static EVERY: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_HASH_EVERY").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(1).clamp(1, 30));
+                    if checked != frame && frame >= checked + *EVERY {
+''')
+tx.write_text(y)
+
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "    let r = build_pipeline_inner(vs, fs, t, color_state, channel_mask, blend, name);\n"
+assert u.count(old) == 1
+u = u.replace(old, "    let r = {\n        let _prof = gfx::prof::Timer::new(&gfx::prof::PIPE_NS);\n        build_pipeline_inner(vs, fs, t, color_state, channel_mask, blend, name)\n    };\n")
+st.write_text(u)
+print("patched profiling, NX_FRAMESKIP, NX_HASH_EVERY")
