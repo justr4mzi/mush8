@@ -731,8 +731,17 @@ fn start_watchdog() {
     ONCE.call_once(|| {
         let _ = std::thread::Builder::new().name("watchdog".into()).spawn(|| {
             let (mut last, mut same, mut dumped) = (FRAME.load(Relaxed), 0u32, false);
+            // NX_DUMP_EVERY=N: also dump every thread's position every N seconds,
+            // for freezes where frames keep coming but the game ignores input.
+            let every: u64 = std::env::var("NX_DUMP_EVERY").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(0);
+            let mut secs = 0u64;
             loop {
                 std::thread::sleep(std::time::Duration::from_secs(1));
+                secs += 1;
+                if every > 0 && secs % every == 0 {
+                    eprintln!("[hang] periodic dump at {secs} s (frame {}): thread positions", FRAME.load(Relaxed));
+                    dump_threads();
+                }
                 let f = FRAME.load(Relaxed);
                 if f != last {
                     (last, same, dumped) = (f, 0, false);
