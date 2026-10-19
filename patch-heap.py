@@ -646,6 +646,28 @@ fn gpu_ms() -> f64 {
 
 static FRAME: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
+static FRAMESKIP_ON: LazyLock<bool> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0) > 0);
+
+/// With frameskip, a skipped frame never waits for the screen, so the game
+/// would run faster than 60 updates per second. Keep a 60 Hz cadence: a
+/// skipped frame sleeps until its slot; shown frames are paced by the display.
+fn pace_frame(skip: bool) {
+    const IV: std::time::Duration = std::time::Duration::from_micros(16_667);
+    static NEXT: Mutex<Option<std::time::Instant>> = Mutex::new(None);
+    let now = std::time::Instant::now();
+    let deadline = {
+        let n = NEXT.lock().unwrap();
+        match *n {
+            Some(d) if d + IV * 3 > now => d,
+            _ => now,
+        }
+    };
+    if skip && deadline > now {
+        crate::kernel::blocking(|| std::thread::sleep(deadline - now));
+    }
+    *NEXT.lock().unwrap() = Some(deadline.max(now) + IV);
+}
+
 /// NX_FRAMESKIP=N: draw and show 1 frame out of N+1; the game itself still runs every frame.
 fn skip_frame() -> bool {
     static N: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0).min(4));
@@ -685,6 +707,9 @@ z = z.replace(old, '''pub fn present(texture: u64) {
     count_fps();
     let skip = skip_frame();
     FRAME.fetch_add(1, Relaxed);
+    if *FRAMESKIP_ON {
+        pace_frame(skip);
+    }
     if skip {
         gfx::prof::SKIPPED.fetch_add(1, Relaxed);
         return;
