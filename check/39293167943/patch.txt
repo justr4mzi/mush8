@@ -1,0 +1,31 @@
+patched crates/nxhost/src/gfx/mod.rs
+patched crates/nxhost/src/services/am.rs
+patched crates/nxhost/src/nvn/draw/state.rs
+patched crates/nxhost/src/kernel.rs
+patched crates/nxhost/src/nvn/draw/shaders.rs
+patched crates/nxhost/src/nvn/draw/exec.rs
+patched crates/nxhost/src/nvn/draw/state.rs (device pipeline archive)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP)
+patched crates/nxhost/src/nvn/draw/mod.rs (NX_TEX_DROP)
+wrote tt-a16.sh
+patched make-ios.sh
+patched crates/nxhost/src/nvn/draw/copy.rs
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/mod.rs (low-memory texture trim)
+patched profiling, NX_FRAMESKIP, NX_HASH_EVERY
+patched crates/nxhost/src/nvn/draw/mod.rs (freeze watchdog)
+patched crates/nxhost/src/services/mii.rs (GetIndex not found)
+patched crates/nxhost/src/kernel.rs (SignalToAddress waiting-count semantics)
+patched crates/nxhost/src/loader.rs (NX_TRACE_QUIET, NX_TRACE_DELAY_US)
+ crates/nxhost/src/gfx/mod.rs           | 109 ++++++++++++++--
+ crates/nxhost/src/kernel.rs            |  22 +++-
+ crates/nxhost/src/loader.rs            |   8 ++
+ crates/nxhost/src/nvn/draw/copy.rs     |   5 +-
+ crates/nxhost/src/nvn/draw/exec.rs     |   2 +-
+ crates/nxhost/src/nvn/draw/mod.rs      | 231 +++++++++++++++++++++++++++++++++
+ crates/nxhost/src/nvn/draw/shaders.rs  |   3 +
+ crates/nxhost/src/nvn/draw/state.rs    | 146 +++++++++++++++++----
+ crates/nxhost/src/nvn/draw/textures.rs |  74 ++++++++++-
+ crates/nxhost/src/services/am.rs       |   8 ++
+ crates/nxhost/src/services/mii.rs      |   5 +-
+ make-ios.sh                            |   3 +
+ 12 files changed, 565 insertions(+), 51 deletions(-)
