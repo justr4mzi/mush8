@@ -925,3 +925,28 @@ new = """            let new = if waiting == 0 {
 z = z.replace(old, new)
 kp.write_text(z)
 print("patched", kp, "(SignalToAddress waiting-count semantics)")
+
+# NX_TRACE_SYMS helpers for timing experiments: NX_TRACE_QUIET=1 hooks the
+# functions without printing anything, NX_TRACE_DELAY_US=N waits N microseconds
+# after each hooked call (the printing used to slow these calls down, and that
+# alone made Solo > 1 player stop freezing).
+lp = pathlib.Path("crates/nxhost/src/loader.rs")
+z = lp.read_text()
+old = '''    let r = f(a.0[0], a.0[1], a.0[2], a.0[3], a.0[4], a.0[5], a.0[6], a.0[7]);
+    eprintln!("[trace] {name}({:#x}, {:#x}, {:#x}, {:#x}) -> {r:#x}", a.0[0], a.0[1], a.0[2], a.0[3]);
+'''
+assert z.count(old) == 1
+new = '''    let r = f(a.0[0], a.0[1], a.0[2], a.0[3], a.0[4], a.0[5], a.0[6], a.0[7]);
+    static QUIET: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TRACE_QUIET").is_some());
+    static DELAY: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_TRACE_DELAY_US").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(0));
+    if *DELAY > 0 {
+        std::thread::sleep(std::time::Duration::from_micros(*DELAY));
+    }
+    if *QUIET {
+        return r;
+    }
+    eprintln!("[trace] {name}({:#x}, {:#x}, {:#x}, {:#x}) -> {r:#x}", a.0[0], a.0[1], a.0[2], a.0[3]);
+'''
+z = z.replace(old, new)
+lp.write_text(z)
+print("patched", lp, "(NX_TRACE_QUIET, NX_TRACE_DELAY_US)")
