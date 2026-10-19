@@ -1,0 +1,6 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+warning: nxhost@0.1.0: NX_MODULES_DIR is not set: the iOS build has no game code
+    Finished `release` profile [optimized + debuginfo] target(s) in 35.04s
