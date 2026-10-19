@@ -712,3 +712,108 @@ assert u.count(old) == 1
 u = u.replace(old, "    let r = {\n        let _prof = gfx::prof::Timer::new(&gfx::prof::PIPE_NS);\n        build_pipeline_inner(vs, fs, t, color_state, channel_mask, blend, name)\n    };\n")
 st.write_text(u)
 print("patched profiling, NX_FRAMESKIP, NX_HASH_EVERY")
+
+# Watchdog: if no frame is shown for 6 s (a freeze), write every thread's
+# position (symbolized, with a short backtrace) to the log, once per freeze.
+# NX_NO_WATCHDOG=1 turns it off.
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = "pub fn present(texture: u64) {\n    count_fps();\n"
+assert z.count(old) == 1
+z = z.replace(old, "pub fn present(texture: u64) {\n    start_watchdog();\n    count_fps();\n")
+z += r'''
+
+fn start_watchdog() {
+    static ONCE: std::sync::Once = std::sync::Once::new();
+    if std::env::var_os("NX_NO_WATCHDOG").is_some() {
+        return;
+    }
+    ONCE.call_once(|| {
+        let _ = std::thread::Builder::new().name("watchdog".into()).spawn(|| {
+            let (mut last, mut same, mut dumped) = (FRAME.load(Relaxed), 0u32, false);
+            loop {
+                std::thread::sleep(std::time::Duration::from_secs(1));
+                let f = FRAME.load(Relaxed);
+                if f != last {
+                    (last, same, dumped) = (f, 0, false);
+                    continue;
+                }
+                same += 1;
+                if same >= 6 && !dumped {
+                    dumped = true;
+                    eprintln!("[hang] no frame for {same} s (frame {f}): thread positions");
+                    dump_threads();
+                }
+            }
+        });
+    });
+}
+
+fn dump_threads() {
+    unsafe extern "C" {
+        fn task_threads(task: u32, list: *mut *mut u32, count: *mut u32) -> i32;
+        fn thread_get_state(t: u32, flavor: i32, state: *mut u32, count: *mut u32) -> i32;
+        fn thread_suspend(t: u32) -> i32;
+        fn thread_resume(t: u32) -> i32;
+        fn mach_thread_self() -> u32;
+        fn vm_read_overwrite(task: u32, addr: u64, size: u64, data: u64, out: *mut u64) -> i32;
+        fn pthread_from_mach_thread_np(t: u32) -> libc::pthread_t;
+        fn pthread_getname_np(t: libc::pthread_t, name: *mut libc::c_char, len: usize) -> i32;
+        static mach_task_self_: u32;
+    }
+    const ARM_THREAD_STATE64: i32 = 6;
+    unsafe {
+        let task = mach_task_self_;
+        let me = mach_thread_self();
+        let (mut list, mut n) = (std::ptr::null_mut(), 0u32);
+        if task_threads(task, &mut list, &mut n) != 0 {
+            eprintln!("[hang] task_threads failed");
+            return;
+        }
+        // grab every state first (no allocation while a thread is suspended)
+        let mut states: Vec<(u32, [u64; 34])> = Vec::with_capacity(n as usize);
+        for i in 0..n as usize {
+            let t = *list.add(i);
+            if t == me {
+                continue;
+            }
+            let mut st = [0u64; 34];
+            let mut count = 68u32;
+            thread_suspend(t);
+            let r = thread_get_state(t, ARM_THREAD_STATE64, st.as_mut_ptr() as *mut u32, &mut count);
+            thread_resume(t);
+            if r == 0 {
+                states.push((t, st));
+            }
+        }
+        let read = |addr: u64| -> Option<u64> {
+            let mut v = 0u64;
+            let mut got = 0u64;
+            (addr != 0 && addr % 8 == 0 && vm_read_overwrite(task, addr, 8, &mut v as *mut u64 as u64, &mut got) == 0 && got == 8).then_some(v)
+        };
+        for (t, st) in states {
+            // x0..x28, fp (29), lr (30), sp (31), pc (32)
+            let (fp, lr, pc) = (st[29], st[30], st[32]);
+            let mut name = [0 as libc::c_char; 64];
+            pthread_getname_np(pthread_from_mach_thread_np(t), name.as_mut_ptr(), name.len());
+            let name = std::ffi::CStr::from_ptr(name.as_ptr()).to_string_lossy().into_owned();
+            let mut line = format!("[hang] thread {t:#x} '{name}': pc {} | lr {}", crate::diag::symbolize(pc), crate::diag::symbolize(lr));
+            let mut f = fp;
+            for _ in 0..10 {
+                let (Some(next), Some(ret)) = (read(f), read(f.wrapping_add(8))) else { break };
+                if ret == 0 {
+                    break;
+                }
+                line.push_str(&format!(" <- {}", crate::diag::symbolize(ret)));
+                if next <= f {
+                    break;
+                }
+                f = next;
+            }
+            eprintln!("{line}");
+        }
+    }
+}
+'''
+md.write_text(z)
+print("patched", md, "(freeze watchdog)")
