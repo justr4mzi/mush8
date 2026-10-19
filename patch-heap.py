@@ -758,6 +758,30 @@ fn start_watchdog() {
     });
 }
 
+// Guest addresses via diag::symbolize; anything else (Mush8 itself, iOS
+// libraries) via dladdr: "image+offset symbol+offset".
+fn host_sym(addr: u64) -> String {
+    let s = crate::diag::symbolize(addr);
+    if !s.starts_with("0x") || addr == 0 {
+        return s;
+    }
+    unsafe {
+        let mut info: libc::Dl_info = std::mem::zeroed();
+        if libc::dladdr(addr as *const libc::c_void, &mut info) == 0 || info.dli_fname.is_null() {
+            return s;
+        }
+        let file = std::ffi::CStr::from_ptr(info.dli_fname).to_string_lossy();
+        let file = file.rsplit('/').next().unwrap_or("?").to_string();
+        let mut out = format!("{file}+{:#x}", addr - info.dli_fbase as u64);
+        if !info.dli_sname.is_null() {
+            let n = std::ffi::CStr::from_ptr(info.dli_sname).to_string_lossy();
+            let n: String = n.chars().take(120).collect();
+            out.push_str(&format!(" {n}+{:#x}", addr - info.dli_saddr as u64));
+        }
+        out
+    }
+}
+
 fn dump_threads() {
     unsafe extern "C" {
         fn task_threads(task: u32, list: *mut *mut u32, count: *mut u32) -> i32;
@@ -806,14 +830,14 @@ fn dump_threads() {
             let mut name = [0 as libc::c_char; 64];
             pthread_getname_np(pthread_from_mach_thread_np(t), name.as_mut_ptr(), name.len());
             let name = std::ffi::CStr::from_ptr(name.as_ptr()).to_string_lossy().into_owned();
-            let mut line = format!("[hang] thread {t:#x} '{name}': pc {} | lr {}", crate::diag::symbolize(pc), crate::diag::symbolize(lr));
+            let mut line = format!("[hang] thread {t:#x} '{name}': pc {} | lr {}", host_sym(pc), host_sym(lr));
             let mut f = fp;
-            for _ in 0..10 {
+            for _ in 0..16 {
                 let (Some(next), Some(ret)) = (read(f), read(f.wrapping_add(8))) else { break };
                 if ret == 0 {
                     break;
                 }
-                line.push_str(&format!(" <- {}", crate::diag::symbolize(ret)));
+                line.push_str(&format!(" <- {}", host_sym(ret)));
                 if next <= f {
                     break;
                 }
