@@ -850,3 +850,15 @@ fn dump_threads() {
 '''
 md.write_text(z)
 print("patched", md, "(freeze watchdog)")
+
+# Mii GetIndex (cmd 21): a real Switch answers "not found" (module 126, desc 1)
+# for a Mii that is not in the database, e.g. the default Mii the game saved
+# for player 1. Answering success with index -1 froze the game on
+# Solo > 1 player once a Mii had been saved.
+mi = pathlib.Path("crates/nxhost/src/services/mii.rs")
+z = mi.read_text()
+old = "            21 => rsp.push_u32(u32::MAX),\n"
+assert z.count(old) == 1
+z = z.replace(old, "            21 => {\n                eprintln!(\"[mii] GetIndex: Mii not in the database, answering not found\");\n                return 0x27E;\n            }\n")
+mi.write_text(z)
+print("patched", mi, "(GetIndex not found)")
