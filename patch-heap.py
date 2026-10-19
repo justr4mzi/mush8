@@ -862,3 +862,41 @@ assert z.count(old) == 1
 z = z.replace(old, "            21 => {\n                eprintln!(\"[mii] GetIndex: Mii not in the database, answering not found\");\n                return 0x27E;\n            }\n")
 mi.write_text(z)
 print("patched", mi, "(GetIndex not found)")
+
+# svcSignalToAddress, SignalAndModifyByWaitingCountIfEqual (kind 2): compute the
+# new value exactly like the real kernel (Atmosphere/yuzu KAddressArbiter):
+# - count <= 0: value - 2 if anyone waits, else value + 1
+# - count > 0 : look at the waiters AFTER the first one (up to count+1 of them):
+#     none -> value + 1, <= count -> value - 1, more -> value
+# Mush8 counted all waiters (off by one) and used value - 1 for count <= 0, so
+# nn::os light events/semaphores could believe nobody (or somebody) was still
+# waiting: a timing-dependent lost wakeup (menus freezing on Solo > 1 player).
+kp = pathlib.Path("crates/nxhost/src/kernel.rs")
+z = kp.read_text()
+old = """            let new = if count <= 0 {
+                if waiting > 0 { value - 1 } else { value + 1 }
+            } else if waiting == 0 {
+                value + 1
+            } else if waiting <= count {
+                value - 1
+            } else {
+                value
+            };"""
+assert z.count(old) == 1
+new = """            let new = if waiting == 0 {
+                value.wrapping_add(1)
+            } else if count <= 0 {
+                value.wrapping_sub(2)
+            } else {
+                let others = (waiting - 1).min(count + 1);
+                if others == 0 {
+                    value.wrapping_add(1)
+                } else if others <= count {
+                    value.wrapping_sub(1)
+                } else {
+                    value
+                }
+            };"""
+z = z.replace(old, new)
+kp.write_text(z)
+print("patched", kp, "(SignalToAddress waiting-count semantics)")
