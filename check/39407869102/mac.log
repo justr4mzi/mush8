@@ -1,0 +1,24 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+error: expected identifier, found reserved keyword `gen`
+   --> crates/nxhost/src/nvn/draw/textures.rs:546:9
+    |
+546 |     let gen = {
+    |         ^^^ expected identifier, found reserved keyword
+    |
+help: escape `gen` to use it as an identifier
+    |
+546 |     let r#gen = {
+    |         ++
+
+error: expected expression, found reserved keyword `gen`
+   --> crates/nxhost/src/nvn/draw/textures.rs:554:51
+    |
+554 |         if GENS.lock().unwrap().get(&id) != Some(&gen) {
+    |                                                   ^^^ expected expression
+
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+error: could not compile `nxhost` (bin "nxhost") due to 2 previous errors
