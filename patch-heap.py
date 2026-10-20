@@ -116,12 +116,12 @@ assert "APPLET_MII_EDIT =>" in t
 a.write_text(t)
 print("patched", a)
 
-# Prewarm: build the recorded pipelines with 4 threads instead of 2 at startup.
+# Prewarm: thread count left at 2.
 st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
 u = st.read_text()
 old = "                for _ in 0..2 {\n                    s.spawn(|| {\n                        unsafe { libc::pthread_set_qos_class_self_np"
 assert u.count(old) == 1, "prewarm loop not found"
-u = u.replace(old, old.replace("0..2", "0..4"))
+# (kept at 2 threads: with 4 the game waited behind them, see below)
 st.write_text(u)
 print("patched", st)
 
@@ -312,7 +312,7 @@ u = u.replace(old, """                                let dev = &gfx::gpu().devi
                                     }
                                     PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));""")
 
-old = "            let (next, built) = (AtomicUsize::new(0), AtomicUsize::new(0));\n            std::thread::scope(|s| {\n                for _ in 0..4 {"
+old = "            let (next, built) = (AtomicUsize::new(0), AtomicUsize::new(0));\n            std::thread::scope(|s| {\n                for _ in 0..2 {"
 assert u.count(old) == 1, "prewarm counters not found"
 u = u.replace(old, "            static PREWARM_HITS: AtomicUsize = AtomicUsize::new(0);\n" + old)
 old = 'eprintln!("[gfx] prewarmed {}/{} recorded pipelines in {:.1} s", built.into_inner(), list.len(), t0.elapsed().as_secs_f32());'
@@ -1137,3 +1137,42 @@ assert y.count(old) == 1
 y = y.replace(old, "                Some(k) => decode_and_stage(tex, k, src.to_vec(), pieces, 0, (key.width, key.height)),\n")
 tx.write_text(y)
 print("patched", tx, "(NX_TEX_DROP keeps full size)")
+
+
+# The game first: prewarm (rebuilding every recorded pipeline at startup, 1-2
+# minutes) used to compete with the pipelines the game needs right now; the
+# menus could then wait up to a minute (the Solo > 1 player "freeze"). Prewarm
+# now pauses while any pipeline the game asked for is being compiled.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = """        self.pending.insert(key);
+        super::shaders::spawn_job(Box::new(move || {
+            let p = build_pipeline(&jvs, &jfs, &jt, cs, cm, &blend, &name);
+            DONE.lock().unwrap().push((key, p));
+        }));"""
+assert u.count(old) == 1
+u = u.replace(old, """        self.pending.insert(key);
+        DEMAND.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+        super::shaders::spawn_job(Box::new(move || {
+            let p = build_pipeline(&jvs, &jfs, &jt, cs, cm, &blend, &name);
+            DONE.lock().unwrap().push((key, p));
+            DEMAND.fetch_sub(1, std::sync::atomic::Ordering::SeqCst);
+        }));""")
+old = """            let p = crate::kernel::blocking(|| build_pipeline(&jvs, &jfs, &jt, cs, cm, &blend, &name));"""
+assert u.count(old) == 1
+u = u.replace(old, """            DEMAND.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            let p = crate::kernel::blocking(|| build_pipeline(&jvs, &jfs, &jt, cs, cm, &blend, &name));
+            DEMAND.fetch_sub(1, std::sync::atomic::Ordering::SeqCst);""")
+old = """                        while let Some(r) = list.get(next.fetch_add(1, Relaxed)) {
+"""
+assert u.count(old) == 1
+u = u.replace(old, """                        while let Some(r) = list.get(next.fetch_add(1, Relaxed)) {
+                            while DEMAND.load(std::sync::atomic::Ordering::SeqCst) > 0 {
+                                std::thread::sleep(std::time::Duration::from_millis(5));
+                            }
+""")
+old = "pub fn prewarm() {\n"
+assert u.count(old) == 1
+u = u.replace(old, "/// Pipelines the game is waiting for right now (prewarm pauses meanwhile).\nstatic DEMAND: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);\n\n" + old)
+st.write_text(u)
+print("patched", st, "(prewarm yields to the game)")
