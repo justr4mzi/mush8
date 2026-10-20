@@ -1921,3 +1921,18 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, io, sw, "(Show FPS / Music from other apps)")
+
+# ---------------------------------------------------------------------------
+# iOS link fix: "compact unwind compressed function offset doesn't fit in 24
+# bits". The embedded game code (64 MB above the app's code) was marked as
+# instructions, so the linker put it in the unwind table next to the app's
+# last functions; depending on how many functions the app has, both could
+# land in one unwind page, too far apart. The segments stay executable
+# (-segprot rx); only the section attribute goes.
+br = pathlib.Path("crates/nxhost/build.rs")
+r = br.read_text()
+old = 'let flags = if prot == "rx" { "regular,pure_instructions" } else { "regular" };'
+assert r.count(old) == 1
+r = r.replace(old, 'let flags = "regular";')
+br.write_text(r)
+print("patched", br, "(no unwind entries for the embedded game code)")
