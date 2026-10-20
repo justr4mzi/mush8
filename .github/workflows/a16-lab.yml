@@ -28,6 +28,9 @@ jobs:
           mkdir -p out; exec > >(tee -a out/tools.txt) 2>&1
           xcodebuild -version
           ls -d /Applications/Xcode*.app
+          for x in /Applications/Xcode*.app; do
+            echo "== $x: $(DEVELOPER_DIR=$x/Contents/Developer xcodebuild -version 2>/dev/null | tr '\n' ' ') iphoneos SDK $(DEVELOPER_DIR=$x/Contents/Developer xcrun -sdk iphoneos --show-sdk-version 2>/dev/null)"
+          done
           xcrun -sdk iphoneos -f metal-tt || true
           xcrun -sdk iphoneos metal-tt --help 2>&1 | head -60 || true
           TC="$(dirname "$(dirname "$(xcrun -sdk iphoneos -f metal-tt)")")"
@@ -65,13 +68,24 @@ jobs:
           head -c 3000 lab.mtlp-json; echo
           head -c 20000 lab.mtlp-json > out/lab-head.mtlp-json
           date
-          perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 -arch applegpu_g15p -compress-resources lab.mtlp-json -o lab.metalar
+          # newest Xcode (highest iOS SDK) on the runner
+          X="$(for x in /Applications/Xcode*.app; do echo "$(DEVELOPER_DIR=$x/Contents/Developer xcrun -sdk iphoneos --show-sdk-version 2>/dev/null) $x"; done | sort -V | tail -1 | cut -d' ' -f2-)"
+          export DEVELOPER_DIR="$X/Contents/Developer"
+          SDK="$(xcrun -sdk iphoneos --show-sdk-version)"
+          echo "using $X (iOS SDK $SDK)"
+          for arch in applegpu_g15p applegpu_g14p; do
+            for tgt in "ios$SDK" ios27.0 ios26.0; do
+              echo "--- $arch target $tgt"
+              if perl -e 'alarm shift; exec @ARGV' 4800 xcrun -sdk iphoneos metal-tt -target "air64-apple-$tgt" -arch $arch -compress-resources lab.mtlp-json -o "lab-$arch.metalar"; then
+                xcrun metal-lipo -archs "lab-$arch.metalar"; ls -lh "lab-$arch.metalar"; break
+              fi
+            done
+          done
           date
-          xcrun metal-lipo -archs lab.metalar
-          ls -lh lab.metalar
+          cp lab-applegpu_g15p.metalar lab.metalar 2>/dev/null || true
           rm -rf src; xcrun metal-source -flatbuffers=json lab.metalar -o src && du -sh src/*
           xcrun metal-strip -help 2>&1 | head -20 || true
-          rm -rf lab.metalar src
+          rm -rf lab*.metalar src
 
       - name: Publish logs
         if: always()
