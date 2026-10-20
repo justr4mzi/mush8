@@ -162,7 +162,15 @@ jobs:
             *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.archive ;;
             *) curl -fsSL "$SAVE_URL" -o save.archive ;;
           esac
-          mkdir -p save-tmp && 7zz x -y -osave-tmp save.archive > /dev/null && rm -f save.archive  # zip, rar or 7z
+          mkdir -p save-tmp
+          # 7zz from Homebrew cannot unpack every RAR: fall back to unar
+          if ! 7zz x -y -osave-tmp save.archive > /dev/null; then
+            echo "7zz could not unpack the save, trying unar"
+            rm -rf save-tmp; mkdir -p save-tmp
+            brew install unar > /dev/null && unar -q -f -o save-tmp save.archive || { echo "::error::could not unpack the save archive"; exit 1; }
+          fi
+          rm -f save.archive
+          if [ -z "$(find save-tmp -type f -size +0)" ]; then echo "::error::the unpacked save is empty"; exit 1; fi
           # use the folder that holds the save files (zip may wrap them in a folder)
           d=save-tmp; while [ "$(ls -A "$d" | wc -l)" -eq 1 ] && [ -d "$d/$(ls -A "$d")" ]; do d="$d/$(ls -A "$d")"; done
           mv "$d" unlocked-save; rm -rf save-tmp
