@@ -41,6 +41,14 @@ jobs:
           done
           exit $missing
 
+      - name: Use the newest Xcode (highest iOS SDK)
+        run: |
+          X="$(for x in /Applications/Xcode*.app; do echo "$(DEVELOPER_DIR=$x/Contents/Developer xcrun -sdk iphoneos --show-sdk-version 2>/dev/null) $x"; done | sort -V | tail -1 | cut -d' ' -f2-)"
+          echo "selecting $X"
+          sudo xcode-select -s "$X/Contents/Developer"
+          xcodebuild -version
+          xcrun -sdk iphoneos --show-sdk-version
+
       - name: Check machine (arm64, Xcode, Metal, disk)
         run: |
           uname -m
