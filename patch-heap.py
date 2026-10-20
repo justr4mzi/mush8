@@ -2758,3 +2758,23 @@ assert w.count(old) == 1
 w = w.replace(old, '                        Text("Ultra low (least memory)").tag("ultralow")\n' + old)
 sw.write_text(w)
 print("patched", st, mn, sw, "(prewarm keeps only fresh pipelines, Ultra low textures)")
+
+# ---------------------------------------------------------------------------
+# Precompiled A15/A16 shader files removed (700 MB in the app for little gain;
+# the device archive in work/devarch does the job): no metal-tt step, nothing
+# shipped, no launcher switch.
+mk = pathlib.Path("make-ios.sh")
+k = mk.read_text()
+k = k.replace('for f in "$CACHE"/pipelines-applegpu_*.metalar; do [ -f "$f" ] && cp "$f" "$RES/shaders/" && echo "shipping $(basename "$f")"; done\n', '')
+k = k.replace('sh ./tt-a16.sh "$CACHE" > work/a16.log 2>&1 || echo "A16 pipeline archive failed, building without it"\ntail -5 work/a16.log || true\n\n', '')
+assert "tt-a16" not in k and "pipelines-applegpu" not in k
+mk.write_text(k)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+old = '\n                    Toggle("Precompiled shaders (experimental)", isOn: $s.precompiled)'
+assert w.count(old) == 1
+w = w.replace(old, '')
+w = w.replace(" Precompiled shaders: ready-made GPU code for the A15/A16 packed in the app; if the game crashes at start, turn it off.", "")
+w = w.replace("Background texture loading (experimental): fewer small hitches, new objects are grey for a moment.", "Background texture loading (experimental): fewer small hitches, but can run out of memory while a race loads.")
+sw.write_text(w)
+print("patched", mk, sw, "(precompiled shader files removed)")
