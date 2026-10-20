@@ -340,13 +340,15 @@ old = """        let levels = key.levels.min(max_levels).max(1);
 assert y.count(old) == 1, "texture create not found"
 y = y.replace(old, """        let levels = key.levels.min(max_levels).max(1);
         let skip = tex_drop(&key, height, levels, render_target, depth_format);
-        let levels = levels - skip;
+        if skip > 0 {
+            DROPS.lock().unwrap().insert(key, skip);
+        }
         let d = MTLTextureDescriptor::new();
         unsafe {
             d.setTextureType(ty);
             d.setPixelFormat(format);
-            d.setWidth((key.width >> skip).max(1) as usize);
-            d.setHeight((height >> skip).max(1) as usize);""")
+            d.setWidth(key.width as usize);
+            d.setHeight(height as usize);""")
 
 old = "fn upload(b: &TexBuilder, key: &TexKey, tex: &Texture, levels: u32) {\n"
 assert y.count(old) == 1
@@ -373,10 +375,14 @@ y = y.replace(old, """fn tex_drop(key: &TexKey, height: u32, levels: u32, render
     n
 }
 
-/// How many top mip levels this Metal texture is missing compared to the guest texture.
-fn dropped(key: &TexKey, tex: &Texture) -> u32 {
-    let w = tex.width() as u32;
-    if w == 0 || w >= key.width { 0 } else { (key.width / w).ilog2() }
+/// Textures whose sharpest mip levels are not decoded: those levels get an
+/// enlarged copy of the first decoded level instead. The Metal texture keeps the
+/// game's exact size and mip count (shrinking it turned some objects black:
+/// shaders and copies expect the real size).
+static DROPS: std::sync::LazyLock<std::sync::Mutex<std::collections::HashMap<TexKey, u32>>> = std::sync::LazyLock::new(Default::default);
+
+fn dropped(key: &TexKey, _tex: &Texture) -> u32 {
+    DROPS.lock().unwrap().get(key).copied().unwrap_or(0)
 }
 
 """ + old)
@@ -392,7 +398,8 @@ old = """            let levels = levels.min(layout.level_offsets.len() as u32);
             for layer in 0..shape.layers {
                 for level in 0..levels {"""
 assert y.count(old) == 1
-y = y.replace(old, """            let levels = (levels + skip).min(layout.level_offsets.len() as u32);
+y = y.replace(old, """            let levels = levels.min(layout.level_offsets.len() as u32);
+            let skip = if skip < levels { skip } else { 0 };
             for layer in 0..shape.layers {
                 for level in skip..levels {""")
 
@@ -404,37 +411,17 @@ assert y.count(old) == 1
 y = y.replace(old, """                Some(k) => {
                     let mut data = vec![0u8; total];
                     fill(&mut data);
-                    for p in &mut pieces {
-                        p.sub.0 -= skip;
-                    }
-                    decode_and_stage(tex, k, data, pieces);""")
+                    decode_and_stage(tex, k, data, pieces, skip, (key.width, key.height));""")
 
 old = """        None => {
             let stride = u32_at(b, 0x5c);"""
 assert y.count(old) == 1
 y = y.replace(old, """        None => {
-            if skip > 0 {
-                return;
-            }
             let stride = u32_at(b, 0x5c);""")
 tx.write_text(y)
 print("patched", tx, "(NX_TEX_DROP)")
 
-md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
-z = md.read_text()
-old = "        let layered = matches!(tex.0.textureType(), MTLTextureType::Type2DArray | MTLTextureType::TypeCube | MTLTextureType::TypeCubeArray);\n        let slices = if layered { z..z + d.max(1) } else { 0..1 };\n        if tex.0.storageMode() == MTLStorageMode::Private {"
-assert z.count(old) == 1, "write_texels not found"
-z = z.replace(old, """        let skip = {
-            let tw = tex.0.width() as u32;
-            if tw == 0 || tw >= key.width { 0 } else { (key.width / tw).ilog2() as usize }
-        };
-        if level < skip {
-            return;
-        }
-        let level = level - skip;
-""" + old)
-md.write_text(z)
-print("patched", md, "(NX_TEX_DROP)")
+# (write_texels needs no change: dropped textures keep their full size)
 
 # GPU binaries for the A16, built offline on the GitHub Mac with Apple's own
 # translator (metal-tt), so the iPhone loads ready pipelines instead of
@@ -1097,3 +1084,56 @@ assert x.count(old) == 1
 x = x.replace(old, "        let wait = self.pass.as_ref().unwrap().fresh && std::env::var_os(\"NX_ASYNC_ALL\").is_none() && !super::rt_repeat();")
 ex.write_text(x)
 print("patched", ex, "(no stall on targets drawn every frame)")
+
+
+# NX_TEX_DROP, part 2: fill the dropped (sharpest) mip levels with a nearest-
+# neighbour enlargement of the first decoded level, on the CPU (cheap compared
+# with BC decoding, which is what NX_TEX_DROP saves).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "fn decode_and_stage(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>) {\n"
+assert y.count(old) == 1
+y = y.replace(old, "fn decode_and_stage(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>, skip: u32, full: (u32, u32)) {\n")
+old = "    stage_with(tex, decoded.len(), &pieces, |dst| dst.copy_from_slice(&decoded));\n}"
+assert y.count(old) == 1
+y = y.replace(old, """    if skip > 0 {
+        let mut extra = Vec::new();
+        for p in pieces.iter().filter(|p| p.sub.0 == skip) {
+            let (w, h, d) = p.size;
+            let bpp = p.row / (w.max(1) as usize);
+            if bpp == 0 || w == 0 || h == 0 {
+                continue;
+            }
+            for l in 0..skip {
+                let (lw, lh) = ((full.0 >> l).max(1), (full.1 >> l).max(1));
+                let sh = skip - l;
+                let row = lw as usize * bpp;
+                let mut out = Vec::with_capacity(row * lh as usize * d as usize);
+                for z in 0..d as usize {
+                    for yy in 0..lh {
+                        let sy = ((yy >> sh).min(h - 1)) as usize;
+                        let src = p.offset + z * p.image + sy * p.row;
+                        for xx in 0..lw {
+                            let a = src + ((xx >> sh).min(w - 1)) as usize * bpp;
+                            match decoded.get(a..a + bpp) {
+                                Some(px) => out.extend_from_slice(px),
+                                None => out.resize(out.len() + bpp, 0),
+                            }
+                        }
+                    }
+                }
+                let offset = decoded.len();
+                decoded.extend_from_slice(&out);
+                extra.push(Piece { offset, row, image: row * lh as usize, size: (lw, lh, d), sub: (l, p.sub.1) });
+                decoded.resize(decoded.len().next_multiple_of(16), 0);
+            }
+        }
+        pieces.extend(extra);
+    }
+    stage_with(tex, decoded.len(), &pieces, |dst| dst.copy_from_slice(&decoded));
+}""")
+old = "                Some(k) => decode_and_stage(tex, k, src.to_vec(), pieces),\n"
+assert y.count(old) == 1
+y = y.replace(old, "                Some(k) => decode_and_stage(tex, k, src.to_vec(), pieces, 0, (key.width, key.height)),\n")
+tx.write_text(y)
+print("patched", tx, "(NX_TEX_DROP keeps full size)")
