@@ -1,0 +1,13 @@
+[tt] using /Applications/Xcode_26.3.0.app (iOS SDK 26.2)
+[a16] 1901 pipelines in the script, 0 skipped (shader not in the iOS cache), 220 libraries
+Tue Oct 20 20:07:19 UTC 2026
+[tt] applegpu_g15p, target ios26.2
+Tue Oct 20 20:09:58 UTC 2026
+applegpu_g15p 
+-rw-r--r--  1 runner  staff   353M Oct 20 20:09 work/shader_cache_ios.noindex/pipelines-applegpu_g15p.metalar
+Tue Oct 20 20:10:02 UTC 2026
+[tt] applegpu_g14p, target ios26.2
+Tue Oct 20 20:12:23 UTC 2026
+applegpu_g14p 
+-rw-r--r--  1 runner  staff   353M Oct 20 20:12 work/shader_cache_ios.noindex/pipelines-applegpu_g14p.metalar
+[tt] done

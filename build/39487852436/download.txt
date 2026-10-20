@@ -1,0 +1,7 @@
+-rw-------  1 runner  staff   6.8G Oct 17 18:31 base.nsp
+-rw-------  1 runner  staff    14K Oct 17 18:24 prod.keys
+-rw-r--r--  1 runner  staff   4.5G Oct 20 20:05 upd4-0-1.nsp
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk2s1s1   320Gi    10Gi    48Gi    18%    427k  504M    0%   /
+ERROR: Unsupported Method : userdata.dat
+unlocked-save/userdata.dat
