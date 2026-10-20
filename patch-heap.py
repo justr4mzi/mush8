@@ -2057,7 +2057,7 @@ m = m.replace(old, """    if field("show_fps").as_deref() == Some("false") {
         let dst = PathBuf::from("work/save-unlocked");
         if !dst.exists() {
             if src.is_dir() {
-                match copy_dir(&src, &dst) {
+                match seed_unlocked_save(&src, &dst) {
                     Ok(()) => eprintln!("[host] unlocked save copied to work/save-unlocked"),
                     Err(e) => eprintln!("[host] could not copy the unlocked save: {e}"),
                 }
@@ -2072,6 +2072,35 @@ m = m.replace(old, """    if field("show_fps").as_deref() == Some("false") {
     }
 """)
 m += """
+
+/// work/save-unlocked = a copy of the player's own save folders, with the
+/// packed save files (e.g. userdata.dat, a dump of the game's save) put in the
+/// folder that holds the same file name (type1-index0 if none does).
+fn seed_unlocked_save(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    let own = std::path::Path::new("work/save");
+    if own.is_dir() {
+        copy_dir(own, dst)?;
+    }
+    std::fs::create_dir_all(dst)?;
+    let subdirs: Vec<PathBuf> = std::fs::read_dir(dst)?.flatten().map(|e| e.path()).filter(|p| p.is_dir()).collect();
+    for e in std::fs::read_dir(src)? {
+        let e = e?;
+        let name = e.file_name();
+        let target = if e.file_type()?.is_dir() && name.to_string_lossy().starts_with("type") {
+            dst.to_path_buf()
+        } else {
+            subdirs.iter().find(|d| d.join(&name).exists()).cloned().unwrap_or_else(|| dst.join("type1-index0"))
+        };
+        std::fs::create_dir_all(&target)?;
+        if e.file_type()?.is_dir() {
+            copy_dir(&e.path(), &target.join(&name))?;
+        } else {
+            std::fs::copy(e.path(), target.join(&name))?;
+        }
+        eprintln!("[host] unlocked save: {} -> {}", name.to_string_lossy(), target.display());
+    }
+    Ok(())
+}
 
 fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
     std::fs::create_dir_all(dst)?;
