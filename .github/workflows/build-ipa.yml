@@ -137,7 +137,7 @@ jobs:
           done
           df -h /
 
-      - name: Unlocked save (optional, secret SAVE_URL = link to a zip of the save folder)
+      - name: Unlocked save (optional, secret SAVE_URL = link to a zip/rar of the save folder)
         env:
           SAVE_URL: ${{ secrets.SAVE_URL }}
         run: |
@@ -146,11 +146,11 @@ jobs:
           mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
           python3 -m pip install --quiet --break-system-packages gdown || true
           case "$SAVE_URL" in
-            *drive.google.com*) python3 -m gdown --quiet "$SAVE_URL" -O save.zip ;;
-            *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.zip ;;
-            *) curl -fsSL "$SAVE_URL" -o save.zip ;;
+            *drive.google.com*) python3 -m gdown --quiet "$SAVE_URL" -O save.archive ;;
+            *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.archive ;;
+            *) curl -fsSL "$SAVE_URL" -o save.archive ;;
           esac
-          mkdir -p save-tmp && unzip -q save.zip -d save-tmp && rm -f save.zip
+          mkdir -p save-tmp && 7zz x -y -osave-tmp save.archive > /dev/null && rm -f save.archive  # zip, rar or 7z
           # use the folder that holds the save files (zip may wrap them in a folder)
           d=save-tmp; while [ "$(ls -A "$d" | wc -l)" -eq 1 ] && [ -d "$d/$(ls -A "$d")" ]; do d="$d/$(ls -A "$d")"; done
           mv "$d" unlocked-save; rm -rf save-tmp
