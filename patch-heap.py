@@ -1940,8 +1940,7 @@ print("patched", br, "(no unwind entries for the embedded game code)")
 # ---------------------------------------------------------------------------
 # Device archive v2 must not compete with the game for the shader compiler:
 # adding a pipeline to an archive compiles it again in MTLCompilerService.
-# The archive thread now waits for the boot prewarm to finish, and before
-# each pipeline it waits until the game is not waiting for a pipeline
+# Before each pipeline the archive thread waits until the game is not waiting for a pipeline
 # (DEMAND == 0), with a short pause between pipelines.
 st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
 u = st.read_text()
@@ -1955,8 +1954,7 @@ u = u.replace(old, """static PREWARM_DONE: std::sync::atomic::AtomicBool = std::
 /// Let the game and the boot prewarm use the shader compiler first.
 fn archive_wait_idle() {
     use std::sync::atomic::Ordering::SeqCst;
-    let prewarm = std::env::var_os("NX_PREWARM").is_some();
-    while (prewarm && !PREWARM_DONE.load(SeqCst)) || DEMAND.load(SeqCst) > 0 {
+    while DEMAND.load(SeqCst) > 0 {
         std::thread::sleep(std::time::Duration::from_millis(50));
     }
     std::thread::sleep(std::time::Duration::from_millis(20));
@@ -1971,3 +1969,27 @@ assert u.count(old) == 1
 u = u.replace(old, "                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(5)) {")
 st.write_text(u)
 print("patched", st, "(device archive waits for the game and the prewarm)")
+
+# Prewarm progress in the log every 200 pipelines (it can take minutes with a
+# cold iOS shader cache, while it pauses for the game).
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "                                    PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));\n                                    built.fetch_add(1, Relaxed);\n"
+assert u.count(old) == 1
+u = u.replace(old, """                                    PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));
+                                    let n = built.fetch_add(1, Relaxed) + 1;
+                                    if n % 200 == 0 {
+                                        eprintln!("[gfx] prewarm: {n}/{} pipelines ({:.0} s)", list.len(), t0.elapsed().as_secs_f32());
+                                    }
+""")
+st.write_text(u)
+print("patched", st, "(prewarm progress)")
+
+# Which build is running: first line of the log.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    eprintln!("[host] iOS: files in {}, bundle {}", docs.display(), bundle.display());\n'
+assert m.count(old) == 1
+m = m.replace(old, '    eprintln!("[host] build {}", option_env!("GITHUB_SHA").map_or("local", |s| &s[..s.len().min(7)]));\n' + old)
+mn.write_text(m)
+print("patched", mn, "(build id in the log)")
