@@ -1,0 +1,46 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+    Finished `release` profile [optimized + debuginfo] target(s) in 34.21s
+[a16] up to date
+-rw-r--r--  1 runner  staff   324M Oct 18 10:34 work/shader_cache_ios.noindex/pipelines-a16.metalar
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+error: linking with `cc` failed: exit status: 1
+  |
+  = note:  "cc" "/Users/runner/work/mush8/mush8/target/ios/aarch64-apple-ios/release/deps/rustcErAaKj/symbols.o" "<17 object files omitted>" "-framework" "Security" "-framework" "CoreFoundation" "-framework" "Network" "-lmush8launcher" "/Users/runner/work/mush8/mush8/target/ios/aarch64-apple-ios/release/deps/{libmp4-781549c0a2a00da9,libserde_json-86506e19bfb71d50,libmemchr-56d5b6cc94c8181a,libitoa-31c874443b27f241,libzmij-9776f5955cd4288f,libbyteorder-21dc75a322bfb3b9,libnum_rational-eaa9d2924571478c,libnum_bigint-7b139358f5c473b9,libnum_integer-5314c900e1d0b760,libnum_traits-bdf29bc4f2151225,libbytes-13f96028732d6245,libserde-7f82d5592f67cca4,libserde_core-bb9ba8e953a53ef2,libthiserror-6487b53f7a2e0059,libimage_webp-8892000a349d19dc,libquick_error-aead6b333462a982,libbyteorder_lite-137e800e8e5917e8,libobjc2_core_motion-8f66f4757bdef4d1,libpng-7142537873b4becf,libflate2-c441fdb7df9a880c,libminiz_oxide-4588d42aa8c9a46a,libfdeflate-69ab3e09bb036663,libsimd_adler32-da7990e8d5a50f08,libcrc32fast-1db25639e7efc68d,libcfg_if-c89bc73050eb7e06,libbcdec_rs-652ef26956ee2a15,libclap-145f9d5cb7197da7,libclap_builder-f01b53f88c765539,libstrsim-1790cc577a7cc4c3,libanstream-d9bbd86cc363c939,libanstyle_query-9d33eaa016ef3c0d,libis_terminal_polyfill-f58a5e33d1012ab5,libcolorchoice-0e9eea758872bf02,libanstyle_parse-272e99cdc2d034ab,libutf8parse-732482c0568c46d4,libclap_lex-9737509565428ad4,libanstyle-d68d03720d6ecf46,libnxshader-24db2229073c4940,libobjc2_av_foundation-c598e76ba53f8494,libobjc2_image_io-d50e1b6eea11711d,libobjc2_avf_audio-e51b80530e1fdb13,libobjc2_media_toolbox-691eee9de54bc03a,libobjc2_core_media-4c8904aa2f17588f,libnxfs-8037a3371e144af3,libcpp_demangle-c4f69c0656d78553,liblz4_flex-5beace183c537268,libtwox_hash-407aa8c8d19d78bb,libhex-e78a4199bb9bc822,libaes-171f6c8c7a20ccb1,libcpufeatures-58308e21a826dd0a,libcpubits-e055cf6a1d6fcad5,libcipher-aa514ff661498b6a,libinout-7e78d6eaffed7c9b,libcrypto_common-b443af7b958b4f07,libhybrid_array-10a0f73f73d75d5c,libtypenum-d4572022bce78817,libanyhow-c45e71474d726426,libobjc2_game_controller-b90f7dcdaa94a568,libobjc2_core_haptics-c71833e1910360fe,libnxabi-4efb195578ac0ca6,libobjc2_ui_kit-cf50700a1b143307,libobjc2_user_notifications-7447b2aef3355a5f,libobjc2_core_data-4172c6a643d2b6ef,libobjc2_core_location-684c2e8b08b67211,libobjc2_core_text-c0e3a6696dad3694,libobjc2_core_image-b63aae7f54a0fcb4,libobjc2_cloud_kit-19cde4dc5af296b5,libobjc2_quartz_core-f422ffa6c3df4cf6,libobjc2_core_video-97e69288e9b40f7c,libobjc2_core_graphics-7ee3d26e04ec912a,libobjc2_metal-7145b39be74cf0db,libobjc2_audio_toolbox-bf30a4f163783519,libobjc2_core_audio-af678d35c3195f65,libobjc2_foundation-031a040156510cc7,libobjc2_core_foundation-e82b187982edd032,libdispatch2-aa28a3e0aa0b2b55,liblibc-727e215dddafcc01,libblock2-dafafb9ab7b21070,libobjc2_core_audio_types-151b6a8d84f0cae8,libbitflags-c4b136ebfa76ac7f,libobjc2-679db0be6b4d670a,libobjc2_encode-e92565ca229c89fe}.rlib" "<sysroot>/lib/rustlib/aarch64-apple-ios/lib/{libstd-*,libpanic_unwind-*,libobject-*,libmemchr-*,libaddr2line-*,libgimli-*,libcfg_if-*,librustc_demangle-*,libstd_detect-*,libhashbrown-*,librustc_std_workspace_alloc-*,libminiz_oxide-*,libadler2-*,libunwind-*,liblibc-*,librustc_std_workspace_core-*,liballoc-*,libcore-*,libcompiler_builtins-*}.rlib" "-framework" "CoreMotion" "-framework" "AVFoundation" "-framework" "ImageIO" "-framework" "AVFAudio" "-framework" "MediaToolbox" "-framework" "CoreMedia" "-framework" "GameController" "-framework" "CoreHaptics" "-framework" "UIKit" "-framework" "UserNotifications" "-framework" "CoreData" "-framework" "CoreLocation" "-framework" "CoreText" "-framework" "CoreImage" "-framework" "CloudKit" "-framework" "QuartzCore" "-framework" "CoreVideo" "-framework" "CoreGraphics" "-framework" "Metal" "-framework" "AudioToolbox" "-framework" "CoreAudio" "-framework" "Foundation" "-framework" "CoreFoundation" "-lSystem" "-liconv" "-lobjc" "-framework" "Foundation" "-lSystem" "-lc" "-lm" "-target" "arm64-apple-ios26.0.0" "-L" "/Users/runner/work/mush8/mush8/target/ios/aarch64-apple-ios/release/build/nxhost-d3a4a4ee7caea51e/out" "-L" "/Applications/Xcode_26.6.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS26.5.sdk/usr/lib/swift" "-L" "/Applications/Xcode_26.6.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/iphoneos" "-o" "/Users/runner/work/mush8/mush8/target/ios/aarch64-apple-ios/release/deps/nxhost-c3efbba30dea5398" "-Wl,-dead_strip" "-nodefaultlibs" "-Wl,-segprot,__NX0_X,rx,rx" "-Wl,-segaddr,__NX0_X,0x104000000" "-Wl,-segprot,__NX0_D,rw,rw" "-Wl,-segaddr,__NX0_D,0x104b58000" "-Wl,-segprot,__NX0_T,rx,rx" "-Wl,-segaddr,__NX0_T,0x10536c000" "-Wl,-segprot,__NX1_X,rx,rx" "-Wl,-segaddr,__NX1_X,0x105394000" "-Wl,-segprot,__NX1_D,rw,rw" "-Wl,-segaddr,__NX1_D,0x1056a0000" "-Wl,-segprot,__NX1_T,rx,rx" "-Wl,-segaddr,__NX1_T,0x105a80000" "-Wl,-segprot,__NX2_X,rx,rx" "-Wl,-segaddr,__NX2_X,0x105ad8000" "-Wl,-segprot,__NX2_D,rw,rw" "-Wl,-segaddr,__NX2_D,0x105ee8000" "-Wl,-segprot,__NX2_T,rx,rx" "-Wl,-segaddr,__NX2_T,0x106568000"
+  = note: some arguments are omitted. use `--verbose` to show all linker arguments
+  = note: ld: warning: ignoring duplicate libraries: '-lSystem'
+          0  0x10025dc90  __assert_rtn + 252
+          1  0x1001d4728  __Block_byref_object_copy_.2329 + 0
+          2  0x1001f6574  ld::LayoutExecutable::writeToFile(char const*) + 10424
+          3  0x1001911b4  main + 10656
+          ld snapshot written at /tmp/nxhost-c3efbba30dea5398-2026-10-20-132255.ld-snapshot
+          ld: Assertion failed: (false && "compact unwind compressed function offset doesn't fit in 24 bits"), function operator(), file Layout.cpp, line 5215.
+          clang: error: linker command failed with exit code 1 (use -v to see invocation)
+          
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+error: could not compile `nxhost` (bin "nxhost") due to 1 previous error; 1 warning emitted
