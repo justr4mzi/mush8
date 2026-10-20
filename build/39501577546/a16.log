@@ -1,0 +1,6 @@
+[tt] using /Applications/Xcode_26.3.0.app (iOS SDK 26.2)
+[tt] applegpu_g15p up to date
+-rw-r--r--  1 runner  staff   353M Oct 20 20:09 work/shader_cache_ios.noindex/pipelines-applegpu_g15p.metalar
+[tt] applegpu_g14p up to date
+-rw-r--r--  1 runner  staff   353M Oct 20 20:12 work/shader_cache_ios.noindex/pipelines-applegpu_g14p.metalar
+[tt] done

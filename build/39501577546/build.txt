@@ -1,0 +1,69 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+warning: unused variable: `n`
+   --> crates/nxhost/src/nvn/draw/state.rs:698:14
+    |
+698 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |              ^ help: if this is intentional, prefix it with an underscore: `_n`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `total`
+   --> crates/nxhost/src/nvn/draw/state.rs:698:17
+    |
+698 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |                 ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+warning: function `seed_unlocked_save` is never used
+   --> crates/nxhost/src/main.rs:364:4
+    |
+364 | fn seed_unlocked_save(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `copy_dir` is never used
+   --> crates/nxhost/src/main.rs:390:4
+    |
+390 | fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^
+
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+
+warning: `nxhost` (bin "nxhost") generated 5 warnings (run `cargo fix --bin "nxhost" -p nxhost` to apply 2 suggestions)
+    Finished `release` profile [optimized + debuginfo] target(s) in 27.46s
+[tt] applegpu_g15p up to date
+-rw-r--r--  1 runner  staff   353M Oct 20 20:09 work/shader_cache_ios.noindex/pipelines-applegpu_g15p.metalar
+[tt] applegpu_g14p up to date
+-rw-r--r--  1 runner  staff   353M Oct 20 20:12 work/shader_cache_ios.noindex/pipelines-applegpu_g14p.metalar
+[tt] done
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+    Finished `release` profile [optimized + debuginfo] target(s) in 44.52s
+shipping pipelines-applegpu_g14p.metalar
+shipping pipelines-applegpu_g15p.metalar
+unlocked save packed in the IPA
+2026-10-20 21:42:02.638 xcodebuild[9919:31454] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+warning: 'UIRequiresFullScreen' has been deprecated starting in iOS 26.0 and will be ignored in a future release. See the UIRequiresFullScreen documentation for more details. (in target 'Mush8' from project 'Mush8')
+note: Run script build phase 'Use the Rust executable' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Mush8' from project 'Mush8')
+built: /Users/runner/work/mush8/mush8/target/ios-xcode/Build/Products/Release-iphoneos/Mush8.app (1.0G)
+built: /Users/runner/work/mush8/mush8/build/Mush8.ipa (417M)
