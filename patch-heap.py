@@ -2778,3 +2778,29 @@ w = w.replace(" Precompiled shaders: ready-made GPU code for the A15/A16 packed 
 w = w.replace("Background texture loading (experimental): fewer small hitches, new objects are grey for a moment.", "Background texture loading (experimental): fewer small hitches, but can run out of memory while a race loads.")
 sw.write_text(w)
 print("patched", mk, sw, "(precompiled shader files removed)")
+
+# ---------------------------------------------------------------------------
+# Defaults from the tests: Ultra low textures, full prewarm before playing,
+# low-memory trim from 600 MB left.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = 'let q = field("texture_quality").unwrap_or_else(|| "verylow".into());'
+assert m.count(old) == 1
+m = m.replace(old, 'let q = field("texture_quality").unwrap_or_else(|| "ultralow".into());')
+old = 'if field("full_prewarm").as_deref() == Some("true") ||'
+assert m.count(old) == 1
+m = m.replace(old, 'if field("full_prewarm").as_deref() != Some("false") ||')
+old = '    def("NX_HASH_EVERY", "2");\n'
+assert m.count(old) == 1
+m = m.replace(old, old + '    def("NX_TRIM_MB", "600");\n')
+mn.write_text(m)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+for a_, b_ in [('    @Published var textureQuality = "verylow"\n', '    @Published var textureQuality = "ultralow"\n'),
+               ('        textureQuality = json["texture_quality"] as? String ?? "verylow"\n', '        textureQuality = json["texture_quality"] as? String ?? "ultralow"\n'),
+               ('    @Published var fullPrewarm = false\n', '    @Published var fullPrewarm = true\n'),
+               ('        fullPrewarm = json["full_prewarm"] as? Bool ?? false\n', '        fullPrewarm = json["full_prewarm"] as? Bool ?? true\n')]:
+    assert w.count(a_) == 1, a_
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, sw, "(defaults: Ultra low, full prewarm, trim 600)")
