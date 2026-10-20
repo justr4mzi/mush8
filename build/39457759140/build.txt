@@ -1,0 +1,37 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+    Finished `release` profile [optimized + debuginfo] target(s) in 28.79s
+[a16] up to date
+-rw-r--r--  1 runner  staff   324M Oct 18 10:34 work/shader_cache_ios.noindex/pipelines-a16.metalar
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+    Finished `release` profile [optimized + debuginfo] target(s) in 51.66s
+2026-10-20 16:42:29.534 xcodebuild[5130:18325] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+warning: 'UIRequiresFullScreen' has been deprecated starting in iOS 26.0 and will be ignored in a future release. See the UIRequiresFullScreen documentation for more details. (in target 'Mush8' from project 'Mush8')
+note: Run script build phase 'Use the Rust executable' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Mush8' from project 'Mush8')
+built: /Users/runner/work/mush8/mush8/target/ios-xcode/Build/Products/Release-iphoneos/Mush8.app (315M)
+built: /Users/runner/work/mush8/mush8/build/Mush8.ipa (145M)
