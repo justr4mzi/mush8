@@ -1,0 +1,52 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+error[E0277]: `dyn objc2_metal::MTLTexture` cannot be shared between threads safely
+   --> crates/nxhost/src/nvn/draw/textures.rs:553:20
+    |
+553 |       let job: Job = Box::new(move || {
+    |  ____________________^
+554 | |         if GENS.lock().unwrap().get(&id) != Some(&generation) {
+555 | |             return;
+...   |
+558 | |     });
+    | |______^ `dyn objc2_metal::MTLTexture` cannot be shared between threads safely
+    |
+    = help: the trait `std::marker::Sync` is not implemented for `dyn objc2_metal::MTLTexture`
+    = note: required for `ProtocolObject<dyn objc2_metal::MTLTexture>` to implement `std::marker::Sync`
+    = note: required for `Retained<ProtocolObject<dyn objc2_metal::MTLTexture>>` to implement `Send`
+note: required because it's used within this closure
+   --> crates/nxhost/src/nvn/draw/textures.rs:553:29
+    |
+553 |     let job: Job = Box::new(move || {
+    |                             ^^^^^^^
+    = note: required for the cast from `Box<{closure@crates/nxhost/src/nvn/draw/textures.rs:553:29: 553:36}>` to `Box<(dyn FnOnce() + Send + 'static)>`
+
+error[E0277]: `dyn objc2_metal::MTLTexture` cannot be sent between threads safely
+   --> crates/nxhost/src/nvn/draw/textures.rs:553:20
+    |
+553 |       let job: Job = Box::new(move || {
+    |  ____________________^
+554 | |         if GENS.lock().unwrap().get(&id) != Some(&generation) {
+555 | |             return;
+...   |
+558 | |     });
+    | |______^ `dyn objc2_metal::MTLTexture` cannot be sent between threads safely
+    |
+    = help: the trait `Send` is not implemented for `dyn objc2_metal::MTLTexture`
+    = note: required for `ProtocolObject<dyn objc2_metal::MTLTexture>` to implement `Send`
+    = note: 1 redundant requirement hidden
+    = note: required for `Retained<ProtocolObject<dyn objc2_metal::MTLTexture>>` to implement `Send`
+note: required because it's used within this closure
+   --> crates/nxhost/src/nvn/draw/textures.rs:553:29
+    |
+553 |     let job: Job = Box::new(move || {
+    |                             ^^^^^^^
+    = note: required for the cast from `Box<{closure@crates/nxhost/src/nvn/draw/textures.rs:553:29: 553:36}>` to `Box<(dyn FnOnce() + Send + 'static)>`
+
+For more information about this error, try `rustc --explain E0277`.
+error: could not compile `nxhost` (bin "nxhost") due to 2 previous errors
+warning: build failed, waiting for other jobs to finish...
