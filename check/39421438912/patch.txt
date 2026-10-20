@@ -1,0 +1,43 @@
+patched crates/nxhost/src/gfx/mod.rs
+patched crates/nxhost/src/services/am.rs
+patched crates/nxhost/src/nvn/draw/state.rs
+patched crates/nxhost/src/kernel.rs
+patched crates/nxhost/src/nvn/draw/shaders.rs
+patched crates/nxhost/src/nvn/draw/exec.rs
+patched crates/nxhost/src/nvn/draw/state.rs (device pipeline archive)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP)
+wrote tt-a16.sh
+patched make-ios.sh
+patched crates/nxhost/src/nvn/draw/copy.rs
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/mod.rs (low-memory texture trim)
+patched profiling, NX_FRAMESKIP, NX_HASH_EVERY
+patched crates/nxhost/src/nvn/draw/mod.rs (freeze watchdog)
+patched crates/nxhost/src/services/mii.rs (GetIndex not found)
+patched crates/nxhost/src/kernel.rs (SignalToAddress waiting-count semantics)
+patched crates/nxhost/src/loader.rs (NX_TRACE_QUIET, NX_TRACE_DELAY_US)
+patched crates/nxhost/src/gfx/ios.rs (on-screen fps)
+patched crates/nxhost/src/nvn/draw/mod.rs (frameskip keeps rarely rendered targets)
+patched crates/nxhost/src/nvn/draw/exec.rs (no stall on targets drawn every frame)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP keeps full size)
+patched crates/nxhost/src/nvn/draw/state.rs (prewarm yields to the game)
+patched crates/nxhost/src/nvn/draw/textures.rs (async texture decode, texture disk cache)
+patched crates/nxhost/src/gfx/mod.rs (even pacing with frameskip)
+patched crates/nxhost/src/gfx/bc.rs crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_16BIT)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/mod.rs (NX_TEX_DROP_SHRINK)
+patched crates/nxhost/src/gfx/mod.rs crates/nxhost/src/nvn/draw/mod.rs (NX_AUTOSKIP)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/state.rs (earlier memory trim, free unused prewarmed pipelines)
+ crates/nxhost/src/gfx/bc.rs            |  44 ++++
+ crates/nxhost/src/gfx/ios.rs           |  31 ++-
+ crates/nxhost/src/gfx/mod.rs           | 118 +++++++++--
+ crates/nxhost/src/kernel.rs            |  22 +-
+ crates/nxhost/src/loader.rs            |   8 +
+ crates/nxhost/src/nvn/draw/copy.rs     |   5 +-
+ crates/nxhost/src/nvn/draw/exec.rs     |   2 +-
+ crates/nxhost/src/nvn/draw/mod.rs      | 364 +++++++++++++++++++++++++++++++++
+ crates/nxhost/src/nvn/draw/shaders.rs  |   3 +
+ crates/nxhost/src/nvn/draw/state.rs    | 180 +++++++++++++---
+ crates/nxhost/src/nvn/draw/textures.rs | 295 +++++++++++++++++++++++++-
+ crates/nxhost/src/services/am.rs       |   8 +
+ crates/nxhost/src/services/mii.rs      |   5 +-
+ make-ios.sh                            |   3 +
+ 14 files changed, 1030 insertions(+), 58 deletions(-)
