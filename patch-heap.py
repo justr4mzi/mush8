@@ -1677,10 +1677,10 @@ tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
 y = tx.read_text()
 old = '.unwrap_or(400) << 20);'
 assert y.count(old) == 1
-y = y.replace(old, '.unwrap_or(600) << 20);')
+y = y.replace(old, '.unwrap_or(400) << 20);')
 old = "        let frame = self.frame;\n        let old: std::collections::HashSet<TexKey> = self\n"
 assert y.count(old) == 1
-y = y.replace(old, "        super::state::drop_prewarmed();\n" + old)
+
 tx.write_text(y)
 st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
 u = st.read_text()
@@ -1702,3 +1702,222 @@ pub fn drop_prewarmed() {
 """ + old)
 st.write_text(u)
 print("patched", tx, st, "(earlier memory trim, free unused prewarmed pipelines)")
+
+
+# ---------------------------------------------------------------------------
+# Low-memory trim: a texture uploaded but not looked up again yet had no
+# "last used" frame and was dropped at once (it came back decoded again).
+# Now it counts as used when the trim first sees it.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        let frame = self.frame;\n        let old: std::collections::HashSet<TexKey> = self\n"
+assert y.count(old) == 1
+y = y.replace(old, """        let frame = self.frame;
+        for k in self.uploaded.keys() {
+            self.last_used.entry(*k).or_insert(frame);
+        }
+        let old: std::collections::HashSet<TexKey> = self
+""")
+y = y.replace(".filter(|k| self.last_used.get(*k).map_or(true, |&f| f + 300 < frame))", ".filter(|k| self.last_used.get(*k).is_some_and(|&f| f + 300 < frame))")
+tx.write_text(y)
+print("patched", tx, "(trim keeps fresh textures)")
+
+# ---------------------------------------------------------------------------
+# Device pipeline archive, v2. The single growing archive often failed to
+# save ("expecting 'fragment' stage in pipeline no. N") and pipelines compiled
+# in one run were never found in the next one (0 archive hits). Now:
+# - the descriptor is copied before it is handed to the archive thread;
+# - each batch goes to its own small file in work/devarch/ (a bad pipeline
+#   can no longer poison the whole archive: a failing batch is split in two
+#   until the bad pipeline is isolated and left out);
+# - after the first save, the file is read back and one pipeline is looked up
+#   in it: "[gfx] archive self-test: hit/MISS" in the log tells if it works.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+a = u.index("fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {")
+b = u.index("#[derive(Clone, PartialEq, Eq, Hash)]\nstruct Recorded")
+u = u[:a] + r"""const DEVICE_ARCHIVE_DIR: &str = "work/devarch";
+
+fn device_archive_files() -> Vec<String> {
+    let mut v: Vec<String> = std::fs::read_dir(DEVICE_ARCHIVE_DIR)
+        .map(|r| r.flatten().map(|e| e.file_name().to_string_lossy().into_owned()).filter(|n| n.ends_with(".metalar")).collect())
+        .unwrap_or_default();
+    v.sort();
+    v.into_iter().map(|n| format!("{DEVICE_ARCHIVE_DIR}/{n}")).collect()
+}
+
+fn save_group(group: &[Shared<MTLRenderPipelineDescriptor>], path: &str) -> Result<(), String> {
+    let a = Shared(open_archive(None).ok_or("could not create an archive")?);
+    for d in group {
+        if !add(&a, &d.0) {
+            return Err("could not add the pipeline".into());
+        }
+    }
+    let tmp = format!("{path}.tmp");
+    a.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&tmp))).map_err(|e| e.localizedDescription().to_string())?;
+    std::fs::rename(&tmp, path).map_err(|e| e.to_string())
+}
+
+fn archive_self_test(path: &str, d: &MTLRenderPipelineDescriptor) {
+    let Some(a) = open_archive(Some(path)) else {
+        eprintln!("[gfx] archive self-test: could not reopen {path}");
+        return;
+    };
+    let copy: Retained<MTLRenderPipelineDescriptor> = unsafe { objc2::msg_send![d, copy] };
+    copy.setBinaryArchives(Some(&NSArray::from_retained_slice(&[a])));
+    let r = gfx::gpu().device.0.newRenderPipelineStateWithDescriptor_options_reflection_error(&copy, MTLPipelineOption::FailOnBinaryArchiveMiss, None);
+    match r {
+        Ok(_) => eprintln!("[gfx] archive self-test: hit (saved pipelines are found again)"),
+        Err(e) => eprintln!("[gfx] archive self-test: MISS ({})", e.localizedDescription()),
+    }
+}
+
+fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {
+    static TX: LazyLock<Option<Mutex<std::sync::mpsc::Sender<Shared<MTLRenderPipelineDescriptor>>>>> = LazyLock::new(|| {
+        if !device_archive_on() {
+            return None;
+        }
+        let _ = std::fs::create_dir_all(DEVICE_ARCHIVE_DIR);
+        let files = device_archive_files();
+        let bytes: u64 = files.iter().filter_map(|f| std::fs::metadata(f).ok()).map(|m| m.len()).sum();
+        if files.len() >= 400 || bytes > 300 << 20 {
+            eprintln!("[gfx] device pipeline archive is full ({} files, {} MB), not adding to it", files.len(), bytes >> 20);
+            return None;
+        }
+        let (tx, rx) = std::sync::mpsc::channel::<Shared<MTLRenderPipelineDescriptor>>();
+        std::thread::Builder::new()
+            .name("pipeline-archive".into())
+            .spawn(move || {
+                unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_UTILITY, 0) };
+                let run = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).map_or(0, |d| d.as_secs());
+                let (mut files, mut saved, mut rejected, mut tested) = (files.len(), 0usize, 0usize, false);
+                let mut batch: Vec<Shared<MTLRenderPipelineDescriptor>> = Vec::new();
+                let mut seq = 0u32;
+                loop {
+                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(3)) {
+                        Ok(d) => {
+                            batch.push(d);
+                            false
+                        }
+                        Err(std::sync::mpsc::RecvTimeoutError::Timeout) => true,
+                        Err(_) => return,
+                    };
+                    if batch.is_empty() || !(timed_out || batch.len() >= 32) {
+                        continue;
+                    }
+                    objc2::rc::autoreleasepool(|_| {
+                        let mut stack = vec![std::mem::take(&mut batch)];
+                        while let Some(mut group) = stack.pop() {
+                            seq += 1;
+                            let path = format!("{DEVICE_ARCHIVE_DIR}/{run:x}-{seq:04}.metalar");
+                            match save_group(&group, &path) {
+                                Ok(()) => {
+                                    files += 1;
+                                    saved += group.len();
+                                    if !tested {
+                                        tested = true;
+                                        archive_self_test(&path, &group[0].0);
+                                    }
+                                }
+                                Err(e) if group.len() == 1 => {
+                                    rejected += 1;
+                                    if rejected <= 3 {
+                                        let e: String = e.chars().take(300).collect();
+                                        eprintln!("[gfx] pipeline left out of the device archive: {e}");
+                                    }
+                                }
+                                Err(_) => {
+                                    let half = group.split_off(group.len() / 2);
+                                    stack.push(group);
+                                    stack.push(half);
+                                }
+                            }
+                        }
+                    });
+                    eprintln!("[gfx] device pipeline archive: {saved} pipelines saved this run ({files} files, {rejected} left out)");
+                    if files >= 400 {
+                        return;
+                    }
+                }
+            })
+            .ok()?;
+        Some(Mutex::new(tx))
+    });
+    if let Some(tx) = &*TX {
+        // a private copy: the caller's descriptor still points at the loaded archives
+        let copy: Retained<MTLRenderPipelineDescriptor> = unsafe { objc2::msg_send![&*d, copy] };
+        copy.setBinaryArchives(None);
+        let _ = tx.lock().unwrap().send(Shared(copy));
+    }
+}
+
+""" + u[b:]
+old = """    if device_archive_on() && std::path::Path::new(DEVICE_ARCHIVE).exists() {
+        paths.push(DEVICE_ARCHIVE.to_string());
+    }"""
+assert u.count(old) == 1
+u = u.replace(old, old + """
+    if device_archive_on() {
+        paths.extend(device_archive_files());
+    }""")
+old = """    eprintln!("[gfx] {} pipeline archive(s) loaded ({})", archives.len(), paths.join(", "));"""
+assert u.count(old) == 1
+u = u.replace(old, """    eprintln!("[gfx] {} pipeline archive(s) loaded", archives.len());""")
+st.write_text(u)
+print("patched", st, "(device pipeline archive v2)")
+
+# ---------------------------------------------------------------------------
+# Launcher: "Show FPS" switch (config show_fps; on by default) and
+# "Music from other apps" (mix_audio): game sound mixes with Spotify & co.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("rumble").as_deref() == Some("false") {\n'
+assert m.count(old) == 1
+m = m.replace(old, """    if field("show_fps").as_deref() == Some("false") {
+        unsafe { std::env::set_var("NX_HIDE_FPS", "1") };
+    } else if std::env::var_os("NX_FPS").is_none() {
+        unsafe { std::env::set_var("NX_FPS", "1") };
+    }
+""" + old)
+mn.write_text(m)
+io = pathlib.Path("crates/nxhost/src/gfx/ios.rs")
+i = io.read_text()
+old = "pub fn show_fps(text: String) {\n"
+assert i.count(old) == 1
+i = i.replace(old, old + "    if std::env::var_os(\"NX_HIDE_FPS\").is_some() {\n        return;\n    }\n")
+io.write_text(i)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("import Combine\n", "import AVFoundation\nimport Combine\n"),
+("    @Published var phonePads = false\n", "    @Published var phonePads = false\n    @Published var showFps = true\n    @Published var mixAudio = true\n"),
+('        phonePads = json["phone_pads"] as? Bool ?? false\n', '        phonePads = json["phone_pads"] as? Bool ?? false\n        showFps = json["show_fps"] as? Bool ?? true\n        mixAudio = json["mix_audio"] as? Bool ?? true\n'),
+('        json["phone_pads"] = phonePads\n', '        json["phone_pads"] = phonePads\n        json["show_fps"] = showFps\n        json["mix_audio"] = mixAudio\n'),
+("""                Section {
+                    Toggle("Prewarm pipelines", isOn: $s.prewarm)""", """                Section {
+                    Toggle("Show FPS", isOn: $s.showFps)
+                    Toggle("Music from other apps", isOn: $s.mixAudio)
+                } footer: {
+                    Text("Keep Spotify or other music playing while you play (game sound is mixed in)")
+                }
+                Section {
+                    Toggle("Prewarm pipelines", isOn: $s.prewarm)"""),
+("""        .onAppear {
+            files.scan()""", """        .onAppear {
+            applyAudioMix(s.mixAudio)
+            files.scan()"""),
+("""        .onChange(of: s.phonePads) {""", """        .onChange(of: s.mixAudio) { applyAudioMix(s.mixAudio) }
+        .onChange(of: s.phonePads) {"""),
+('let docsURL = ', """func applyAudioMix(_ mix: Bool) {
+    let session = AVAudioSession.sharedInstance()
+    try? session.setCategory(mix ? .ambient : .soloAmbient, mode: .default, options: mix ? [.mixWithOthers] : [])
+    try? session.setActive(true)
+}
+
+let docsURL = """),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, io, sw, "(Show FPS / Music from other apps)")
