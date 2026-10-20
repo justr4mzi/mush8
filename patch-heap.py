@@ -224,16 +224,16 @@ fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {
         std::thread::Builder::new()
             .name("pipeline-archive".into())
             .spawn(move || {
-                unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_BACKGROUND, 0) };
+                unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_UTILITY, 0) };
                 let existing = std::path::Path::new(DEVICE_ARCHIVE).exists();
                 let Some(archive) = (if existing { open_archive(Some(DEVICE_ARCHIVE)) } else { None }).or_else(|| open_archive(None)) else {
                     eprintln!("[gfx] could not create the device pipeline archive");
                     return;
                 };
                 let archive = Shared(archive);
-                let (mut added, mut pending) = (0usize, 0usize);
+                let (mut added, mut pending, mut rejected) = (0usize, 0usize, 0usize);
                 loop {
-                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(5)) {
+                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(2)) {
                         Ok(d) => {
                             objc2::rc::autoreleasepool(|_| {
                                 d.0.setBinaryArchives(None);
@@ -242,9 +242,20 @@ fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {
                                 let ok = open_archive(None).is_some_and(|t| {
                                     let t = Shared(t);
                                     let probe = format!("{DEVICE_ARCHIVE}.probe");
-                                    let r = add(&t, &d.0) && t.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&probe))).is_ok();
+                                    let r = if !add(&t, &d.0) {
+                                        Err("could not add it".to_string())
+                                    } else {
+                                        t.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&probe))).map_err(|e| e.localizedDescription().to_string())
+                                    };
                                     let _ = std::fs::remove_file(&probe);
-                                    r
+                                    if let Err(e) = &r {
+                                        rejected += 1;
+                                        if rejected <= 3 {
+                                            let e: String = e.chars().take(300).collect();
+                                            eprintln!("[gfx] pipeline left out of the device archive: {e}");
+                                        }
+                                    }
+                                    r.is_ok()
                                 });
                                 if ok && add(&archive, &d.0) {
                                     added += 1;
@@ -256,14 +267,14 @@ fn harvest(d: Retained<MTLRenderPipelineDescriptor>) {
                         Err(std::sync::mpsc::RecvTimeoutError::Timeout) => true,
                         Err(_) => return,
                     };
-                    if pending > 0 && (timed_out || pending >= 32) {
+                    if pending > 0 && (timed_out || pending >= 8) {
                         objc2::rc::autoreleasepool(|_| {
                             let _ = std::fs::create_dir_all("work");
                             let tmp = format!("{DEVICE_ARCHIVE}.tmp");
                             match archive.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&tmp))) {
                                 Ok(()) => {
                                     let _ = std::fs::rename(&tmp, DEVICE_ARCHIVE);
-                                    eprintln!("[gfx] device pipeline archive saved ({added} new pipelines this run)");
+                                    eprintln!("[gfx] device pipeline archive saved ({added} new pipelines this run, {rejected} left out)");
                                 }
                                 Err(e) => eprintln!("[gfx] could not save the device pipeline archive: {}", e.localizedDescription()),
                             }
