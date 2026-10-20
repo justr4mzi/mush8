@@ -1993,3 +1993,18 @@ assert m.count(old) == 1
 m = m.replace(old, '    eprintln!("[host] build {}", option_env!("GITHUB_SHA").map_or("local", |s| &s[..s.len().min(7)]));\n' + old)
 mn.write_text(m)
 print("patched", mn, "(build id in the log)")
+
+# ---------------------------------------------------------------------------
+# NX_TEX_SHRINK_MIN=W: with NX_TEX_DROP_SHRINK, only textures at least W
+# pixels wide (game size) are really shrunk; smaller reduced textures keep
+# their full size (sharpest levels filled by enlargement). The item textures
+# turn black when shrunk; the biggest textures (most of the memory) can still be.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        let sh = if shrink_mode() { skip } else { 0 };\n"
+assert y.count(old) == 1
+y = y.replace(old, """        static SHRINK_MIN: std::sync::LazyLock<u32> = std::sync::LazyLock::new(|| std::env::var("NX_TEX_SHRINK_MIN").ok().and_then(|v| v.trim().parse::<u32>().ok()).unwrap_or(0));
+        let sh = if shrink_mode() && key.width.max(height) >= *SHRINK_MIN { skip } else { 0 };
+""")
+tx.write_text(y)
+print("patched", tx, "(NX_TEX_SHRINK_MIN)")
