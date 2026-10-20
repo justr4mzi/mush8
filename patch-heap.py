@@ -1469,3 +1469,79 @@ assert y.count(old) == 1
 y = y.replace(old, old + "    h ^= (gfx::bc::sixteen() as u64) << 60;\n")
 tx.write_text(y)
 print("patched", bcp, tx, "(NX_TEX_16BIT)")
+
+
+# ---------------------------------------------------------------------------
+# NX_TEX_DROP_SHRINK=1 (with NX_TEX_DROP=1..3): the old, stronger variant. The
+# Metal texture really is smaller: up to 16x less memory and less GPU work for
+# big textures, but some objects can turn black (shaders expect the real size).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """        if skip > 0 {
+            DROPS.lock().unwrap().insert(key, skip);
+        } else {
+            DROPS.lock().unwrap().remove(&key);
+        }"""
+assert y.count(old) == 1
+y = y.replace(old, """        let sh = if shrink_mode() { skip } else { 0 };
+        if skip > 0 {
+            DROPS.lock().unwrap().insert(key, skip | if sh > 0 { 0x100 } else { 0 });
+        } else {
+            DROPS.lock().unwrap().remove(&key);
+        }
+        let levels = levels - sh;""")
+old = """            d.setWidth(key.width as usize);
+            d.setHeight(height as usize);"""
+assert y.count(old) == 1
+y = y.replace(old, """            d.setWidth((key.width >> sh).max(1) as usize);
+            d.setHeight((height >> sh).max(1) as usize);""")
+old = "fn dropped(key: &TexKey, _tex: &Texture) -> u32 {\n"
+assert y.count(old) == 1
+y = y.replace(old, """fn shrink_mode() -> bool {
+    static S: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TEX_DROP_SHRINK").is_some());
+    *S
+}
+
+""" + old)
+old = "    let skip = dropped(key, tex);\n"
+assert y.count(old) == 1
+y = y.replace(old, "    let raw = dropped(key, tex);\n    let (skip, shrunk) = (raw & 0xFF, raw & 0x100 != 0);\n")
+old = """            let levels = levels.min(layout.level_offsets.len() as u32);
+            let skip = if skip < levels { skip } else { 0 };"""
+assert y.count(old) == 1
+y = y.replace(old, """            let levels = (levels + if shrunk { skip } else { 0 }).min(layout.level_offsets.len() as u32);
+            let skip = if skip < levels { skip } else { 0 };""")
+old = "                    decode_async(tex, k, data, pieces, skip | srgb_bit(key.format), (key.width, key.height));\n"
+assert y.count(old) == 1
+y = y.replace(old, """                    if shrunk {
+                        for p in &mut pieces {
+                            p.sub.0 -= skip;
+                        }
+                    }
+                    decode_async(tex, k, data, pieces, (if shrunk { 0 } else { skip }) | srgb_bit(key.format), (key.width, key.height));
+""")
+old = """        None => {
+            let stride = u32_at(b, 0x5c);"""
+assert y.count(old) == 1
+y = y.replace(old, """        None => {
+            if shrunk {
+                return;
+            }
+            let stride = u32_at(b, 0x5c);""")
+tx.write_text(y)
+
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = "        let layered = matches!(tex.0.textureType(), MTLTextureType::Type2DArray | MTLTextureType::TypeCube | MTLTextureType::TypeCubeArray);\n        let slices = if layered { z..z + d.max(1) } else { 0..1 };\n        if tex.0.storageMode() == MTLStorageMode::Private {"
+assert z.count(old) == 1, "write_texels not found"
+z = z.replace(old, """        let skip = {
+            let tw = tex.0.width() as u32;
+            if tw == 0 || tw >= key.width { 0 } else { (key.width / tw).ilog2() as usize }
+        };
+        if level < skip {
+            return;
+        }
+        let level = level - skip;
+""" + old)
+md.write_text(z)
+print("patched", tx, md, "(NX_TEX_DROP_SHRINK)")
