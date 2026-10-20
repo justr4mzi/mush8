@@ -1365,3 +1365,107 @@ g = g.replace(old, """    static SKIP: std::sync::LazyLock<u32> = std::sync::Laz
 """)
 gm.write_text(g)
 print("patched", gm, "(even pacing with frameskip)")
+
+
+# ---------------------------------------------------------------------------
+# NX_TEX_16BIT=1: keep colour BC textures (BC1/2/3/7, decoded on the CPU) as
+# 16-bit pixels instead of 32-bit: half the memory (iOS killed the app for
+# memory on the character select). Less precise colours (banding).
+# BC1 -> A1BGR5, BC2/3/7 -> ABGR4. NX_TEX_16BIT=2 uses the other bit order,
+# in case the colours come out wrong with 1.
+bcp = pathlib.Path("crates/nxhost/src/gfx/bc.rs")
+b = bcp.read_text()
+old = """        Kind::Bc6(_) => P::RGBA16Float,
+        _ if srgb => P::RGBA8Unorm_sRGB,"""
+assert b.count(old) == 1
+b = b.replace(old, """        Kind::Bc6(_) => P::RGBA16Float,
+        Kind::Bc1 if sixteen() > 0 => P::A1BGR5Unorm,
+        _ if sixteen() > 0 => P::ABGR4Unorm,
+        _ if srgb => P::RGBA8Unorm_sRGB,""")
+b += """
+/// NX_TEX_16BIT: 0 = off, 1 = 16-bit colour textures, 2 = same, other bit order.
+pub fn sixteen() -> u32 {
+    static S: std::sync::LazyLock<u32> = std::sync::LazyLock::new(|| std::env::var("NX_TEX_16BIT").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(0).min(2));
+    *S
+}
+
+/// Repack RGBA8 pixels (rows of `row` bytes, `w` pixels) into 16-bit pixels.
+pub fn pack16(k: Kind, srgb: bool, src: &[u8], w: usize, h: usize, row: usize, out: &mut Vec<u8>) {
+    static LIN: std::sync::LazyLock<[u8; 256]> = std::sync::LazyLock::new(|| {
+        let mut t = [0u8; 256];
+        for (i, v) in t.iter_mut().enumerate() {
+            let c = i as f32 / 255.0;
+            let l = if c <= 0.04045 { c / 12.92 } else { ((c + 0.055) / 1.055).powf(2.4) };
+            *v = (l * 255.0 + 0.5) as u8;
+        }
+        t
+    });
+    let alt = sixteen() == 2;
+    for y in 0..h {
+        for x in 0..w {
+            let i = y * row + x * 4;
+            let Some(px) = src.get(i..i + 4) else {
+                out.extend_from_slice(&[0, 0]);
+                continue;
+            };
+            let (mut r, mut g, mut bl, a) = (px[0] as u16, px[1] as u16, px[2] as u16, px[3] as u16);
+            if srgb {
+                r = LIN[r as usize] as u16;
+                g = LIN[g as usize] as u16;
+                bl = LIN[bl as usize] as u16;
+            }
+            let v: u16 = match (k, alt) {
+                (Kind::Bc1, false) => (a >> 7) | (bl >> 3) << 1 | (g >> 3) << 6 | (r >> 3) << 11,
+                (Kind::Bc1, true) => (a >> 7) << 15 | (bl >> 3) << 10 | (g >> 3) << 5 | (r >> 3),
+                (_, false) => (a >> 4) | (bl >> 4) << 4 | (g >> 4) << 8 | (r >> 4) << 12,
+                (_, true) => (a >> 4) << 12 | (bl >> 4) << 8 | (g >> 4) << 4 | (r >> 4),
+            };
+            out.extend_from_slice(&v.to_le_bytes());
+        }
+    }
+}
+"""
+bcp.write_text(b)
+
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+# the sRGB flag rides in bit 16 of `skip`
+old = "                    decode_async(tex, k, data, pieces, skip, (key.width, key.height));\n"
+assert y.count(old) == 1
+y = y.replace(old, "                    decode_async(tex, k, data, pieces, skip | srgb_bit(key.format), (key.width, key.height));\n")
+old = "                Some(k) => decode_async(tex, k, src.to_vec(), pieces, 0, (key.width, key.height)),\n"
+assert y.count(old) == 1
+y = y.replace(old, "                Some(k) => decode_async(tex, k, src.to_vec(), pieces, srgb_bit(key.format), (key.width, key.height)),\n")
+old = "fn decode_pieces(k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>, skip: u32, full: (u32, u32)) -> (Vec<u8>, Vec<Piece>) {\n"
+assert y.count(old) == 1
+y = y.replace(old, """fn srgb_bit(nvn: u32) -> u32 {
+    if matches!(nvn, 69..=72 | 78) { 1 << 16 } else { 0 }
+}
+
+fn decode_pieces(k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>, skip: u32, full: (u32, u32)) -> (Vec<u8>, Vec<Piece>) {
+    let (skip, srgb) = (skip & 0xFFFF, skip >> 16 != 0);
+""")
+old = "    if skip > 0 {\n        let mut extra = Vec::new();"
+assert y.count(old) == 1
+y = y.replace(old, """    if gfx::bc::sixteen() > 0 && matches!(k, gfx::bc::Kind::Bc1 | gfx::bc::Kind::Bc2 | gfx::bc::Kind::Bc3 | gfx::bc::Kind::Bc7) {
+        let mut packed = Vec::with_capacity(decoded.len() / 2 + 64);
+        for p in &mut pieces {
+            let (w, h, d) = p.size;
+            let offset = packed.len();
+            for z in 0..d as usize {
+                let start = p.offset + z * p.image;
+                gfx::bc::pack16(k, srgb, decoded.get(start..).unwrap_or(&[]), w as usize, h as usize, p.row, &mut packed);
+            }
+            (p.offset, p.row, p.image) = (offset, w as usize * 2, w as usize * 2 * h as usize);
+            packed.resize(packed.len().next_multiple_of(16), 0);
+        }
+        decoded = packed;
+    }
+    if skip > 0 {
+        let mut extra = Vec::new();""")
+# cache key must change with the 16-bit mode
+old = "    let mut h = 0xcbf2_9ce4_8422_2325u64 ^ ((skip as u64) << 48) ^ ((full.0 as u64) << 24) ^ full.1 as u64;\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "    h ^= (gfx::bc::sixteen() as u64) << 60;\n")
+tx.write_text(y)
+print("patched", bcp, tx, "(NX_TEX_16BIT)")
