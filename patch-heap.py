@@ -1936,3 +1936,38 @@ assert r.count(old) == 1
 r = r.replace(old, 'let flags = "regular";')
 br.write_text(r)
 print("patched", br, "(no unwind entries for the embedded game code)")
+
+# ---------------------------------------------------------------------------
+# Device archive v2 must not compete with the game for the shader compiler:
+# adding a pipeline to an archive compiles it again in MTLCompilerService.
+# The archive thread now waits for the boot prewarm to finish, and before
+# each pipeline it waits until the game is not waiting for a pipeline
+# (DEMAND == 0), with a short pause between pipelines.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "fn save_group(group: &[Shared<MTLRenderPipelineDescriptor>], path: &str) -> Result<(), String> {\n    let a = Shared(open_archive(None).ok_or(\"could not create an archive\")?);\n    for d in group {\n"
+assert u.count(old) == 1
+u = u.replace(old, old + """        archive_wait_idle();
+""")
+old = "fn save_group("
+u = u.replace(old, """static PREWARM_DONE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Let the game and the boot prewarm use the shader compiler first.
+fn archive_wait_idle() {
+    use std::sync::atomic::Ordering::SeqCst;
+    let prewarm = std::env::var_os("NX_PREWARM").is_some();
+    while (prewarm && !PREWARM_DONE.load(SeqCst)) || DEMAND.load(SeqCst) > 0 {
+        std::thread::sleep(std::time::Duration::from_millis(50));
+    }
+    std::thread::sleep(std::time::Duration::from_millis(20));
+}
+
+fn save_group(""", 1)
+old = '            eprintln!("[gfx] prewarmed {}/{} recorded pipelines in {:.1} s ({} from the device archive)", built.into_inner(), list.len(), t0.elapsed().as_secs_f32(), PREWARM_HITS.load(Relaxed));\n'
+assert u.count(old) == 1
+u = u.replace(old, old + "            PREWARM_DONE.store(true, std::sync::atomic::Ordering::SeqCst);\n")
+old = "                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(3)) {"
+assert u.count(old) == 1
+u = u.replace(old, "                    let timed_out = match rx.recv_timeout(std::time::Duration::from_secs(5)) {")
+st.write_text(u)
+print("patched", st, "(device archive waits for the game and the prewarm)")
