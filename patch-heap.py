@@ -2404,3 +2404,121 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, sw, "(launcher: background textures, show memory, tools)")
+
+# ---------------------------------------------------------------------------
+# "Full shader prewarm" (launcher, off by default): before the game starts,
+# compile every recorded pipeline with all CPU cores, with a progress message
+# on screen; no compiling during races afterwards (NX_PREWARM_FULL=1).
+io = pathlib.Path("crates/nxhost/src/gfx/ios.rs")
+i = io.read_text()
+old = "fn set_status(text: &str) {"
+assert i.count(old) == 1
+i = i.replace(old, "pub fn set_status(text: &str) {")
+io.write_text(i)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "pub use ios::{run_app, set_touch_controls, show_fps, wait_foreground};"
+assert g.count(old) == 1
+g = g.replace(old, "pub use ios::{run_app, set_status, set_touch_controls, show_fps, wait_foreground};")
+gm.write_text(g)
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "            let (next, built) = (AtomicUsize::new(0), AtomicUsize::new(0));\n            std::thread::scope(|s| {\n                for _ in 0..2 {\n"
+assert u.count(old) == 1
+u = u.replace(old, """            let (next, built) = (AtomicUsize::new(0), AtomicUsize::new(0));
+            let full = std::env::var_os("NX_PREWARM_FULL").is_some();
+            PREWARM_TOTAL.store(list.len(), Relaxed);
+            let workers = if full { std::thread::available_parallelism().map_or(4, |n| n.get()).clamp(2, 6) } else { 2 };
+            std::thread::scope(|s| {
+                for _ in 0..workers {
+""")
+old = "                                    let n = built.fetch_add(1, Relaxed) + 1;\n"
+assert u.count(old) == 1
+u = u.replace(old, old + "                                    PREWARM_BUILT.store(n, Relaxed);\n")
+old = "pub fn prewarm() {"
+u = u.replace(old, """static PREWARM_TOTAL: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+static PREWARM_BUILT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+/// NX_PREWARM_FULL: hold the game until the prewarm is done, with progress on screen.
+pub fn prewarm_wait() {
+    use std::sync::atomic::Ordering::{Relaxed, SeqCst};
+    let t0 = std::time::Instant::now();
+    while !PREWARM_DONE.load(SeqCst) {
+        let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+        #[cfg(target_os = "ios")]
+        crate::gfx::set_status(&format!("Preparing shaders… {}%\\n\\n{n} / {total}\\nOnly slow the first time", n * 100 / total));
+        std::thread::sleep(std::time::Duration::from_millis(300));
+    }
+    #[cfg(target_os = "ios")]
+    crate::gfx::set_status("");
+    eprintln!("[gfx] full prewarm: game held for {:.0} s", t0.elapsed().as_secs_f32());
+}
+
+pub fn prewarm() {""", 1)
+st.write_text(u)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+d = dm.read_text()
+old = "pub use state::prewarm;"
+assert d.count(old) == 1
+d = d.replace(old, "pub use state::{prewarm, prewarm_wait};")
+dm.write_text(d)
+nm = pathlib.Path("crates/nxhost/src/nvn/mod.rs")
+n_ = nm.read_text()
+old = "pub use draw::{precompile, prewarm};"
+assert n_.count(old) == 1
+n_ = n_.replace(old, "pub use draw::{precompile, prewarm, prewarm_wait};")
+nm.write_text(n_)
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = "    if std::env::var_os(\"NX_PREWARM\").is_some() {\n        nvn::prewarm();\n    }\n"
+assert m.count(old) == 1
+m = m.replace(old, "    if std::env::var_os(\"NX_PREWARM\").is_some() || std::env::var_os(\"NX_PREWARM_FULL\").is_some() {\n        nvn::prewarm();\n        if std::env::var_os(\"NX_PREWARM_FULL\").is_some() {\n            nvn::prewarm_wait();\n        }\n    }\n")
+old = '    if field("async_textures").as_deref() != Some("true") {\n'
+assert m.count(old) == 1
+m = m.replace(old, '''    if field("full_prewarm").as_deref() == Some("true") {
+        def("NX_PREWARM_FULL", "1");
+    }
+    if let Some(v) = field("game_volume").and_then(|v| v.parse::<f32>().ok()) {
+        def("NX_VOLUME", &format!("{}", v.clamp(0.0, 1.0)));
+    }
+''' + old)
+mn.write_text(m)
+
+# Game volume (launcher slider, NX_VOLUME 0..1): scales the game's sound only,
+# handy with music from other apps.
+ou = pathlib.Path("crates/nxhost/src/audio/output.rs")
+o = ou.read_text()
+old = "    fn fill(&mut self, buf: &mut [i16]) {\n        (self.source)(buf);\n"
+assert o.count(old) == 1
+o = o.replace(old, """    fn fill(&mut self, buf: &mut [i16]) {
+        (self.source)(buf);
+        static VOL: std::sync::LazyLock<f32> = std::sync::LazyLock::new(|| std::env::var("NX_VOLUME").ok().and_then(|v| v.trim().parse::<f32>().ok()).unwrap_or(1.0).clamp(0.0, 1.0));
+        if *VOL < 0.999 {
+            for s in buf.iter_mut() {
+                *s = (*s as f32 * *VOL) as i16;
+            }
+        }
+""")
+ou.write_text(o)
+
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var showMemory = true\n", "    @Published var showMemory = true\n    @Published var fullPrewarm = false\n    @Published var gameVolume = 1.0\n"),
+('        showMemory = json["show_memory"] as? Bool ?? true\n', '        showMemory = json["show_memory"] as? Bool ?? true\n        fullPrewarm = json["full_prewarm"] as? Bool ?? false\n        gameVolume = json["game_volume"] as? Double ?? 1.0\n'),
+('        json["show_memory"] = showMemory\n', '        json["show_memory"] = showMemory\n        json["full_prewarm"] = fullPrewarm\n        json["game_volume"] = gameVolume\n'),
+("""                    Toggle("Music from other apps", isOn: $s.mixAudio)""", """                    Toggle("Music from other apps", isOn: $s.mixAudio)
+                    HStack {
+                        Image(systemName: "speaker.fill").foregroundStyle(.secondary)
+                        Slider(value: $s.gameVolume, in: 0...1)
+                        Text("\\(Int(s.gameVolume * 100))%").monospacedDigit().foregroundStyle(.secondary).frame(width: 44, alignment: .trailing)
+                    }"""),
+("""                    Toggle("Prewarm pipelines", isOn: $s.prewarm)""", """                    Toggle("Prewarm pipelines", isOn: $s.prewarm)
+                    Toggle("Full prewarm before playing (experimental)", isOn: $s.fullPrewarm)"""),
+("""                    Text("Builds the game's graphics pipelines in the background at startup")""", """                    Text("Builds the game's graphics pipelines in the background at startup. Full prewarm: waits until all of them are ready (slow the first time, then no compiling during races).")"""),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", st, mn, ou, sw, "(full prewarm, game volume)")
