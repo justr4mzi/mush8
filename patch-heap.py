@@ -2717,3 +2717,17 @@ g = g.replace(old, """        let mut last_used = 0u64;
             let (used, left) = (now, available_memory());""")
 gm.write_text(g)
 print("patched", tx, gm, "(upload staging limit, memory jump log)")
+
+# NX_SKIP_SHADERS=hash,hash: never draw with these vertex/fragment shaders
+# (to test whether one shader brings the game down).
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "        let mut key = PipeKey::new();\n        for w in [vs_key.0, vs_key.1 as u64, fs_key,"
+assert u.count(old) == 1
+u = u.replace(old, """        static SKIP: LazyLock<Vec<u64>> = LazyLock::new(|| std::env::var("NX_SKIP_SHADERS").unwrap_or_default().split(',').filter_map(|s| u64::from_str_radix(s.trim(), 16).ok()).collect());
+        if !SKIP.is_empty() && (SKIP.contains(&vs_key.0) || SKIP.contains(&fs_key)) {
+            return Err("shader skipped (NX_SKIP_SHADERS)");
+        }
+""" + old)
+st.write_text(u)
+print("patched", st, "(NX_SKIP_SHADERS)")
