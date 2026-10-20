@@ -1243,6 +1243,7 @@ fn decode_async(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, pieces: Vec<Piec
     };
     let t = Shared(unsafe { objc2::rc::Retained::retain(tex as *const Texture as *mut Texture) }.expect("texture"));
     let job: Job = Box::new(move || {
+        let t = t; // capture the whole Shared (Send), not just its field
         if GENS.lock().unwrap().get(&id) != Some(&generation) {
             return;
         }
