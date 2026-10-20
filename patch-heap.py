@@ -2731,3 +2731,30 @@ u = u.replace(old, """        static SKIP: LazyLock<Vec<u64>> = LazyLock::new(||
 """ + old)
 st.write_text(u)
 print("patched", st, "(NX_SKIP_SHADERS)")
+
+# ---------------------------------------------------------------------------
+# Memory: pipelines the prewarm found in the device archive are not kept
+# (the game gets them back from the archive in about a millisecond when it
+# needs them); only freshly compiled ones stay in memory. The last race used
+# 2.97 of the ~3.07 GB iOS allows, races that need a bit more were killed.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "                                    PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));\n"
+assert u.count(old) == 1
+u = u.replace(old, "                                    if !from_archive {\n                                        PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));\n                                    }\n")
+st.write_text(u)
+
+# Launcher Textures: "Ultra low" = NX_TEX_DROP=3 (8x smaller sharpest size)
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '            for (k, v) in [("NX_TEX_DROP", "2"), ("NX_TEX_DROP_SHRINK", "1"), ("NX_TEX_DROP_MIN", "256")] {'
+assert m.count(old) == 1
+m = m.replace(old, '            for (k, v) in [("NX_TEX_DROP", if q == "ultralow" { "3" } else { "2" }), ("NX_TEX_DROP_SHRINK", "1"), ("NX_TEX_DROP_MIN", if q == "ultralow" { "128" } else { "256" })] {')
+mn.write_text(m)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+old = '                        Text("Very low (fastest)").tag("verylow")\n'
+assert w.count(old) == 1
+w = w.replace(old, '                        Text("Ultra low (least memory)").tag("ultralow")\n' + old)
+sw.write_text(w)
+print("patched", st, mn, sw, "(prewarm keeps only fresh pipelines, Ultra low textures)")
