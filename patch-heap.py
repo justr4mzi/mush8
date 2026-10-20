@@ -1027,9 +1027,7 @@ z = z.replace(old, """                Cmd::Draw(d) => {
 old = """                Cmd::SetRenderTargets { colors, depth } => {
 """
 assert z.count(old) == 1
-z = z.replace(old, old + """                    if *FRAMESKIP_ON {
-                        note_render_targets(colors, depth);
-                    }
+z = z.replace(old, old + """                    note_render_targets(colors, depth);
 """)
 for arm in ("                Cmd::ClearColor { index, rgba } => {\n", "                Cmd::ClearDepthStencil { depth: z, stencil } => {\n"):
     assert z.count(arm) == 1, arm
@@ -1040,6 +1038,15 @@ for arm in ("                Cmd::ClearColor { index, rgba } => {\n", "         
 old = "/// NX_FRAMESKIP=N: draw and show 1 frame out of N+1; the game itself still runs every frame.\n"
 assert z.count(old) == 1
 z = z.replace(old, '''static SKIP_RT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+static RT_REPEAT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// True when the current render targets were also rendered in one of the last
+/// 2 frames: a pipeline still compiling can then be skipped for a frame or two
+/// instead of stalling the whole game (see exec.rs).
+fn rt_repeat() -> bool {
+    static OFF: LazyLock<bool> = LazyLock::new(|| std::env::var_os("NX_NO_ASYNC_REPEAT").is_some());
+    !*OFF && RT_REPEAT.load(Relaxed)
+}
 
 /// Called for every render target change when frameskip is on: decides whether
 /// the draws into these targets may be skipped on a skipped frame (only if the
@@ -1061,8 +1068,10 @@ fn note_render_targets(colors: &[Option<Box<cmd::TexBuilder>>], depth: &Option<B
     }
     let frame = FRAME.load(Relaxed);
     let mut last = LAST.lock().unwrap();
-    let recent = last.get(&h).is_some_and(|&f| frame > f && frame - f <= *N);
-    let skip = skip_frame() && recent;
+    let prev = last.get(&h).copied();
+    RT_REPEAT.store(prev.is_some_and(|f| frame > f && frame - f <= (*N).max(1) + 1), Relaxed);
+    let recent = prev.is_some_and(|f| frame > f && frame - f <= *N);
+    let skip = *N > 0 && skip_frame() && recent;
     SKIP_RT.store(skip, Relaxed);
     if !skip {
         last.insert(h, frame);
@@ -1075,3 +1084,16 @@ fn note_render_targets(colors: &[Option<Box<cmd::TexBuilder>>], depth: &Option<B
 ''' + old)
 md.write_text(z)
 print("patched", md, "(frameskip keeps rarely rendered targets)")
+
+# A render target the game draws every frame (the race scene, menus) no longer
+# waits for a pipeline that is still compiling: the draw is skipped for a frame
+# or two instead of freezing the game for up to several seconds. Targets drawn
+# for the first time still wait (they could otherwise stay empty).
+# NX_NO_ASYNC_REPEAT=1 in env.txt turns it off.
+ex = pathlib.Path("crates/nxhost/src/nvn/draw/exec.rs")
+x = ex.read_text()
+old = "        let wait = self.pass.as_ref().unwrap().fresh && std::env::var_os(\"NX_ASYNC_ALL\").is_none();"
+assert x.count(old) == 1
+x = x.replace(old, "        let wait = self.pass.as_ref().unwrap().fresh && std::env::var_os(\"NX_ASYNC_ALL\").is_none() && !super::rt_repeat();")
+ex.write_text(x)
+print("patched", ex, "(no stall on targets drawn every frame)")
