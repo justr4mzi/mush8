@@ -1007,3 +1007,71 @@ assert g.count(old) == 1
 g = g.replace(old, "pub use ios::{run_app, set_touch_controls, show_fps, wait_foreground};")
 gm.write_text(g)
 print("patched", io, "(on-screen fps)")
+
+# NX_FRAMESKIP, smarter: on a skipped frame only skip the draws and clears into
+# render targets that were also rendered in the last N frames (the per-frame
+# scene, shadows, post effects...). Targets rendered once or rarely (kart
+# preview, Mii faces, environment maps, the "1st race" scene setup) are still
+# drawn, otherwise they stayed black.
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = """                Cmd::Draw(d) => {
+                    if skip_frame() {
+                        continue;
+                    }"""
+assert z.count(old) == 1
+z = z.replace(old, """                Cmd::Draw(d) => {
+                    if skip_frame() && SKIP_RT.load(Relaxed) {
+                        continue;
+                    }""")
+old = """                Cmd::SetRenderTargets { colors, depth } => {
+"""
+assert z.count(old) == 1
+z = z.replace(old, old + """                    if *FRAMESKIP_ON {
+                        note_render_targets(colors, depth);
+                    }
+""")
+for arm in ("                Cmd::ClearColor { index, rgba } => {\n", "                Cmd::ClearDepthStencil { depth: z, stencil } => {\n"):
+    assert z.count(arm) == 1, arm
+    z = z.replace(arm, arm + """                    if skip_frame() && SKIP_RT.load(Relaxed) {
+                        continue;
+                    }
+""")
+old = "/// NX_FRAMESKIP=N: draw and show 1 frame out of N+1; the game itself still runs every frame.\n"
+assert z.count(old) == 1
+z = z.replace(old, '''static SKIP_RT: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Called for every render target change when frameskip is on: decides whether
+/// the draws into these targets may be skipped on a skipped frame (only if the
+/// same targets were rendered in one of the last N frames).
+fn note_render_targets(colors: &[Option<Box<cmd::TexBuilder>>], depth: &Option<Box<cmd::TexBuilder>>) {
+    static LAST: LazyLock<Mutex<std::collections::HashMap<u64, u64>>> = LazyLock::new(|| Mutex::new(std::collections::HashMap::new()));
+    static N: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0).min(4));
+    let mut h = 0xcbf2_9ce4_8422_2325u64;
+    let mut mix = |b: &[u8]| {
+        for &x in b {
+            h = (h ^ x as u64).wrapping_mul(0x100_0000_01b3);
+        }
+    };
+    for c in colors.iter().chain(std::iter::once(depth)) {
+        match c {
+            Some(b) => mix(&b[..]),
+            None => mix(&[0xff]),
+        }
+    }
+    let frame = FRAME.load(Relaxed);
+    let mut last = LAST.lock().unwrap();
+    let recent = last.get(&h).is_some_and(|&f| frame > f && frame - f <= *N);
+    let skip = skip_frame() && recent;
+    SKIP_RT.store(skip, Relaxed);
+    if !skip {
+        last.insert(h, frame);
+        if last.len() > 4096 {
+            last.retain(|_, f| frame.saturating_sub(*f) < 600);
+        }
+    }
+}
+
+''' + old)
+md.write_text(z)
+print("patched", md, "(frameskip keeps rarely rendered targets)")
