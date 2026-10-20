@@ -2647,3 +2647,73 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", tt, mk, st, mn, sw, "(precompiled shaders for A15 and A16)")
+
+# ---------------------------------------------------------------------------
+# Texture upload staging limit. Each texture upload copies its pixels into a
+# fresh shared buffer that lives until the GPU has copied it; loading a track
+# uploads hundreds of textures in one go, and those buffers pile up (a likely
+# reason for the game being killed while a race loads). At most ~96 MB of
+# staging buffers stay in flight: beyond that, wait for the oldest uploads.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """    enc.endEncoding();
+    cb.commit();
+}
+
+pub fn compare_fn(nvn: u32) -> MTLCompareFunction {"""
+assert y.count(old) == 1
+y = y.replace(old, """    enc.endEncoding();
+    cb.commit();
+    throttle_staging(cb, total);
+}
+
+static STAGING: std::sync::Mutex<std::collections::VecDeque<(Shared<gfx::CommandBuffer>, usize)>> = std::sync::Mutex::new(std::collections::VecDeque::new());
+
+fn throttle_staging(cb: objc2::rc::Retained<gfx::CommandBuffer>, bytes: usize) {
+    const LIMIT: usize = 96 << 20;
+    let mut q = STAGING.lock().unwrap();
+    q.retain(|(c, _)| !matches!(c.0.status(), MTLCommandBufferStatus::Completed | MTLCommandBufferStatus::Error));
+    q.push_back((Shared(cb), bytes));
+    let mut total: usize = q.iter().map(|(_, b)| *b).sum();
+    let mut waited = false;
+    while total > LIMIT && q.len() > 1 {
+        let (c, b) = q.pop_front().unwrap();
+        c.0.waitUntilCompleted();
+        total -= b;
+        waited = true;
+    }
+    drop(q);
+    static LOGGED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+    if waited && LOGGED.fetch_add(1, std::sync::atomic::Ordering::Relaxed) < 5 {
+        eprintln!("[gfx] texture uploads: waited for the GPU (over 96 MB of upload buffers in flight)");
+    }
+}
+
+pub fn compare_fn(nvn: u32) -> MTLCompareFunction {""")
+tx.write_text(y)
+
+# Memory log: also every time the app grows or shrinks by 150 MB within a
+# second (shows what happens right before iOS closes the app).
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = """        loop {
+            std::thread::sleep(std::time::Duration::from_secs(10));
+            let (used, left) = (footprint(), available_memory());"""
+assert g.count(old) == 1
+g = g.replace(old, """        let mut last_used = 0u64;
+        let mut tick = 0u32;
+        loop {
+            std::thread::sleep(std::time::Duration::from_secs(1));
+            tick += 1;
+            let now = footprint();
+            if tick % 10 != 0 {
+                if now.abs_diff(last_used) > 150 << 20 && last_used != 0 {
+                    eprintln!("[mem] {:.0} s: jump to {} MB (was {} MB), iOS still allows {} MB", t0.elapsed().as_secs_f32(), now >> 20, last_used >> 20, available_memory() >> 20);
+                    last_used = now;
+                }
+                continue;
+            }
+            last_used = now;
+            let (used, left) = (now, available_memory());""")
+gm.write_text(g)
+print("patched", tx, gm, "(upload staging limit, memory jump log)")
