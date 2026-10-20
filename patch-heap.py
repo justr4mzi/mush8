@@ -2522,3 +2522,46 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", st, mn, ou, sw, "(full prewarm, game volume)")
+
+# ---------------------------------------------------------------------------
+# Launcher: "Full prewarm on first launch" (auto, when the app has no saved
+# pipeline archive yet) and "Quiet mode" (no log, no watchdog, no memory log:
+# a little less CPU; turn it off to send a log). Both off by default.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("full_prewarm").as_deref() == Some("true") {\n        def("NX_PREWARM_FULL", "1");\n    }\n'
+assert m.count(old) == 1
+m = m.replace(old, '''    let first_launch = std::fs::read_dir("work/devarch").map_or(true, |r| r.flatten().all(|e| !e.file_name().to_string_lossy().ends_with(".metalar")));
+    if field("full_prewarm").as_deref() == Some("true") || (field("auto_full_prewarm").as_deref() == Some("true") && first_launch) {
+        def("NX_PREWARM_FULL", "1");
+        if first_launch {
+            eprintln!("[host] first launch: full shader prewarm before playing");
+        }
+    }
+    if field("quiet").as_deref() == Some("true") {
+        eprintln!("[host] quiet mode: no more log from here (turn it off in the launcher to get a log)");
+        def("NX_NO_WATCHDOG", "1");
+        def("NX_NO_MEMLOG", "1");
+        if let Ok(null) = std::fs::OpenOptions::new().write(true).open("/dev/null") {
+            use std::os::fd::AsRawFd;
+            unsafe { libc::dup2(null.as_raw_fd(), 2) };
+        }
+    }
+''')
+mn.write_text(m)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var fullPrewarm = false\n", "    @Published var fullPrewarm = false\n    @Published var autoFullPrewarm = false\n    @Published var quiet = false\n"),
+('        fullPrewarm = json["full_prewarm"] as? Bool ?? false\n', '        fullPrewarm = json["full_prewarm"] as? Bool ?? false\n        autoFullPrewarm = json["auto_full_prewarm"] as? Bool ?? false\n        quiet = json["quiet"] as? Bool ?? false\n'),
+('        json["full_prewarm"] = fullPrewarm\n', '        json["full_prewarm"] = fullPrewarm\n        json["auto_full_prewarm"] = autoFullPrewarm\n        json["quiet"] = quiet\n'),
+("""                    Toggle("Full prewarm before playing (experimental)", isOn: $s.fullPrewarm)""", """                    Toggle("Full prewarm before playing (experimental)", isOn: $s.fullPrewarm)
+                    Toggle("Full prewarm on first launch only", isOn: $s.autoFullPrewarm)"""),
+("""                    Button("Clean up unneeded files") { toolMessage = cleanWork() }""", """                    Toggle("Quiet mode (no log)", isOn: $s.quiet)
+                    Button("Clean up unneeded files") { toolMessage = cleanWork() }"""),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, sw, "(first-launch full prewarm, quiet mode)")
