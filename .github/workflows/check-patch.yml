@@ -7,13 +7,17 @@ name: Check patch
 
 on:
   workflow_dispatch:
+    inputs:
+      runner:
+        description: "macOS runner label"
+        default: "macos-26"
 
 permissions:
   contents: write
 
 jobs:
   check:
-    runs-on: macos-26
+    runs-on: ${{ inputs.runner || 'macos-26' }}
     timeout-minutes: 60
     env:
       TOOLCHAIN: 1.98.1
