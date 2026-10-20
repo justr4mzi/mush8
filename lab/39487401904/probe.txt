@@ -1,0 +1,64 @@
++ W=probe
++ rm -rf probe
++ mkdir -p probe
++ xcrun -sdk iphoneos metal -target air64-apple-ios26.0 -c a16/probe.metal -o probe/probe.air
++ xcrun -sdk iphoneos metallib probe/probe.air -o probe/probe.metallib
++ python3 a16/gen.py --probe /Users/runner/work/mush8/mush8/probe/probe.metallib
++ cat probe/probe.mtlp-json
+{
+ "libraries": {
+  "paths": [
+   {
+    "label": "P",
+    "path": "/Users/runner/work/mush8/mush8/probe/probe.metallib"
+   }
+  ]
+ },
+ "pipelines": {
+  "render_pipelines": [
+   {
+    "vertex_function": "alias:P#probe_vs",
+    "fragment_function": "alias:P#probe_fs",
+    "color_attachments": [
+     {
+      "pixel_format": "BGRA8Unorm_sRGB",
+      "write_mask": "Red Alpha",
+      "blending_enabled": true,
+      "rgb_blend_operation": "Max",
+      "alpha_blend_operation": "ReverseSubtract",
+      "source_rgb_blend_factor": "SourceAlpha",
+      "destination_rgb_blend_factor": "OneMinusSourceAlpha",
+      "source_alpha_blend_factor": "BlendColor",
+      "destination_alpha_blend_factor": "Zero"
+     },
+     {},
+     {
+      "pixel_format": "RGBA8Uint",
+      "write_mask": "All"
+     }
+    ],
+    "depth_attachment_pixel_format": "Depth32Float_Stencil8",
+    "stencil_attachment_pixel_format": "Depth32Float_Stencil8"
+   }
+  ]
+ }
+}
++ xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 probe/probe.mtlp-json -o probe/out.metalar
+metal-tt: Architectures not supported for deployment target 'iOS 26.0': 'applegpu_g5p', 'applegpu_g9p', 'applegpu_g9g', 'applegpu_g10p', 'applegpu_g11p', 'applegpu_g12p', 'applegpu_g13p', 'applegpu_g13g', 'applegpu_g13s', 'applegpu_g13d', 'applegpu_g14p', 'applegpu_g14g', 'applegpu_g14s', 'applegpu_g14d', 'applegpu_g15p', 'applegpu_g15g', 'applegpu_g15s', 'applegpu_g15d', 'applegpu_g16p', 'applegpu_g16g', 'applegpu_g16s', 'applegpu_g17p', 'amdgpu_gfx803', 'amdgpu_gfx802', 'amdgpu_gfx900', 'amdgpu_gfx904', 'amdgpu_gfx906', 'amdgpu_gfx1010_nsgc', 'amdgpu_gfx1010', 'amdgpu_gfx1011', 'amdgpu_gfx1012', 'amdgpu_gfx1030', 'amdgpu_gfx1032', 'intelgpu_kbl_gt2r0', 'intelgpu_kbl_gt2r2', 'intelgpu_kbl_gt2r4', 'intelgpu_kbl_gt3r1', 'intelgpu_kbl_gt3r6', 'intelgpu_icl_1x6x8r7', 'intelgpu_icl_1x8x8r7'
++ xcrun metal-lipo -archs probe/out.metalar
+air-lipo: error: 'probe/out.metalar': No such file or directory
++ xcrun metal-lipo -thin applegpu_g15p -output probe/g15p.metalar probe/out.metalar
+air-lipo: error: 'probe/out.metalar': No such file or directory
++ for f in out g15p
++ rm -rf probe/src-out
++ xcrun metal-source -flatbuffers=json probe/out.metalar -o probe/src-out
+metal-source: error: can't open 'probe/out.metalar': No such file or directory
++ for f in out g15p
++ rm -rf probe/src-g15p
++ xcrun metal-source -flatbuffers=json probe/g15p.metalar -o probe/src-g15p
+metal-source: error: can't open 'probe/g15p.metalar': No such file or directory
++ sed 's/"pixel_format"/"pixel_formatXX"/' probe/probe.mtlp-json
++ xcrun -sdk iphoneos metal-tt -target air64-apple-ios26.0 probe/bad.mtlp-json -o probe/bad.metalar
+metal-tt: Architectures not supported for deployment target 'iOS 26.0': 'applegpu_g5p', 'applegpu_g9p', 'applegpu_g9g', 'applegpu_g10p', 'applegpu_g11p', 'applegpu_g12p', 'applegpu_g13p', 'applegpu_g13g', 'applegpu_g13s', 'applegpu_g13d', 'applegpu_g14p', 'applegpu_g14g', 'applegpu_g14s', 'applegpu_g14d', 'applegpu_g15p', 'applegpu_g15g', 'applegpu_g15s', 'applegpu_g15d', 'applegpu_g16p', 'applegpu_g16g', 'applegpu_g16s', 'applegpu_g17p', 'amdgpu_gfx803', 'amdgpu_gfx802', 'amdgpu_gfx900', 'amdgpu_gfx904', 'amdgpu_gfx906', 'amdgpu_gfx1010_nsgc', 'amdgpu_gfx1010', 'amdgpu_gfx1011', 'amdgpu_gfx1012', 'amdgpu_gfx1030', 'amdgpu_gfx1032', 'intelgpu_kbl_gt2r0', 'intelgpu_kbl_gt2r2', 'intelgpu_kbl_gt2r4', 'intelgpu_kbl_gt3r1', 'intelgpu_kbl_gt3r6', 'intelgpu_icl_1x6x8r7', 'intelgpu_icl_1x8x8r7'
++ echo 'bad key exit: 1'
+bad key exit: 1

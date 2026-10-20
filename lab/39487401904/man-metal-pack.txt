@@ -1,0 +1,82 @@
+METAL-PACK(1)			     Metal			 METAL-PACK(1)
+
+NAME
+       metal-pack - Metal binary optimizing packer
+
+SYNOPSIS
+       metal-pack [filenames...] [options]
+
+DESCRIPTION
+       metal-pack combines a list of metallibs, machos, or universal binaries
+       into a single output file.
+
+       The format of the output file depends on the input files. If all input
+       files share the same architecture, a thin binary is generated.
+       Otherwise a universal binary is emitted.
+
+       Inputs files can contain different kinds of resources: metallibs,
+       descriptors, reflections, and sources. How to optimize each kind of
+       resource can be controlled using the -pack-metallibs,
+       -pack-descriptors, -pack-reflections, and -pack-sources options.
+
+       There are three different packing policies.
+
+       The none policy just copies the resources from the input files into the
+       output file. If a referenced resource is not directly stored into the
+       input file -- e.g. a temporary file -- just the reference to the
+       resource is copied -- e.g. the path to the temporary file.
+
+       The internal policy embeds each resource referenced by each slice into
+       the slice itself. So, for instance, if the foo.airr reflection is
+       referenced by the amdgpu_gfx600 slice, the reflection is inlined into
+       the amdgpu_gfx600 slice itself. If the same reflection is referenced by
+       multiple slices, it will be stored multiple times into each slice.
+
+       The external policy is an experimental policy where common resources
+       referenced by multiple slices are stored in a common slice in the
+       output file.
+
+       The -pack-metallibs and -pack-descriptors options only supports the
+       internal packing policy.
+
+OPTIONS
+       metal-pack supports the following options:
+
+       -help, -h
+	      Display usage information and exit.
+
+       -version
+	      Display the version of this program.
+
+       -pack-metallibs <policy>
+	      Set the metallibs packing policy.
+
+       -pack-descriptors <policy>
+	      Set the descriptors packing policy.
+
+       -pack-reflections <policy>
+	      Set the reflections packing policy.
+
+       -pack-sources <policy>
+	      Set the sources packing policy.
+
+       -o <filename>
+	      Set the output file name.
+
+       -nthreads <n>
+	      Perform optimization using n threads.
+
+       -stats Display statistics about packed inputs.
+
+BUGS
+       To report bugs, please visit
+       <https://developer.apple.com/bug-reporting/>.
+
+INTERNET RESOURCES
+       Metal Shading Language Specification:
+       <https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf>
+
+COPYRIGHT
+       2014-2025, The Metal Team
+
+32023				 April 4, 2025			 METAL-PACK(1)

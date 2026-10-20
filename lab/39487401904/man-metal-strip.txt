@@ -1,0 +1,70 @@
+METAL-STRIP(1)			     Metal			METAL-STRIP(1)
+
+NAME
+       metal-strip - metal stripping tool
+
+SYNOPSIS
+       metal-strip [options] filename
+
+DESCRIPTION
+       The default behavior of metal-strip is to strip out non-public symbols
+       from <filename>. More information can be stripped out by using
+       individual options.
+
+OPTIONS
+
+       -help  Display available options.
+
+       -version
+	      Display metal-strip version.
+
+       -arch <arch>
+	      Add <arch> to the list of slices to strip. It can be specified
+	      multiple times. The default behavior is to strip to all the
+	      slices.
+
+       -o <filename>
+	      Write output to <filename>. If not specified, the overwrite the
+	      input file.
+
+       -S     Strip debug info -- default is off.
+
+       -T     Strip type names -- default is off.
+
+       -debug_line_table
+	      Save debug line tables when stripping out debug info.
+
+       -source_metadata
+	      Save source embedded into the binary -- default is off.
+
+       -save_tracepoint_metadata
+	      Save tracepoint data structures -- default is off.
+
+EXAMPLES
+       To strip out non-public symbols:
+
+	  $ metal-strip foo.metallib -o foo-stripped.metallib
+
+       To strip out type names as well:
+
+	  $ metal-strip foo.metallib -T -o foo-stripped.metallib
+
+       To strip out debug info:
+
+	  $ metal-strip foo.metallib -S -o foo-stripped.metallib
+
+       To strip out all debug info but line table info:
+
+	  $ metal-strip foo.metallib -S -debug_line_table -o foo-stripped.metalllib
+
+BUGS
+       To report bugs, please visit
+       <https://developer.apple.com/bug-reporting/>.
+
+SEE ALSO
+       metal-toolchain(7)
+
+COPYRIGHT
+       2014-2025, The Metal Team
+
+32023				 April 4, 2025			METAL-STRIP(1)

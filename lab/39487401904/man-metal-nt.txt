@@ -1,0 +1,243 @@
+METAL-NT(1)			     Metal			   METAL-NT(1)
+
+NAME
+       metal-nt - metal native translator
+
+SYNOPSIS
+       metal-nt [options] [filename]
+
+DESCRIPTION
+       metal-nt is a tool translating AIR virtual code to native code. The
+       translation process is driven by the input file kind and an optional
+       script, specified via the -N option. Each file kind has an associated
+       script kind. Each script kind supports multiple formats. In particular,
+       for those scripts backed by a FlatBuffer, both the JSON and binary
+       representation of the FlatBuffer are valid script formats.
+
+CORE TRANSLATIONS
+       The translation of an assembly or object file produces a target
+       specific assembly file, or a MachO MH_OBJECT file. AIR assembly/objects
+       scripts can be used to customize the translation process. They are both
+       backed by FlatBuffers.  The file extensions of the FlatBuffer JSON
+       representations are .aira-json and .airo-json. The file extensions of
+       the FlatBuffer binary representations are .aira and .airo.
+
+       The translation of an executable MetalLib results in a MachO
+       MH_GPU_EXECUTE file. Each qualified function in the MetalLib is
+       translated independently. An AIR function script can be used to
+       customize the translation process of a single qualified function. AIR
+       functions scripts are backed by FlatBuffers. The file extension for the
+       Flatbuffer JSON encoding is .airf-json. The file extension of the
+       Flatbuffer binary encoding is .airf. If a function script is not
+       specified, all the qualified functions in the MetalLib are translated.
+       This still results in a single MachO being generated, containing the
+       translation of all the qualified functions.
+
+       The translation of a MetalLib dynamic library produces a MachO
+       MH_GPU_DYLIB.  An AIR dynamic library script can be used to customize
+       the translation process.  Such script is backed by a Flatbuffer. The
+       file extension of the JSON encoding is .aird-json. The file extension
+       of the binary encoding is .aird.
+
+       A pipeline can be created by invoking metal-nt with an executable
+       MetalLib and an AIR pipeline script. AIR pipeline scripts are backed by
+       Flatbuffers. The Flatbuffer JSON encoding file extension is .airp-json.
+       The Flatbuffer binary encoding file extension is .airp. The provided
+       MetalLib must contains all the qualified functions referenced by the
+       AIR pipeline script. The output of a pipeline translation is a MachO
+       MH_GPU_EXECUTE.
+
+       Plugins implementing translation to binary code might provide support
+       for builtin scripts. Such kind of scripts does not require any
+       assembly, object, or MetalLib file input. The output of a builtin
+       translation is a MachO MH_GPU_EXECUTE. The file extension and contents
+       of builtin scripts are specific to each plugin. Refer to each plugin
+       documentation for more information.
+
+METAL TRANSLATIONS
+       Metal pipelines scripts describe how to create a pipeline using a
+       syntax that mirrors the one provided by the Metal.framework API. They
+       are backed by Flatbuffers. The JSON encoding file extension is
+       .mtlp-json. The binary encoding file extension is .mtlp.
+
+       Metal pipelines scripts are way more expressive than AIR pipeline
+       scripts.  Qualified functions of a specific MetalLib can be directly
+       referenced from a Metal pipelines script, removing the need of
+       providing a MetalLib argument to metal-nt. They also allow to
+       specialize qualified functions and to stitch them together prior of
+       pipeline creation.
+
+       The output of a Metal pipelines script translation is a MachO of type
+       MH_GPU_EXECUTE that contains the translation of all the pipelines
+       described by the Metal pipelines script.
+
+OPTIONS
+
+       -archs Display all the architectures that can be targeted.
+
+       -impls <arch>
+	      Display all the implementations that can be targeted by the
+	      specified architecture.
+
+       -available <arch> <platform> <min_version>
+	      Display whether the specified target is supported. <platform> is
+	      one of the following strings:
+
+	      • ios
+
+	      • ios-simulator
+
+	      • mac-catalyst
+
+	      • tvos
+
+	      • tvos-simulator
+
+	      • watchos
+
+	      • watchos-simulator
+
+	      • xros
+
+	      • xros-simulator
+
+	      • macos
+
+	      The format of <min_version> is a version number such as 16.0 or
+	      16.2.
+
+       -available-archs <platform> <min_version>
+	      Display all the architectures that can be targeted for the
+	      specified target.  <platform> and <min_version> follow the same
+	      rules documented for the -available flag.
+
+       -arch <name>
+	      Select the architecture to target.
+
+       -platform_version <platform> <min_version> <sdk_version>
+	      Set the platform name, minimum deployment target version, and
+	      the SDK version the output is going to be built against.
+	      <platform> is one of the following strings:
+
+	      • ios
+
+	      • ios-simulator
+
+	      • mac-catalyst
+
+	      • tvos
+
+	      • tvos-simulator
+
+	      • watchos
+
+	      • watchos-simulator
+
+	      • xros
+
+	      • xros-simulator
+
+	      • macos
+
+	      Specifying a newer min or SDK version allows to assume features
+	      of that OS or SDK in the output file. The format of
+	      <min_version> and <sdk_version> is a version number such as 16.0
+	      or 16.2.
+
+       -load <filename>
+	      Load a plugin supporting translation for a set of architectures
+	      or providing legalization passes.
+
+       -i     Prints information about all the loaded plugins.
+
+       -S     Translate an assembly file.
+
+       -c <filename>
+	      Override the configuration file path.
+
+       -N <filename>
+	      Set a translation script.
+
+       -o <filename>
+	      Specify the output file name. Defaults to "-" -- i.e. standard
+	      output.
+
+       -j <n> Set the number of threads to be used in parallel translation.
+	      Default to the number of CPUs.
+
+       -L <dirname>
+	      Add <dirname> to the MetalLib search path. This allows to use
+	      relative paths when referencing to a MetalLib in Metal pipelines
+	      scripts.
+
+       -sysroot <dirname>
+	      Set the system root.
+
+       -runtime-dir <dirname>
+	      Set the runtime directory.
+
+       -stop-after <stage>
+	      Stop translation after performing <stage>. Valid values are:
+
+	      • metal-script stop after Metal to AIR script translation
+
+	      • specialize   stop after function constant specialization
+
+	      • stitch	     stop after function stitching
+
+	      • translate    stop after AIR to native code translation
+
+	      • package      stop after packaging of multiple native codes
+
+       -save-temps
+	      Save all the temporaries files in the current working directory.
+
+       -mllvm <value>
+	      Forward <value> to the LLVM command line parser.
+
+       -mtranslator <value>
+	      Forward <value> to the plugins command line parser.
+
+       -disable-optimizations
+	      Do not perform any optimization in the translation process.
+
+       -embed-unused-generated-libraries
+	      Embed generated libraries that are not used by targets.
+
+       -no-warn-unused-generated-libraries
+	      Do not warn about generated libraries that are not used by
+	      targets.
+
+       -help  Display available options.
+
+FILES
+       ${TOOLCHAIN}/lib/air-nt/config.yaml Default configuration file
+
+EXAMPLES
+       To build Metal pipelines:
+
+	  $ metal-nt -arch amdgpu_gfx600 foobar-air64.metallib -N foobar.mtlp-json -o foobar.metallib
+
+       To build a Metal dynamic library:
+
+	  $ metal-nt -arch amdgpu_gfx600 libfoo-air64.metallib -o libfoo.metallib
+
+       To build Metal pipelines without directly referencing any MetalLib:
+
+	  $ metal-nt -arch amdgpu_gfx600 -L my-libs-dir -N foobar.mtlp-json
+
+BUGS
+       To report bugs, please visit
+       <https://developer.apple.com/bug-reporting/>.
+
+SEE ALSO
+       metal-arch(1) metal-pipelines-script(5)
+
+INTERNET RESOURCES
+       Metal Shading Language Specification:
+       <https://developer.apple.com/metal/Metal-Shading-Language-Specification.pdf>
+
+COPYRIGHT
+       2014-2025, The Metal Team
+
+32023				 April 4, 2025			   METAL-NT(1)

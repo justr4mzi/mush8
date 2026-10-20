@@ -1,0 +1,65 @@
+Xcode 16.4
+Build version 16F6
+/Applications/Xcode_16.0.0.app
+/Applications/Xcode_16.0.app
+/Applications/Xcode_16.1.0.app
+/Applications/Xcode_16.1.app
+/Applications/Xcode_16.2.0.app
+/Applications/Xcode_16.2.app
+/Applications/Xcode_16.3.0.app
+/Applications/Xcode_16.3.app
+/Applications/Xcode_16.4.0.app
+/Applications/Xcode_16.4.app
+/Applications/Xcode_16.app
+/Applications/Xcode_26.0.1.app
+/Applications/Xcode_26.0.app
+/Applications/Xcode_26.1.1.app
+/Applications/Xcode_26.1.app
+/Applications/Xcode_26.2.0.app
+/Applications/Xcode_26.2.app
+/Applications/Xcode_26.3.0.app
+/Applications/Xcode_26.3.app
+/Applications/Xcode.app
+== /Applications/Xcode_16.0.0.app: Xcode 16.0 Build version 16A242d  iphoneos SDK 18.0
+== /Applications/Xcode_16.0.app: Xcode 16.0 Build version 16A242d  iphoneos SDK 18.0
+== /Applications/Xcode_16.1.0.app: Xcode 16.1 Build version 16B40  iphoneos SDK 18.1
+== /Applications/Xcode_16.1.app: Xcode 16.1 Build version 16B40  iphoneos SDK 18.1
+== /Applications/Xcode_16.2.0.app: Xcode 16.2 Build version 16C5032a  iphoneos SDK 18.2
+== /Applications/Xcode_16.2.app: Xcode 16.2 Build version 16C5032a  iphoneos SDK 18.2
+== /Applications/Xcode_16.3.0.app: Xcode 16.3 Build version 16E140  iphoneos SDK 18.4
+== /Applications/Xcode_16.3.app: Xcode 16.3 Build version 16E140  iphoneos SDK 18.4
+== /Applications/Xcode_16.4.0.app: Xcode 16.4 Build version 16F6  iphoneos SDK 18.5
+== /Applications/Xcode_16.4.app: Xcode 16.4 Build version 16F6  iphoneos SDK 18.5
+== /Applications/Xcode_16.app: Xcode 16.0 Build version 16A242d  iphoneos SDK 18.0
+== /Applications/Xcode_26.0.1.app: Xcode 26.0.1 Build version 17A400  iphoneos SDK 26.0
+== /Applications/Xcode_26.0.app: Xcode 26.0.1 Build version 17A400  iphoneos SDK 26.0
+== /Applications/Xcode_26.1.1.app: Xcode 26.1.1 Build version 17B100  iphoneos SDK 26.1
+== /Applications/Xcode_26.1.app: Xcode 26.1.1 Build version 17B100  iphoneos SDK 26.1
+== /Applications/Xcode_26.2.0.app: Xcode 26.2 Build version 17C52  iphoneos SDK 26.2
+== /Applications/Xcode_26.2.app: Xcode 26.2 Build version 17C52  iphoneos SDK 26.2
+== /Applications/Xcode_26.3.0.app: Xcode 26.3 Build version 17C529  iphoneos SDK 26.2
+== /Applications/Xcode_26.3.app: Xcode 26.3 Build version 17C529  iphoneos SDK 26.2
+== /Applications/Xcode.app: Xcode 16.4 Build version 16F6  iphoneos SDK 18.5
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/metal-tt
+metal-tt: malformed command line
+unknown argument: --help
+toolchain: /Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man5/metal-pipelines-script.5
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/metal/32023/lib/clang/32023.620/include/metal/metal_command_buffer
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man5/metal-pipelines-script.5
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-config.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-package.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-arch.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-nm.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-libtool.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-source.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-tt.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-nt.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-objdump.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-strip.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-lipo.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man1/metal-pack.1
+/Applications/Xcode_16.4.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/share/man/man7/metal-toolchain.7
+    2060 out/pipelines-script.txt
+metal-tt: not enough input files
