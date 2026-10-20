@@ -2565,3 +2565,85 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, sw, "(first-launch full prewarm, quiet mode)")
+
+# ---------------------------------------------------------------------------
+# Precompiled GPU binaries for the A16 (iPhone 15, 14 Pro: applegpu_g15p) and
+# the A15 (iPhone 14, 13: applegpu_g14p), built on the GitHub Mac with the
+# newest Xcode there, aimed at that Xcode's iOS SDK. Shipped in the app;
+# the phone loads the file for its own GPU only when the launcher switch
+# "Precompiled shaders (experimental)" is on (NX_PIPELINE_ARCHIVE). Off by
+# default: an archive built with the iOS 26 tools crashed the iOS 27 driver once.
+tt = pathlib.Path("tt-a16.sh")
+tt.write_text(r'''#!/bin/sh
+CACHE="$1"
+LIST="$CACHE/pipelines.all.tsv"
+[ -f "$LIST" ] && [ -f "$CACHE/index.tsv" ] || { echo "[tt] no shader cache yet"; exit 0; }
+X="$(for x in /Applications/Xcode*.app; do echo "$(DEVELOPER_DIR=$x/Contents/Developer xcrun -sdk iphoneos --show-sdk-version 2>/dev/null) $x"; done | sort -V | tail -1 | cut -d' ' -f2-)"
+[ -n "$X" ] && export DEVELOPER_DIR="$X/Contents/Developer"
+SDK="$(xcrun -sdk iphoneos --show-sdk-version)"
+echo "[tt] using $X (iOS SDK $SDK)"
+STAMP="$(cat "$LIST" "$CACHE/index.tsv" "$CACHE/guest.tsv" a16/gen.py | shasum | cut -d' ' -f1)-$SDK"
+rm -f "$CACHE/pipelines-a16.metalar" "$CACHE/pipelines-a16.metalar.stamp"
+SCRIPT="$CACHE/tt.mtlp-json"
+for ARCH in applegpu_g15p applegpu_g14p; do
+  OUT="$CACHE/pipelines-$ARCH.metalar"
+  if [ -f "$OUT" ] && [ "$(cat "$OUT.stamp" 2>/dev/null)" = "$STAMP" ]; then echo "[tt] $ARCH up to date"; ls -lh "$OUT"; continue; fi
+  rm -f "$OUT" "$OUT.stamp"
+  [ -f "$SCRIPT" ] || python3 a16/gen.py "$CACHE" "$LIST" a16/metal-enums.json "$SCRIPT" || exit 1
+  date
+  ok=0
+  for TGT in "ios$SDK" ios27.0 ios26.0; do
+    echo "[tt] $ARCH, target $TGT"
+    if perl -e 'alarm shift; exec @ARGV' 2700 xcrun -sdk iphoneos metal-tt -target "air64-apple-$TGT" -arch $ARCH -compress-resources "$SCRIPT" -o "$OUT.tmp"; then ok=1; break; fi
+    rm -f "$OUT.tmp"
+  done
+  date
+  [ $ok = 1 ] || { echo "[tt] $ARCH failed"; continue; }
+  mv "$OUT.tmp" "$OUT"
+  echo "$STAMP" > "$OUT.stamp"
+  xcrun metal-lipo -archs "$OUT"
+  ls -lh "$OUT"
+done
+rm -f "$SCRIPT"
+echo "[tt] done"
+''')
+mk = pathlib.Path("make-ios.sh")
+k = mk.read_text()
+old = 'cp "$LIST" "$RES/shaders/pipelines.tsv"\n'
+assert k.count(old) == 1
+k = k.replace(old, old + 'for f in "$CACHE"/pipelines-applegpu_*.metalar; do [ -f "$f" ] && cp "$f" "$RES/shaders/" && echo "shipping $(basename "$f")"; done\n')
+k = k.replace('if [ -f "$CACHE/pipelines-a16.metalar" ]; then cp "$CACHE/pipelines-a16.metalar" "$RES/shaders/"; fi\n', '')
+mk.write_text(k)
+
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = '.filter(|n| n.starts_with("pipelines") && n.ends_with(".metalar"))'
+assert u.count(old) == 1
+u = u.replace(old, '.filter(|n| *n == format!("pipelines-{}.metalar", gfx::gpu().device.0.architecture().name()))')
+old = '    eprintln!("[gfx] {} pipeline archive(s) loaded", archives.len());'
+assert u.count(old) == 1
+u = u.replace(old, '    eprintln!("[gfx] {} pipeline archive(s) loaded{}", archives.len(), if std::env::var_os("NX_PIPELINE_ARCHIVE").is_some() { format!(" (precompiled shaders for {} on)", gfx::gpu().device.0.architecture().name()) } else { String::new() });')
+st.write_text(u)
+
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("quiet").as_deref() == Some("true") {\n'
+assert m.count(old) == 1
+m = m.replace(old, '    if field("precompiled_shaders").as_deref() == Some("true") {\n        def("NX_PIPELINE_ARCHIVE", "1");\n    }\n' + old)
+mn.write_text(m)
+
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var quiet = false\n", "    @Published var quiet = false\n    @Published var precompiled = false\n"),
+('        quiet = json["quiet"] as? Bool ?? false\n', '        quiet = json["quiet"] as? Bool ?? false\n        precompiled = json["precompiled_shaders"] as? Bool ?? false\n'),
+('        json["quiet"] = quiet\n', '        json["quiet"] = quiet\n        json["precompiled_shaders"] = precompiled\n'),
+("""                    Toggle("Full prewarm on first launch only", isOn: $s.autoFullPrewarm)""", """                    Toggle("Full prewarm on first launch only", isOn: $s.autoFullPrewarm)
+                    Toggle("Precompiled shaders (experimental)", isOn: $s.precompiled)"""),
+("""Full prewarm: waits until all of them are ready (slow the first time, then no compiling during races).")""", """Full prewarm: waits until all of them are ready (slow the first time, then no compiling during races). Precompiled shaders: ready-made GPU code for the A15/A16 packed in the app; if the game crashes at start, turn it off.")"""),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", tt, mk, st, mn, sw, "(precompiled shaders for A15 and A16)")
