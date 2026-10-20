@@ -700,6 +700,8 @@ z = z.replace(old, old + '''        let secs = now.duration_since(*start).as_sec
             pipe * 1000.0 / secs,
             skipped
         );
+        #[cfg(target_os = "ios")]
+        crate::gfx::show_fps(format!("{:.0} fps", ((frames - skipped as f64) * 1000.0 / secs).max(0.0)));
 ''')
 old = "pub fn present(texture: u64) {\n    count_fps();\n"
 assert z.count(old) == 1
@@ -950,3 +952,47 @@ new = '''    let r = f(a.0[0], a.0[1], a.0[2], a.0[3], a.0[4], a.0[5], a.0[6], a
 z = z.replace(old, new)
 lp.write_text(z)
 print("patched", lp, "(NX_TRACE_QUIET, NX_TRACE_DELAY_US)")
+
+
+# On-screen fps counter (top centre) whenever NX_FPS=1 is in env.txt.
+io = pathlib.Path("crates/nxhost/src/gfx/ios.rs")
+z = io.read_text()
+z = z.replace("use objc2_core_foundation::CGRect;\n", "use objc2_core_foundation::{CGPoint, CGRect, CGSize};\n")
+z += """
+thread_local! {
+    static FPS_LABEL: RefCell<Option<Retained<UILabel>>> = const { RefCell::new(None) };
+}
+
+/// Shows `text` in a small label at the top of the screen (NX_FPS=1).
+pub fn show_fps(text: String) {
+    dispatch2::DispatchQueue::main().exec_async(move || {
+        let Some(mtm) = MainThreadMarker::new() else { return };
+        FPS_LABEL.with(|cell| {
+            let mut cell = cell.borrow_mut();
+            if cell.is_none() {
+                let Some(view) = root_view() else { return };
+                let w = UICoordinateSpace::bounds(&*view).size.width;
+                let label = UILabel::new(mtm);
+                label.setFrame(CGRect::new(CGPoint::new(w / 2.0 - 50.0, 4.0), CGSize::new(100.0, 22.0)));
+                unsafe { label.setTextColor(Some(&UIColor::yellowColor())) };
+                label.setBackgroundColor(Some(&UIColor::blackColor()));
+                label.setTextAlignment(NSTextAlignment::Center);
+                label.setUserInteractionEnabled(false);
+                view.addSubview(&label);
+                *cell = Some(label);
+            }
+            if let Some(label) = cell.as_ref() {
+                label.setText(Some(&NSString::from_str(&text)));
+            }
+        })
+    });
+}
+"""
+io.write_text(z)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "pub use ios::{run_app, set_touch_controls, wait_foreground};"
+assert g.count(old) == 1
+g = g.replace(old, "pub use ios::{run_app, set_touch_controls, show_fps, wait_foreground};")
+gm.write_text(g)
+print("patched", io, "(on-screen fps)")
