@@ -1545,3 +1545,160 @@ z = z.replace(old, """        let skip = {
 """ + old)
 md.write_text(z)
 print("patched", tx, md, "(NX_TEX_DROP_SHRINK)")
+
+
+# ---------------------------------------------------------------------------
+# NX_AUTOSKIP=1: automatic frameskip. 60 fps while the phone keeps up; as soon
+# as frames come late it shows 1 frame out of 2 (steady 30 fps) and goes back
+# to 60 when drawing is cheap again. Use it INSTEAD of NX_FRAMESKIP.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "    let interval = PRESENT_INTERVAL.load(std::sync::atomic::Ordering::Relaxed).max(*SKIP + if *SKIP > 0 { 1 } else { 0 });\n"
+assert g.count(old) == 1
+g = g.replace(old, """    let auto = AUTO_INTERVAL.load(std::sync::atomic::Ordering::Relaxed);
+    let interval = PRESENT_INTERVAL.load(std::sync::atomic::Ordering::Relaxed).max(if auto > 0 { auto } else { *SKIP + if *SKIP > 0 { 1 } else { 0 } });
+""")
+g = g.replace("pub fn set_present_interval(n: u32) {", """/// Set by the automatic frameskip (NX_AUTOSKIP): 1 = 60 fps, 2 = 30 fps, 0 = off.
+pub static AUTO_INTERVAL: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+
+pub fn set_present_interval(n: u32) {""", 1)
+gm.write_text(g)
+
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+old = 'static N: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0).min(4));'
+assert z.count(old) == 2
+z = z.replace(old, "static N: LazyLock<u64> = LazyLock::new(skip_n);")
+old = 'static FRAMESKIP_ON: LazyLock<bool> = LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0) > 0);'
+assert z.count(old) == 1
+z = z.replace(old, r"""static FRAMESKIP_ON: LazyLock<bool> = LazyLock::new(|| skip_n() > 0);
+
+static AUTO: LazyLock<bool> = LazyLock::new(|| std::env::var_os("NX_AUTOSKIP").is_some_and(|v| v != "0"));
+/// Automatic frameskip: is the frame being recorded now a skipped one?
+static AUTO_SKIP: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+fn skip_n() -> u64 {
+    if *AUTO {
+        return 1;
+    }
+    std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(0).min(4)
+}
+
+static RESUMED: Mutex<Option<std::time::Instant>> = Mutex::new(None);
+
+struct AutoState {
+    mode30: bool,
+    last: Option<std::time::Instant>,
+    up_at: Option<std::time::Instant>,
+    slow: u32,
+    good: u32,
+    need: u32,
+}
+
+/// Called at the start of every present(): decides whether the NEXT frame is skipped.
+/// 60 fps mode: frames spaced more than 21 ms apart are late; a few late frames
+/// close together switch to 30 fps. 30 fps mode: the drawn frame's own work time
+/// (from the end of the skipped frame to this present) is measured; after
+/// `need` cheap frames in a row (under 12 ms) it tries 60 fps again. Each quick
+/// fall back doubles `need` (up to ~60 s), so it does not flicker.
+fn auto_decide(skipped: bool) {
+    static ST: Mutex<AutoState> = Mutex::new(AutoState { mode30: false, last: None, up_at: None, slow: 0, good: 0, need: 120 });
+    let now = std::time::Instant::now();
+    let mut st = ST.lock().unwrap();
+    if !st.mode30 {
+        if let Some(l) = st.last {
+            let dt = now - l;
+            if dt > std::time::Duration::from_millis(21) && dt < std::time::Duration::from_millis(500) {
+                st.slow += 4;
+            } else {
+                st.slow = st.slow.saturating_sub(1);
+            }
+        }
+        if st.slow >= 12 {
+            let quick = st.up_at.is_some_and(|u| now - u < std::time::Duration::from_secs(5));
+            st.need = if quick { (st.need * 2).min(1800) } else { 120 };
+            (st.mode30, st.slow, st.good) = (true, 0, 0);
+            gfx::AUTO_INTERVAL.store(2, Relaxed);
+            eprintln!("[autoskip] frames late: 30 fps");
+        }
+    } else if !skipped {
+        if let Some(r) = *RESUMED.lock().unwrap() {
+            if now - r < std::time::Duration::from_millis(12) {
+                st.good += 1;
+            } else {
+                st.good = 0;
+            }
+        }
+        if st.good >= st.need {
+            (st.mode30, st.good, st.slow, st.up_at) = (false, 0, 0, Some(now));
+            gfx::AUTO_INTERVAL.store(1, Relaxed);
+            eprintln!("[autoskip] drawing is cheap again: 60 fps");
+        }
+    }
+    st.last = Some(now);
+    AUTO_SKIP.store(st.mode30 && !skipped, Relaxed);
+}
+
+""")
+old = "fn skip_frame() -> bool {\n"
+assert z.count(old) == 1
+z = z.replace(old, old + "    if *AUTO {\n        return AUTO_SKIP.load(Relaxed);\n    }\n")
+old = """    let skip = skip_frame();
+    FRAME.fetch_add(1, Relaxed);
+    if *FRAMESKIP_ON {
+        pace_frame(skip);
+    }
+"""
+assert z.count(old) == 1
+z = z.replace(old, """    let skip = skip_frame();
+    FRAME.fetch_add(1, Relaxed);
+    if *AUTO {
+        if gfx::AUTO_INTERVAL.load(Relaxed) == 0 {
+            gfx::AUTO_INTERVAL.store(1, Relaxed);
+        }
+        auto_decide(skip);
+    }
+    if *FRAMESKIP_ON {
+        pace_frame(skip);
+    }
+    if *AUTO && skip {
+        *RESUMED.lock().unwrap() = Some(std::time::Instant::now());
+    }
+""")
+md.write_text(z)
+print("patched", gm, md, "(NX_AUTOSKIP)")
+
+# ---------------------------------------------------------------------------
+# Memory: start dropping unused textures earlier (600 MB left instead of 400:
+# the last race log reached 445 MB left), and at the same time free the
+# pipelines compiled at boot that the game has not asked for yet (they come
+# back from the pipeline archive when needed).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = '.unwrap_or(400) << 20);'
+assert y.count(old) == 1
+y = y.replace(old, '.unwrap_or(600) << 20);')
+old = "        let frame = self.frame;\n        let old: std::collections::HashSet<TexKey> = self\n"
+assert y.count(old) == 1
+y = y.replace(old, "        super::state::drop_prewarmed();\n" + old)
+tx.write_text(y)
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "impl States {\n"
+assert u.count(old) == 1
+u = u.replace(old, """/// Low memory: forget the boot-compiled pipelines nobody has used yet.
+pub fn drop_prewarmed() {
+    let n = {
+        let mut m = PREWARMED.lock().unwrap();
+        let n = m.len();
+        m.clear();
+        n
+    };
+    if n > 0 {
+        eprintln!("[mem] low memory: freed {n} unused prewarmed pipelines");
+    }
+}
+
+""" + old)
+st.write_text(u)
+print("patched", tx, st, "(earlier memory trim, free unused prewarmed pipelines)")
