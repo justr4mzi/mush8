@@ -1,0 +1,19 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+    Finished `release` profile [optimized + debuginfo] target(s) in 31.57s
+[a16] up to date
+-rw-r--r--  1 runner  staff   324M Oct 18 10:34 work/shader_cache_ios.noindex/pipelines-a16.metalar
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+    Finished `release` profile [optimized + debuginfo] target(s) in 49.97s
+2026-10-20 12:26:19.519 xcodebuild[5488:19072] [MT] IDERunDestination: Supported platforms for the buildables in the current scheme is empty.
+warning: 'UIRequiresFullScreen' has been deprecated starting in iOS 26.0 and will be ignored in a future release. See the UIRequiresFullScreen documentation for more details. (in target 'Mush8' from project 'Mush8')
+note: Run script build phase 'Use the Rust executable' will be run during every build because the option to run the script phase "Based on dependency analysis" is unchecked. (in target 'Mush8' from project 'Mush8')
+built: /Users/runner/work/mush8/mush8/target/ios-xcode/Build/Products/Release-iphoneos/Mush8.app (315M)
+built: /Users/runner/work/mush8/mush8/build/Mush8.ipa (145M)
