@@ -342,6 +342,8 @@ y = y.replace(old, """        let levels = key.levels.min(max_levels).max(1);
         let skip = tex_drop(&key, height, levels, render_target, depth_format);
         if skip > 0 {
             DROPS.lock().unwrap().insert(key, skip);
+        } else {
+            DROPS.lock().unwrap().remove(&key);
         }
         let d = MTLTextureDescriptor::new();
         unsafe {
@@ -1176,3 +1178,189 @@ assert u.count(old) == 1
 u = u.replace(old, "/// Pipelines the game is waiting for right now (prewarm pauses meanwhile).\nstatic DEMAND: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);\n\n" + old)
 st.write_text(u)
 print("patched", st, "(prewarm yields to the game)")
+
+
+# ---------------------------------------------------------------------------
+# Texture decoding off the render thread (+ optional disk cache).
+# The A16 cannot read the Switch's BC textures, so they are decoded on the CPU.
+# That used to happen while the game waited (hitches when new things appear).
+# Now the guest data is copied right away and decoded by 2 background threads;
+# the texture shows up a few frames later instead of freezing the game.
+# NX_SYNC_TEXTURES=1 in env.txt restores the old behaviour.
+# Decoded textures are also kept in work/texcache (NX_TEX_CACHE_MB, default
+# 1024 MB; NX_NO_TEX_CACHE=1 turns it off): next time they load from disk.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "                    decode_and_stage(tex, k, data, pieces, skip, (key.width, key.height));\n"
+assert y.count(old) == 1
+y = y.replace(old, "                    decode_async(tex, k, data, pieces, skip, (key.width, key.height));\n")
+old = "                Some(k) => decode_and_stage(tex, k, src.to_vec(), pieces, 0, (key.width, key.height)),\n"
+assert y.count(old) == 1
+y = y.replace(old, "                Some(k) => decode_async(tex, k, src.to_vec(), pieces, 0, (key.width, key.height)),\n")
+
+old = "fn decode_and_stage(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>, skip: u32, full: (u32, u32)) {\n"
+assert y.count(old) == 1
+y = y.replace(old, r"""type Job = Box<dyn FnOnce() + Send>;
+
+/// Latest upload generation per Metal texture: an older decode finishing late
+/// must not overwrite newer contents.
+static GENS: std::sync::LazyLock<std::sync::Mutex<std::collections::HashMap<usize, u64>>> = std::sync::LazyLock::new(Default::default);
+
+fn decode_pool() -> &'static std::sync::Mutex<std::sync::mpsc::Sender<Job>> {
+    static POOL: std::sync::LazyLock<std::sync::Mutex<std::sync::mpsc::Sender<Job>>> = std::sync::LazyLock::new(|| {
+        let (tx, rx) = std::sync::mpsc::channel::<Job>();
+        let rx = std::sync::Arc::new(std::sync::Mutex::new(rx));
+        for i in 0..2 {
+            let rx = rx.clone();
+            let _ = std::thread::Builder::new().name(format!("tex-decode-{i}")).spawn(move || {
+                unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_USER_INITIATED, 0) };
+                loop {
+                    let job = { rx.lock().unwrap().recv() };
+                    match job {
+                        Ok(job) => objc2::rc::autoreleasepool(|_| job()),
+                        Err(_) => return,
+                    }
+                }
+            });
+        }
+        std::sync::Mutex::new(tx)
+    });
+    &POOL
+}
+
+fn decode_async(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, pieces: Vec<Piece>, skip: u32, full: (u32, u32)) {
+    static SYNC: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_SYNC_TEXTURES").is_some());
+    if *SYNC {
+        decode_and_stage(tex, k, data, pieces, skip, full);
+        return;
+    }
+    let id = tex as *const Texture as *const u8 as usize;
+    let gen = {
+        let mut g = GENS.lock().unwrap();
+        let e = g.entry(id).or_insert(0);
+        *e += 1;
+        *e
+    };
+    let t = Shared(unsafe { objc2::rc::Retained::retain(tex as *const Texture as *mut Texture) }.expect("texture"));
+    let job: Job = Box::new(move || {
+        if GENS.lock().unwrap().get(&id) != Some(&gen) {
+            return;
+        }
+        decode_and_stage(&t.0, k, data, pieces, skip, full);
+    });
+    let _ = decode_pool().lock().unwrap().send(job);
+}
+
+fn tex_cache_dir() -> Option<&'static str> {
+    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| {
+        std::env::var_os("NX_NO_TEX_CACHE").is_none() && std::fs::create_dir_all("work/texcache").is_ok()
+    });
+    (*ON).then_some("work/texcache")
+}
+
+static TEX_CACHE_BYTES: std::sync::LazyLock<std::sync::atomic::AtomicU64> = std::sync::LazyLock::new(|| {
+    let n = std::fs::read_dir("work/texcache").map(|r| r.flatten().filter_map(|e| e.metadata().ok()).map(|m| m.len()).sum()).unwrap_or(0);
+    std::sync::atomic::AtomicU64::new(n)
+});
+
+fn tex_cache_limit() -> u64 {
+    static L: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_TEX_CACHE_MB").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(1024u64) << 20);
+    *L
+}
+
+fn tex_cache_key(k: gfx::bc::Kind, data: &[u8], pieces: &[Piece], skip: u32, full: (u32, u32)) -> u64 {
+    let mut h = 0xcbf2_9ce4_8422_2325u64 ^ ((skip as u64) << 48) ^ ((full.0 as u64) << 24) ^ full.1 as u64;
+    let mix = |h: &mut u64, v: u64| *h = (*h ^ v).wrapping_mul(0x100_0000_01b3).rotate_left(29);
+    for b in format!("{:?}", std::mem::discriminant(&k)).bytes() {
+        mix(&mut h, b as u64);
+    }
+    for p in pieces {
+        mix(&mut h, p.offset as u64);
+        mix(&mut h, p.row as u64);
+        mix(&mut h, ((p.size.0 as u64) << 32) | p.size.1 as u64);
+        mix(&mut h, ((p.sub.0 as u64) << 32) | p.sub.1 as u64);
+    }
+    let mut chunks = data.chunks_exact(8);
+    for c in &mut chunks {
+        mix(&mut h, u64::from_le_bytes(c.try_into().unwrap()));
+    }
+    for &b in chunks.remainder() {
+        mix(&mut h, b as u64);
+    }
+    h
+}
+
+fn tex_cache_read(key: u64) -> Option<(Vec<u8>, Vec<Piece>)> {
+    let dir = tex_cache_dir()?;
+    let raw = std::fs::read(format!("{dir}/{key:016x}.bin")).ok()?;
+    let u = |i: usize| raw.get(i..i + 8).map(|b| u64::from_le_bytes(b.try_into().unwrap()));
+    let n = u(0)? as usize;
+    let mut pieces = Vec::with_capacity(n);
+    let mut at = 8;
+    for _ in 0..n {
+        let (o, r, im, a, b) = (u(at)?, u(at + 8)?, u(at + 16)?, u(at + 24)?, u(at + 32)?);
+        pieces.push(Piece { offset: o as usize, row: r as usize, image: im as usize, size: ((a >> 32) as u32, a as u32, (b >> 40) as u32), sub: (((b >> 20) & 0xFFFFF) as u32, (b & 0xFFFFF) as u32) });
+        at += 40;
+    }
+    Some((raw.get(at..)?.to_vec(), pieces))
+}
+
+fn tex_cache_write(key: u64, decoded: &[u8], pieces: &[Piece]) {
+    let Some(dir) = tex_cache_dir() else { return };
+    let total = (decoded.len() + 8 + pieces.len() * 40) as u64;
+    if TEX_CACHE_BYTES.load(std::sync::atomic::Ordering::Relaxed) + total > tex_cache_limit() {
+        return;
+    }
+    let mut out = Vec::with_capacity(total as usize);
+    out.extend_from_slice(&(pieces.len() as u64).to_le_bytes());
+    for p in pieces {
+        for v in [p.offset as u64, p.row as u64, p.image as u64, ((p.size.0 as u64) << 32) | p.size.1 as u64, ((p.size.2 as u64) << 40) | ((p.sub.0 as u64 & 0xFFFFF) << 20) | (p.sub.1 as u64 & 0xFFFFF)] {
+            out.extend_from_slice(&v.to_le_bytes());
+        }
+    }
+    out.extend_from_slice(decoded);
+    let (tmp, path) = (format!("{dir}/{key:016x}.tmp"), format!("{dir}/{key:016x}.bin"));
+    if std::fs::write(&tmp, &out).is_ok() && std::fs::rename(&tmp, &path).is_ok() {
+        TEX_CACHE_BYTES.fetch_add(total, std::sync::atomic::Ordering::Relaxed);
+    }
+}
+
+fn decode_and_stage(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, pieces: Vec<Piece>, skip: u32, full: (u32, u32)) {
+    let key = tex_cache_dir().map(|_| tex_cache_key(k, &data, &pieces, skip, full));
+    if let Some((decoded, pieces)) = key.and_then(tex_cache_read) {
+        stage_with(tex, decoded.len(), &pieces, |dst| dst.copy_from_slice(&decoded));
+        return;
+    }
+    let (decoded, pieces) = decode_pieces(k, data, pieces, skip, full);
+    if let Some(key) = key {
+        tex_cache_write(key, &decoded, &pieces);
+    }
+    stage_with(tex, decoded.len(), &pieces, |dst| dst.copy_from_slice(&decoded));
+}
+
+fn decode_pieces(k: gfx::bc::Kind, data: Vec<u8>, mut pieces: Vec<Piece>, skip: u32, full: (u32, u32)) -> (Vec<u8>, Vec<Piece>) {
+""")
+old = """        pieces.extend(extra);
+    }
+    stage_with(tex, decoded.len(), &pieces, |dst| dst.copy_from_slice(&decoded));
+}"""
+assert y.count(old) == 1
+y = y.replace(old, """        pieces.extend(extra);
+    }
+    (decoded, pieces)
+}""")
+tx.write_text(y)
+print("patched", tx, "(async texture decode, texture disk cache)")
+
+# ---------------------------------------------------------------------------
+# With NX_FRAMESKIP=N, show the drawn frames at an even pace (every N+1
+# display refreshes) instead of "as soon as ready": steadier 30 fps.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "    let interval = PRESENT_INTERVAL.load(std::sync::atomic::Ordering::Relaxed);\n"
+assert g.count(old) == 1
+g = g.replace(old, """    static SKIP: std::sync::LazyLock<u32> = std::sync::LazyLock::new(|| std::env::var("NX_FRAMESKIP").ok().and_then(|v| v.trim().parse::<u32>().ok()).unwrap_or(0).min(4));
+    let interval = PRESENT_INTERVAL.load(std::sync::atomic::Ordering::Relaxed).max(*SKIP + if *SKIP > 0 { 1 } else { 0 });
+""")
+gm.write_text(g)
+print("patched", gm, "(even pacing with frameskip)")
