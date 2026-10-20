@@ -2008,3 +2008,126 @@ y = y.replace(old, """        static SHRINK_MIN: std::sync::LazyLock<u32> = std:
 """)
 tx.write_text(y)
 print("patched", tx, "(NX_TEX_SHRINK_MIN)")
+
+# ---------------------------------------------------------------------------
+# "Final" setup: the optimised settings are built in (no env.txt needed; an
+# env.txt still overrides any of them), chosen in the launcher:
+#   30 fps lock (frameskip)   -> NX_FRAMESKIP            (config "frameskip", on)
+#   Textures: very low / low / full -> NX_TEX_DROP...     (config "texture_quality")
+#   Unlocked save             -> work/save-unlocked, seeded from the save
+#                                packed in the IPA        (config "unlocked_save")
+# Always on unless env.txt says otherwise: NX_FPS=1 (log), NX_SYNC_TEXTURES,
+# NX_NO_TEX_CACHE, NX_HASH_EVERY=2.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = """    if field("show_fps").as_deref() == Some("false") {
+        unsafe { std::env::set_var("NX_HIDE_FPS", "1") };
+    } else if std::env::var_os("NX_FPS").is_none() {
+        unsafe { std::env::set_var("NX_FPS", "1") };
+    }
+"""
+assert m.count(old) == 1
+m = m.replace(old, """    if field("show_fps").as_deref() == Some("false") {
+        unsafe { std::env::set_var("NX_HIDE_FPS", "1") };
+    }
+    let def = |k: &str, v: &str| {
+        if std::env::var_os(k).is_none() {
+            unsafe { std::env::set_var(k, v) };
+        }
+    };
+    def("NX_FPS", "1");
+    def("NX_SYNC_TEXTURES", "1");
+    def("NX_NO_TEX_CACHE", "1");
+    def("NX_HASH_EVERY", "2");
+    def("NX_FRAMESKIP", if field("frameskip").as_deref() == Some("false") { "0" } else { "1" });
+    if std::env::var_os("NX_TEX_DROP").is_none() {
+        let q = field("texture_quality").unwrap_or_else(|| "verylow".into());
+        if q != "normal" {
+            for (k, v) in [("NX_TEX_DROP", "2"), ("NX_TEX_DROP_SHRINK", "1"), ("NX_TEX_DROP_MIN", "256")] {
+                unsafe { std::env::set_var(k, v) };
+            }
+            if q == "low" {
+                def("NX_TEX_SHRINK_MIN", "2048");
+            }
+        }
+    }
+    if field("unlocked_save").as_deref() == Some("true") {
+        let bundle = std::env::current_exe().ok().and_then(|e| e.parent().map(PathBuf::from)).unwrap_or_default();
+        let src = bundle.join("shaders/unlocked-save");
+        let dst = PathBuf::from("work/save-unlocked");
+        if !dst.exists() {
+            if src.is_dir() {
+                match copy_dir(&src, &dst) {
+                    Ok(()) => eprintln!("[host] unlocked save copied to work/save-unlocked"),
+                    Err(e) => eprintln!("[host] could not copy the unlocked save: {e}"),
+                }
+            } else {
+                eprintln!("[host] this IPA has no unlocked save: using your own save");
+            }
+        }
+        if dst.exists() {
+            unsafe { std::env::set_var("NX_SAVE_DIR", "work/save-unlocked") };
+            eprintln!("[host] using the unlocked save (your own save in work/save is untouched)");
+        }
+    }
+""")
+m += """
+
+fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    std::fs::create_dir_all(dst)?;
+    for e in std::fs::read_dir(src)? {
+        let e = e?;
+        let to = dst.join(e.file_name());
+        if e.file_type()?.is_dir() {
+            copy_dir(&e.path(), &to)?;
+        } else {
+            std::fs::copy(e.path(), to)?;
+        }
+    }
+    Ok(())
+}
+"""
+old = "        save_dir: args.save.clone(),\n"
+assert m.count(old) == 1
+m = m.replace(old, "        save_dir: std::env::var_os(\"NX_SAVE_DIR\").map(PathBuf::from).unwrap_or_else(|| args.save.clone()),\n")
+mn.write_text(m)
+
+mk = pathlib.Path("make-ios.sh")
+k = mk.read_text()
+old = 'cp "$LIST" "$RES/shaders/pipelines.tsv"\n'
+assert k.count(old) == 1
+k = k.replace(old, old + 'if [ -d unlocked-save ]; then cp -R unlocked-save "$RES/shaders/unlocked-save"; echo "unlocked save packed in the IPA"; fi\n')
+mk.write_text(k)
+
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var mixAudio = true\n", "    @Published var mixAudio = true\n    @Published var frameskip = true\n    @Published var textureQuality = \"verylow\"\n    @Published var unlockedSave = false\n"),
+('        mixAudio = json["mix_audio"] as? Bool ?? true\n', '        mixAudio = json["mix_audio"] as? Bool ?? true\n        frameskip = json["frameskip"] as? Bool ?? true\n        textureQuality = json["texture_quality"] as? String ?? "verylow"\n        unlockedSave = json["unlocked_save"] as? Bool ?? false\n'),
+('        json["mix_audio"] = mixAudio\n', '        json["mix_audio"] = mixAudio\n        json["frameskip"] = frameskip\n        json["texture_quality"] = textureQuality\n        json["unlocked_save"] = unlockedSave\n'),
+("""                Section {
+                    Toggle("Show FPS", isOn: $s.showFps)""", """                Section {
+                    Toggle("30 fps lock (frameskip)", isOn: $s.frameskip)
+                    Picker("Textures", selection: $s.textureQuality) {
+                        Text("Very low (fastest)").tag("verylow")
+                        Text("Low (items not black)").tag("low")
+                        Text("Full (may run out of memory)").tag("normal")
+                    }
+                } header: {
+                    Text("Performance")
+                } footer: {
+                    Text("Very low: least memory, some items look black. Low: items fixed, uses more memory. An env.txt in Documents overrides these.")
+                }
+                Section {
+                    Toggle("Unlocked save", isOn: $s.unlockedSave)
+                } footer: {
+                    Text("Plays with the save packed in this IPA (everything unlocked). Your own save is kept apart and untouched.")
+                }
+                Section {
+                    Toggle("Show FPS", isOn: $s.showFps)"""),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, mk, sw, "(built-in settings, launcher performance options, unlocked save)")

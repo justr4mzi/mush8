@@ -137,6 +137,25 @@ jobs:
           done
           df -h /
 
+      - name: Unlocked save (optional, secret SAVE_URL = link to a zip of the save folder)
+        env:
+          SAVE_URL: ${{ secrets.SAVE_URL }}
+        run: |
+          rm -rf unlocked-save
+          [ -n "$SAVE_URL" ] || { echo "no SAVE_URL: the IPA has no unlocked save"; exit 0; }
+          mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
+          python3 -m pip install --quiet --break-system-packages gdown || true
+          case "$SAVE_URL" in
+            *drive.google.com*) python3 -m gdown --quiet "$SAVE_URL" -O save.zip ;;
+            *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.zip ;;
+            *) curl -fsSL "$SAVE_URL" -o save.zip ;;
+          esac
+          mkdir -p save-tmp && unzip -q save.zip -d save-tmp && rm -f save.zip
+          # use the folder that holds the save files (zip may wrap them in a folder)
+          d=save-tmp; while [ "$(ls -A "$d" | wc -l)" -eq 1 ] && [ -d "$d/$(ls -A "$d")" ]; do d="$d/$(ls -A "$d")"; done
+          mv "$d" unlocked-save; rm -rf save-tmp
+          find unlocked-save -type f | head -20
+
       - name: Apply experimental patches (if any)
         run: |
           if [ -f patch-heap.py ]; then python3 patch-heap.py; else echo "no patch-heap.py, building stock Mush8"; fi
@@ -168,7 +187,7 @@ jobs:
 
       - name: Remove game files
         if: always()
-        run: rm -f prod.keys base.nsp upd4-0-1.nsp
+        run: rm -rf prod.keys base.nsp upd4-0-1.nsp unlocked-save
 
       - name: Publish logs
         if: always()
