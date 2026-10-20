@@ -2185,7 +2185,7 @@ fn pill(mtm: MainThreadMarker, view: &UIView, x: f64) -> Retained<UILabel> {
     label.setFrame(CGRect::new(CGPoint::new(x, 2.0), CGSize::new(62.0, 16.0)));
     unsafe { label.setTextColor(Some(&UIColor::colorWithWhite_alpha(1.0, 0.92))) };
     label.setBackgroundColor(Some(&UIColor::colorWithWhite_alpha(0.0, 0.42)));
-    label.setFont(Some(&UIFont::boldSystemFontOfSize(11.0)));
+    unsafe { label.setFont(Some(&UIFont::boldSystemFontOfSize(11.0))) };
     label.setTextAlignment(NSTextAlignment::Center);
     label.setUserInteractionEnabled(false);
     label.setClipsToBounds(true);
