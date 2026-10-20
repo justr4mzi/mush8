@@ -1235,7 +1235,7 @@ fn decode_async(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, pieces: Vec<Piec
         return;
     }
     let id = tex as *const Texture as *const u8 as usize;
-    let gen = {
+    let generation = {
         let mut g = GENS.lock().unwrap();
         let e = g.entry(id).or_insert(0);
         *e += 1;
@@ -1243,7 +1243,7 @@ fn decode_async(tex: &Texture, k: gfx::bc::Kind, data: Vec<u8>, pieces: Vec<Piec
     };
     let t = Shared(unsafe { objc2::rc::Retained::retain(tex as *const Texture as *mut Texture) }.expect("texture"));
     let job: Job = Box::new(move || {
-        if GENS.lock().unwrap().get(&id) != Some(&gen) {
+        if GENS.lock().unwrap().get(&id) != Some(&generation) {
             return;
         }
         decode_and_stage(&t.0, k, data, pieces, skip, full);
