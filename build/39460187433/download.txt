@@ -1,0 +1,5 @@
+-rw-------  1 runner  staff   6.8G Oct 17 18:31 base.nsp
+-rw-------  1 runner  staff    14K Oct 17 18:24 prod.keys
+-rw-r--r--  1 runner  staff   4.5G Oct 20 16:54 upd4-0-1.nsp
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk2s1s1   320Gi    12Gi   100Gi    11%    459k  1.1G    0%   /
