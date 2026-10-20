@@ -2160,3 +2160,247 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, mk, sw, "(built-in settings, launcher performance options, unlocked save)")
+
+# ---------------------------------------------------------------------------
+# On-screen counters: two small rounded pills at the very top (above the
+# -/+ buttons), "30 fps" and the memory iOS counts for the app ("2.4 GB").
+# Launcher switches: Show FPS (NX_HIDE_FPS), Show memory (NX_HIDE_MEM).
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "fn footprint() -> u64 {"
+assert g.count(old) == 1
+g = g.replace(old, "pub fn footprint() -> u64 {")
+gm.write_text(g)
+io = pathlib.Path("crates/nxhost/src/gfx/ios.rs")
+i = io.read_text()
+a = i.index("thread_local! {\n    static FPS_LABEL")
+b = i.index("pub fn show_fps(text: String) {", a)
+b = i.index("\n    });\n}\n", b) + len("\n    });\n}\n")
+i = i[:a] + r'''thread_local! {
+    static PILLS: RefCell<Option<(Retained<UILabel>, Retained<UILabel>)>> = const { RefCell::new(None) };
+}
+
+fn pill(mtm: MainThreadMarker, view: &UIView, x: f64) -> Retained<UILabel> {
+    let label = UILabel::new(mtm);
+    label.setFrame(CGRect::new(CGPoint::new(x, 2.0), CGSize::new(62.0, 16.0)));
+    unsafe { label.setTextColor(Some(&UIColor::colorWithWhite_alpha(1.0, 0.92))) };
+    label.setBackgroundColor(Some(&UIColor::colorWithWhite_alpha(0.0, 0.42)));
+    label.setFont(Some(&UIFont::boldSystemFontOfSize(11.0)));
+    label.setTextAlignment(NSTextAlignment::Center);
+    label.setUserInteractionEnabled(false);
+    label.setClipsToBounds(true);
+    label.layer().setCornerRadius(8.0);
+    label.setHidden(true);
+    view.addSubview(&label);
+    label
+}
+
+/// Updates the on-screen counters (called once per second when NX_FPS=1).
+pub fn show_fps(text: String) {
+    let hide_fps = std::env::var_os("NX_HIDE_FPS").is_some();
+    let hide_mem = std::env::var_os("NX_HIDE_MEM").is_some();
+    if hide_fps && hide_mem {
+        return;
+    }
+    let mem = format!("{:.1} GB", super::footprint() as f64 / (1u64 << 30) as f64);
+    dispatch2::DispatchQueue::main().exec_async(move || {
+        let Some(mtm) = MainThreadMarker::new() else { return };
+        PILLS.with(|cell| {
+            let mut cell = cell.borrow_mut();
+            if cell.is_none() {
+                let Some(view) = root_view() else { return };
+                let w = UICoordinateSpace::bounds(&*view).size.width;
+                let both = !hide_fps && !hide_mem;
+                let (xf, xm) = if both { (w / 2.0 - 66.0, w / 2.0 + 4.0) } else { (w / 2.0 - 31.0, w / 2.0 - 31.0) };
+                *cell = Some((pill(mtm, &view, xf), pill(mtm, &view, xm)));
+            }
+            if let Some((f, m)) = cell.as_ref() {
+                if !hide_fps {
+                    f.setText(Some(&NSString::from_str(&text)));
+                    f.setHidden(false);
+                }
+                if !hide_mem {
+                    m.setText(Some(&NSString::from_str(&mem)));
+                    m.setHidden(false);
+                }
+            }
+        })
+    });
+}
+''' + i[b:]
+io.write_text(i)
+print("patched", io, gm, "(fps + memory pills)")
+
+# Background texture loading (launcher, off by default): while a texture is
+# decoded it shows neutral grey instead of leftover memory (the purple), and
+# at most ~32 MB of game data waits in the queue (beyond that, decode at once:
+# the queue made iOS kill the game while a track loaded).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """    let id = tex as *const Texture as *const u8 as usize;
+    let generation = {"""
+assert y.count(old) == 1
+y = y.replace(old, """    if QUEUED.load(std::sync::atomic::Ordering::Relaxed) > 32 << 20 {
+        decode_and_stage(tex, k, data, pieces, skip, full);
+        return;
+    }
+    neutral_fill(tex);
+    let bytes = data.len();
+    QUEUED.fetch_add(bytes, std::sync::atomic::Ordering::Relaxed);
+    let id = tex as *const Texture as *const u8 as usize;
+    let generation = {""")
+old = """        let t = t; // capture the whole Shared (Send), not just its field
+        if GENS.lock().unwrap().get(&id) != Some(&generation) {
+            return;
+        }
+        decode_and_stage(&t.0, k, data, pieces, skip, full);"""
+assert y.count(old) == 1
+y = y.replace(old, """        let t = t; // capture the whole Shared (Send), not just its field
+        if GENS.lock().unwrap().get(&id) == Some(&generation) {
+            decode_and_stage(&t.0, k, data, pieces, skip, full);
+        }
+        QUEUED.fetch_sub(bytes, std::sync::atomic::Ordering::Relaxed);""")
+old = "fn decode_async("
+y = y.replace(old, """static QUEUED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+/// Fill a new 8-bit colour texture with opaque grey on the GPU, so it does not
+/// show leftover memory until its decoded contents arrive.
+fn neutral_fill(tex: &Texture) {
+    if !matches!(tex.pixelFormat(), MTLPixelFormat::RGBA8Unorm | MTLPixelFormat::RGBA8Unorm_sRGB) {
+        return;
+    }
+    if !matches!(tex.textureType(), MTLTextureType::Type2D | MTLTextureType::Type2DArray) {
+        return;
+    }
+    const GREY_BYTES: usize = 16 << 20;
+    static GREY: std::sync::LazyLock<Option<Shared<gfx::Buffer>>> = std::sync::LazyLock::new(|| {
+        let b = gfx::gpu().device.0.newBufferWithLength_options(GREY_BYTES, MTLResourceOptions::StorageModeShared)?;
+        let px = unsafe { std::slice::from_raw_parts_mut(b.contents().as_ptr() as *mut u32, GREY_BYTES / 4) };
+        px.fill(u32::from_le_bytes([0x80, 0x80, 0x80, 0xff]));
+        Some(Shared(b))
+    });
+    let Some(grey) = &*GREY else { return };
+    let Some(cb) = gfx::gpu().queue.0.commandBuffer() else { return };
+    let Some(enc) = cb.blitCommandEncoder() else { return };
+    for level in 0..tex.mipmapLevelCount() {
+        let (w, h) = ((tex.width() >> level).max(1), (tex.height() >> level).max(1));
+        if w * 4 * h > GREY_BYTES {
+            continue;
+        }
+        for slice in 0..tex.arrayLength() {
+            unsafe {
+                enc.copyFromBuffer_sourceOffset_sourceBytesPerRow_sourceBytesPerImage_sourceSize_toTexture_destinationSlice_destinationLevel_destinationOrigin(
+                    &grey.0,
+                    0,
+                    w * 4,
+                    w * 4 * h,
+                    MTLSize { width: w, height: h, depth: 1 },
+                    tex,
+                    slice,
+                    level,
+                    MTLOrigin { x: 0, y: 0, z: 0 },
+                )
+            };
+        }
+    }
+    enc.endEncoding();
+    cb.commit();
+}
+
+fn decode_async(""", 1)
+tx.write_text(y)
+print("patched", tx, "(background textures: grey placeholder, bounded queue)")
+
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    def("NX_SYNC_TEXTURES", "1");\n'
+assert m.count(old) == 1
+m = m.replace(old, '''    if field("async_textures").as_deref() != Some("true") {
+        def("NX_SYNC_TEXTURES", "1");
+    }
+    if field("show_memory").as_deref() == Some("false") {
+        unsafe { std::env::set_var("NX_HIDE_MEM", "1") };
+    }
+''')
+mn.write_text(m)
+
+# Launcher: switches + Tools (share the log, clean up, clear shader cache)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var unlockedSave = false\n", "    @Published var unlockedSave = false\n    @Published var asyncTextures = false\n    @Published var showMemory = true\n"),
+('        unlockedSave = json["unlocked_save"] as? Bool ?? false\n', '        unlockedSave = json["unlocked_save"] as? Bool ?? false\n        asyncTextures = json["async_textures"] as? Bool ?? false\n        showMemory = json["show_memory"] as? Bool ?? true\n'),
+('        json["unlocked_save"] = unlockedSave\n', '        json["unlocked_save"] = unlockedSave\n        json["async_textures"] = asyncTextures\n        json["show_memory"] = showMemory\n'),
+("""                        Text("Full (may run out of memory)").tag("normal")
+                    }""", """                        Text("Full (may run out of memory)").tag("normal")
+                    }
+                    Toggle("Background texture loading", isOn: $s.asyncTextures)"""),
+("""                    Text("Very low: least memory, some items look black. Low: items fixed, uses more memory. An env.txt in Documents overrides these.")""",
+ """                    Text("Very low: least memory, some items look black. Low: items fixed, uses more memory. Background texture loading (experimental): fewer small hitches, new objects are grey for a moment. An env.txt in Documents overrides these.")"""),
+("""                    Toggle("Show FPS", isOn: $s.showFps)""", """                    Toggle("Show FPS", isOn: $s.showFps)
+                    Toggle("Show memory", isOn: $s.showMemory)"""),
+("    @StateObject private var s = Settings()\n", "    @StateObject private var s = Settings()\n    @State private var toolMessage = \"\"\n    @State private var confirmClear = false\n"),
+("                if files.ready { gameFilesSection }\n", """                Section {
+                    ShareLink(item: docsURL.appendingPathComponent("work/nxhost.log")) {
+                        Label("Share the log", systemImage: "square.and.arrow.up")
+                    }
+                    ShareLink(item: docsURL.appendingPathComponent("work/nxhost.prev.log")) {
+                        Label("Share the previous log", systemImage: "square.and.arrow.up")
+                    }
+                    Button("Clean up unneeded files") { toolMessage = cleanWork() }
+                    Button("Clear the shader cache", role: .destructive) { confirmClear = true }
+                } header: {
+                    Text("Tools")
+                } footer: {
+                    Text(toolMessage.isEmpty ? "Clear the shader cache after an iOS update: the next start compiles everything again." : toolMessage)
+                }
+                .confirmationDialog("Clear the shader cache? The next start will be slow while everything compiles again.", isPresented: $confirmClear, titleVisibility: .visible) {
+                    Button("Clear", role: .destructive) { toolMessage = clearShaderCache() }
+                }
+                if files.ready { gameFilesSection }
+"""),
+("let docsURL = ", '''func fileSize(_ url: URL) -> Int64 {
+    let fm = FileManager.default
+    var isDir: ObjCBool = false
+    guard fm.fileExists(atPath: url.path, isDirectory: &isDir) else { return 0 }
+    if !isDir.boolValue { return (try? fm.attributesOfItem(atPath: url.path)[.size] as? Int64) ?? 0 }
+    let items = (try? fm.subpathsOfDirectory(atPath: url.path)) ?? []
+    return items.reduce(0) { $0 + ((try? fm.attributesOfItem(atPath: url.appendingPathComponent($1).path)[.size] as? Int64) ?? 0) }
+}
+
+func removeAll(_ urls: [URL]) -> String {
+    var freed: Int64 = 0, count = 0
+    for u in urls {
+        let n = fileSize(u)
+        if (try? FileManager.default.removeItem(at: u)) != nil { freed += n; count += 1 }
+    }
+    return "Removed \\(count) item(s), \\(ByteCountFormatter.string(fromByteCount: freed, countStyle: .file)) freed"
+}
+
+/// Leftovers: random-named .metallib files, the old texture cache, the old pipeline archive, temp files.
+func cleanWork() -> String {
+    let work = docsURL.appendingPathComponent("work")
+    let names = (try? FileManager.default.contentsOfDirectory(atPath: work.path)) ?? []
+    var junk = names.filter { $0.hasSuffix(".metallib") || $0.hasSuffix(".tmp") || $0.hasSuffix(".probe") || $0 == "texcache" || $0 == "device.metalar" || $0 == "msl_rt" || $0 == "msl_fail" }.map { work.appendingPathComponent($0) }
+    let dev = work.appendingPathComponent("devarch")
+    junk += ((try? FileManager.default.contentsOfDirectory(atPath: dev.path)) ?? []).filter { $0.hasSuffix(".tmp") }.map { dev.appendingPathComponent($0) }
+    return removeAll(junk)
+}
+
+/// The app's pipeline archive and iOS's own compiled-shader cache for the app.
+func clearShaderCache() -> String {
+    let work = docsURL.appendingPathComponent("work")
+    var urls = [work.appendingPathComponent("devarch"), work.appendingPathComponent("device.metalar")]
+    if let caches = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first {
+        urls += ((try? FileManager.default.contentsOfDirectory(atPath: caches.path)) ?? []).map { caches.appendingPathComponent($0) }
+    }
+    return removeAll(urls)
+}
+
+let docsURL = '''),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, sw, "(launcher: background textures, show memory, tools)")
