@@ -194,6 +194,8 @@ jobs:
             # the game starts again on the same Mac until the time is up
             start_game() {
               k=$((k+1)); echo "=== attempt $k at $(( $(date +%s) - T0 )) s" >> "$L"; START_LINE=$(wc -l < "$L"); AT=$(date +%s)
+              # VS run: the next attempts use slower menu variants of the script
+              [ "$VS96" = 1 ] && [ $k -gt 1 ] && python3 tools/vs96.py "$SECS" "$VARIANT" > work/autoinput.txt && echo "=== script variant $VARIANT" >> "$L"
               NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY=60 NX_PIPELINE_LIST="$LIST" \
                 NX_AUTOINPUT="@$PWD/work/autoinput.txt" NX_DUMP_AT="$DUMPS" ./target/release/nxhost >> "$L" 2>&1 &
               pid=$!
@@ -204,14 +206,18 @@ jobs:
               [ $since -lt 300 ] && return 1
               local part; part="$(tail -n +"$START_LINE" "$L")"
               [ -z "$(printf '%s\n' "$part" | grep '^\[fps\]' | tail -1)" ] && [ $since -gt 600 ] && return 0
-              if [ "$VS96" = 1 ] && [ $since -gt 1200 ]; then
-                local last; last=$(printf '%s\n' "$part" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | tail -1 | awk '{print int($2)}')
-                [ -z "$last" ] && return 0
-                [ $(( since - last )) -gt 900 ] && return 0
+              # VS run: a new track every ~4 min when the rules are right ("in order"); the log
+              # lists each file once, so with the wrong rules (same track again) nothing new
+              # comes: no new track for 10 min after 15 min -> next, slower menu script variant
+              if [ "$VS96" = 1 ] && [ $since -gt 900 ]; then
+                local last; last=$(printf '%s\n' "$part" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | grep -v Gu_Menu | tail -1 | awk '{print int($2)}')
+                if [ -z "$last" ] || [ $(( since - last )) -gt 600 ]; then
+                  VARIANT=$((VARIANT+1)); echo "=== no new track for 10 min: menu script variant $VARIANT" >> "$L"; return 0
+                fi
               fi
               return 1
             }
-            k=0; T0=$(date +%s); start_game
+            k=0; VARIANT=0; T0=$(date +%s); start_game
             # every 10 min: a short progress file on the ci-logs branch (tracks loaded, fps, end of the log)
             live() {
               { echo "run $n, $(date -u +%H:%M) UTC, $(( $(date +%s) - T0 )) s, game attempt ${k:-1}"

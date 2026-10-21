@@ -3,11 +3,15 @@
 # auto accelerate turned on in the vehicle screen. The CI Mac runs the game about
 # half as fast as the phone and a press can be missed during a menu animation,
 # so waits are long and presses last 0.6 s. After the menus: A every 10 s (results, next race).
-# Usage: python3 tools/vs96.py <seconds>
+# Usage: python3 tools/vs96.py <seconds> [variant]
+# variant 0, 1, 2...: each one waits longer between the rules presses and holds
+# the directions a bit longer (the Mac workflow tries the next variant when the
+# tracks don't come in order, without leaving the Mac).
 import sys
 
 secs = int(sys.argv[1])
-SLOW, FAST = 30.0, 4.0
+variant = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+SLOW, FAST = 30.0 * (1 + 0.5 * variant), 4.0 + 3.0 * variant
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
 seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"),                     # Single Player
@@ -26,7 +30,7 @@ def press(t, b):
     # A/B/L/R/PLUS: held 0.6 s so a press during a menu animation isn't lost.
     # Directions: a short 0.2 s tap, a longer hold auto-repeats in the menus
     # (seen on the Mac: 5 DOWN taps moved the rules cursor 3 to 6 rows).
-    n = 2 if b in ("UP", "DOWN", "LEFT", "RIGHT") else 6
+    n = (2 + variant % 3) if b in ("UP", "DOWN", "LEFT", "RIGHT") else 6
     ev.extend(f"{t + k / 10:.1f}:{b}" for k in range(n))
 for wait, b in seq:
     t += wait
