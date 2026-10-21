@@ -11,9 +11,9 @@ SLOW, FAST = 30.0, 4.0
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
 seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"),                     # Single Player
-        (FAST, "DOWN"), (FAST, "DOWN"), (SLOW, "A"),   # VS race
+        (15.0, "DOWN"), (6.0, "DOWN"), (SLOW, "A"),   # VS race (the mode menu needs time to appear)
         (SLOW, "A"),                     # 150cc
-        (FAST, "A"),                     # character
+        (10.0, "A"),                     # character
         # vehicle screen (needs ~20 s to be ready on the Mac): + opens the panel,
         # L = smart steering, R = auto accelerate (seen toggling on the probe), + closes
         (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"), (8.0, "A"),

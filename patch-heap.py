@@ -3722,3 +3722,32 @@ assert u.count(old) == 1
 u = u.replace(old, 'eprintln!("[mem] low memory: freed {n} unused prewarmed pipelines (app {} MB -> {} MB)", before, gfx::footprint() >> 20);')
 st.write_text(u)
 print("patched", st, "(pipeline memory measure)")
+
+# NX_AUTOINPUT=@file reads the script from a file (long scripts are over the
+# environment size limit), and the lookup is a binary search (a 6 h script has
+# ~90 000 entries; the old loop went through all of them at every input poll).
+ip = pathlib.Path("crates/nxhost/src/input.rs")
+s_ = ip.read_text()
+old = '''        std::env::var("NX_AUTOINPUT").unwrap_or_default().split(',').filter_map(|e| {'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''        let raw = std::env::var("NX_AUTOINPUT").unwrap_or_default();
+        let raw = match raw.strip_prefix('@') {
+            Some(path) => std::fs::read_to_string(path.trim()).unwrap_or_default(),
+            None => raw,
+        };
+        let mut v: Vec<(f32, u64, usize)> = raw.split(',').filter_map(|e| {''')
+old = '''            Some((t.parse().ok()?, names.iter().find(|(n, _)| n.eq_ignore_ascii_case(b))?.1, player))
+        }).collect()
+    });'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''            Some((t.parse().ok()?, names.iter().find(|(n, _)| n.eq_ignore_ascii_case(b))?.1, player))
+        }).collect();
+        v.sort_by(|a, b| a.0.total_cmp(&b.0));
+        v
+    });''')
+old = '''    SCRIPT.iter().filter(|(at, _, p)| *p == player + 1 && t >= *at && t < at + 0.15).fold(0, |m, (_, b, _)| m | b)'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let lo = SCRIPT.partition_point(|(at, _, _)| *at <= t - 0.15);
+    SCRIPT[lo..].iter().take_while(|(at, _, _)| *at <= t).filter(|(at, _, p)| *p == player + 1 && t < at + 0.15).fold(0, |m, (_, b, _)| m | b)''')
+ip.write_text(s_)
+print("patched", ip, "(script from a file, binary search)")
