@@ -4377,3 +4377,30 @@ s_ = s_.replace(old, """            let qos = if t.id == 0x50 { libc::qos_class_
 """)
 kr.write_text(s_)
 print("patched", kr, "(main game thread priority)")
+
+# ---------------------------------------------------------------------------
+# An Objective-C exception (thrown by Metal or UIKit) used to end the app with
+# only "Rust cannot catch foreign exceptions". Now its reason and where it was
+# thrown from (our call stack) are written to the log first.
+dg = pathlib.Path("crates/nxhost/src/diag.rs")
+s_ = dg.read_text()
+old = "pub fn install_handlers() {\n    install_altstack();\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """extern "C" fn objc_exception_logger(e: *mut objc2::runtime::AnyObject) -> *mut objc2::runtime::AnyObject {
+    if !e.is_null() {
+        let text: Option<objc2::rc::Retained<objc2_foundation::NSString>> = unsafe { objc2::msg_send![&*e, description] };
+        eprintln!("[host] Objective-C exception: {}", text.map_or_else(|| "?".into(), |t| t.to_string()));
+        eprintln!("[host] thrown from:\\n{}", std::backtrace::Backtrace::force_capture());
+    }
+    e
+}
+
+pub fn install_handlers() {
+    unsafe extern "C" {
+        fn objc_setExceptionPreprocessor(f: extern "C" fn(*mut objc2::runtime::AnyObject) -> *mut objc2::runtime::AnyObject) -> *mut std::ffi::c_void;
+    }
+    unsafe { objc_setExceptionPreprocessor(objc_exception_logger) };
+    install_altstack();
+""")
+dg.write_text(s_)
+print("patched", dg, "(Objective-C exceptions logged)")
