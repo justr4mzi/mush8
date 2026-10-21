@@ -3217,10 +3217,10 @@ print("patched", fsr, "(NX_TRACE_ROMFS)")
 
 # ---------------------------------------------------------------------------
 # Movies: a guest thread waiting for the next video frame blocked inside its
-# emulated CPU core. When the iOS video decoder stalls (seen after "1 player":
+# emulated CPU core (it still does, for 250 ms at most). When the iOS video decoder stalls (seen after "1 player":
 # AVAssetReader copyNextSampleBuffer never returns), the core stayed taken
 # forever and the threads scheduled on it never ran again: the game froze on
-# the menu while still drawing. Now the wait releases the core, and after
+# the menu while still drawing. Now after
 # 250 ms without a new frame the previous one is shown again (a black frame
 # the first time), so the game never waits on the decoder.
 vd = pathlib.Path("crates/nxhost/src/movie/video.rs")
@@ -3232,7 +3232,11 @@ old = """        let Ok(mut frame) = self.worker.frames.recv() else { return fal
 """
 assert v.count(old) == 1
 v = v.replace(old, """        use std::sync::mpsc::RecvTimeoutError;
-        let r = crate::kernel::blocking(|| self.worker.frames.recv_timeout(std::time::Duration::from_millis(250)));
+        // no kernel::blocking here: decoder_call holds the movie objects lock, and a
+        // thread giving up its core while holding it deadlocked the menus (other
+        // threads waiting for that lock keep their cores). 250 ms at most, then the
+        // previous frame.
+        let r = self.worker.frames.recv_timeout(std::time::Duration::from_millis(250));
         let mut frame = match r {
             Ok(f) => f,
             Err(RecvTimeoutError::Disconnected) => return false,
@@ -3256,7 +3260,7 @@ v = v.replace(old, """        use std::sync::mpsc::RecvTimeoutError;
 """)
 old = "    ready.recv().ok()?.then_some(Worker { frames, recycle })\n"
 assert v.count(old) == 1
-v = v.replace(old, "    crate::kernel::blocking(|| ready.recv_timeout(std::time::Duration::from_secs(5))).ok()?.then_some(Worker { frames, recycle })\n")
+v = v.replace(old, "    ready.recv_timeout(std::time::Duration::from_secs(5)).ok()?.then_some(Worker { frames, recycle })\n")
 vd.write_text(v)
 print("patched", vd, "(video frames: never hold the core, never wait on a stalled decoder)")
 
