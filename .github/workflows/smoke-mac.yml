@@ -46,7 +46,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Install Rust
-        run: rustup toolchain install stable --profile minimal
+        run: |
+          rustup toolchain install stable --profile minimal
+          brew install sevenzip > /dev/null || true
 
       - name: Cache Rust build
         uses: actions/cache@v4
@@ -161,6 +163,7 @@ jobs:
           MONKEY: ${{ inputs.monkey || '0' }}
           VS96: ${{ inputs.vs96 || '0' }}
           GH_TOKEN: ${{ github.token }}
+          IPA_PASSWORD: ${{ secrets.IPA_PASSWORD }}
         run: |
           mkdir -p out
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
@@ -191,8 +194,16 @@ jobs:
                 echo "--- end of the log"; grep -vE "^\[(fps|prof|hang)\]" "$L" | tail -15 | cut -c1-200
                 [ -f work/pipelines.tsv ] && echo "new pipelines so far: $(wc -l < work/pipelines.tsv)"
               } > "out/live-$n.txt" 2>/dev/null
-              # only the small progress file goes out now, the full log at the end
-              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out"; cp "out/live-$n.txt" "$D/out/"; cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
+              # only the small progress file goes out now, the full log at the end; plus the last
+              # 6 screenshots, small JPEGs in a zip encrypted with the IPA password (repo is public)
+              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out" "$D/shots"; cp "out/live-$n.txt" "$D/out/"
+                if [ -n "${IPA_PASSWORD:-}" ] && command -v 7zz >/dev/null; then
+                  for f in $(ls -t work/frame/t*.png 2>/dev/null | head -6); do
+                    python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((640,360)).save(sys.argv[2], quality=70)" "$f" "$D/shots/$(basename "$f" .png).jpg"
+                  done
+                  [ -n "$(ls "$D/shots")" ] && 7zz a -tzip -mem=AES256 -p"$IPA_PASSWORD" "$D/out/screens-$n.zip" "$D/shots/"* > /dev/null
+                fi
+                cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
             }
             T0=$(date +%s)
             for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; [ $((i % 600)) = 0 ] && live; done
