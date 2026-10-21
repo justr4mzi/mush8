@@ -197,7 +197,7 @@ jobs:
             # the game is (re)started by start_game: a crash or a stuck run doesn't end the job,
             # the game starts again on the same Mac until the time is up
             start_game() {
-              k=$((k+1)); echo "=== attempt $k at $(( $(date +%s) - T0 )) s" >> "$L"; START_LINE=$(wc -l < "$L"); AT=$(date +%s)
+              k=$((k+1)); echo "=== attempt $k at $(( $(date +%s) - T0 )) s" >> "$L"; START_LINE=$(( $(wc -l < "$L") + 0 )); AT=$(date +%s)
               # VS run: the next attempts use slower menu variants of the script
               [ "$VS96" = 1 ] && [ $k -gt 1 ] && python3 tools/vs96.py "$SECS" "$VARIANT" > work/autoinput.txt && echo "=== script variant $VARIANT" >> "$L"
               NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY=60 NX_PIPELINE_LIST="$LIST" \
