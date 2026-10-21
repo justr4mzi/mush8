@@ -3469,3 +3469,63 @@ u = u.replace(old, old + """            eprintln!("[mem] prewarm starts: app use
 """)
 st.write_text(u)
 print("patched", st, "(memory at archive load and prewarm start)")
+
+# ---------------------------------------------------------------------------
+# Detailed memory every 10 s, to know what fills the ~3 GB:
+# "[mem] detail: game RAM X MB, Metal Y MB, resident Z, compressed C, ..."
+#  - game RAM: pages of the Switch address space really in memory (mincore)
+#  - Metal: everything the GPU driver allocated (textures, buffers, pipelines)
+#  - task_vm_info: resident / internal / external / compressed / purgeable / footprint
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = """            eprintln!("[mem] {:.0} s: app uses {} MB, iOS still allows {} MB (lowest so far {} MB)", t0.elapsed().as_secs_f32(), used >> 20, left >> 20, low >> 20);
+"""
+assert g.count(old) == 1
+g = g.replace(old, old + """            mem_detail();
+""")
+old = "/// Every 10 s: memory used by the app and memory iOS still allows (NX_NO_MEMLOG=1 to turn off).\n"
+assert g.count(old) == 1
+g = g.replace(old, r'''/// Where the memory goes (see start_memlog).
+pub fn mem_detail() {
+    unsafe extern "C" {
+        static mach_task_self_: u32;
+        fn task_info(task: u32, flavor: i32, info: *mut u64, count: *mut u32) -> i32;
+    }
+    const TASK_VM_INFO: i32 = 22;
+    let mut vm = [0u64; 64];
+    let mut count = (vm.len() * 2) as u32;
+    let ok = unsafe { task_info(mach_task_self_, TASK_VM_INFO, vm.as_mut_ptr(), &mut count) } == 0;
+    // guest (Switch) address space pages that are really in memory
+    let game = crate::kernel::KERNEL.aspace.get().map_or(0u64, |a| {
+        let len = a.layout.total() as usize;
+        let page = 16384usize;
+        let mut v = vec![0u8; len / page + 1];
+        let r = unsafe { libc::mincore(a.base as *mut libc::c_void, len, v.as_mut_ptr() as *mut _) };
+        if r == 0 { v.iter().filter(|&&b| b & 1 != 0).count() as u64 * page as u64 } else { 0 }
+    });
+    let metal = GPU.get().map_or(0, |g| g.device.0.currentAllocatedSize() as u64);
+    let mb = |b: u64| b >> 20;
+    if ok {
+        // task_vm_info: [2] resident, [6] internal, [8] external, [10] reusable,
+        // [13] purgeable volatile resident, [15] compressed, [18] phys_footprint
+        eprintln!(
+            "[mem] detail: game RAM {} MB, Metal {} MB | resident {} MB, internal {} MB, external {} MB, compressed {} MB, purgeable {} MB, reusable {} MB, footprint {} MB",
+            mb(game), mb(metal), mb(vm[2]), mb(vm[6]), mb(vm[8]), mb(vm[15]), mb(vm[13]), mb(vm[10]), mb(vm[18])
+        );
+    } else {
+        eprintln!("[mem] detail: game RAM {} MB, Metal {} MB", mb(game), mb(metal));
+    }
+}
+
+''' + old)
+gm.write_text(g)
+print("patched", gm, "(detailed memory report)")
+
+# Memory at boot stages: after the game modules are loaded
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    let mods = loader::load(&dir, &["main", "subsdk0", "sdk"], &hle::table())?;\n'
+assert m.count(old) == 1
+m = m.replace(old, old + '    eprintln!("[mem] game modules loaded: app uses {} MB", gfx::footprint() >> 20);\n    gfx::mem_detail();\n')
+mn.write_text(m)
+print("patched", mn, "(memory after loading the game modules)")
