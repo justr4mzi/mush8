@@ -160,6 +160,7 @@ jobs:
           RECORD: ${{ inputs.record || '0' }}
           MONKEY: ${{ inputs.monkey || '0' }}
           VS96: ${{ inputs.vs96 || '0' }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           mkdir -p out
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
@@ -180,7 +181,20 @@ jobs:
             NX_ASYNC_GFX=$m NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_PIPELINE_LIST="$LIST" \
               NX_AUTOINPUT="$INPUT" NX_DUMP_AT="$DUMPS" ./target/release/nxhost > "$L" 2>&1 &
             pid=$!
-            for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; done
+            # every 10 min: a short progress file on the ci-logs branch (tracks loaded, fps, end of the log)
+            live() {
+              { echo "run $n, $(date -u +%H:%M) UTC, $(( $(date +%s) - T0 )) s"
+                grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" "$L" | awk '{print $3, $5}' | sed -E 's#/course_model.*##'
+                grep "^\[fps\]" "$L" | tail -60 | awk '{s+=$2;n++} END{if(n) printf "game fps (last minute): %.1f\n", s/n}'
+                grep -E "\[mem\]|\[hang\] no frame|panic|abort" "$L" | tail -5
+                echo "--- end of the log"; grep -vE "^\[(fps|prof|hang)\]" "$L" | tail -15 | cut -c1-200
+                [ -f work/pipelines.tsv ] && echo "new pipelines so far: $(wc -l < work/pipelines.tsv)"
+              } > "out/live-$n.txt" 2>/dev/null
+              bash .github/publish-logs.sh smoke > /dev/null 2>&1 || true
+            }
+            T0=$(date +%s)
+            for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; [ $((i % 600)) = 0 ] && live; done
+            live
             if kill -0 $pid 2>/dev/null; then echo "still running after $SECS s: stopping it"; kill $pid; sleep 3; kill -9 $pid 2>/dev/null || true; else wait $pid && echo "exited by itself" || echo "exited by itself with code $?"; fi
             grep -c "^\[fps\]" "$L" || true
             [ -f work/pipelines.tsv ] && cp work/pipelines.tsv "out/pipelines-$n.tsv" && wc -l "out/pipelines-$n.tsv"
