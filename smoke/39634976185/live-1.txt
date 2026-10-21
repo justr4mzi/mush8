@@ -1,0 +1,53 @@
+run 1, 16:35 UTC, 67 s, game attempt 1
+tracks:
+5.4s /Course/Gu_Menu
+59.0s /Course/Gu_FirstCircuit
+last game files read:
+60.0s /Audio/Body/Body_B_Std.bars
+60.0s /Audio/Driver/Driver_AnimalBoyA.bars
+60.0s /Audio/Body/Body_K_Ten.bars
+60.0s /Audio/Driver/Driver_DrvChr03.bars
+60.0s /Audio/Body/Body_K_Wld.bars
+60.0s /Audio/Driver/Driver_BbLuigi.bars
+60.0s /Audio/Body/Body_K_Skl.bars
+60.0s /Audio/Driver/Driver_Roy.bars
+60.0s /Audio/Driver/Driver_BbDaisy.bars
+60.0s /Audio/Driver/Driver_DrvChr02.bars
+60.0s /Audio/Body/Body_K_Shp.bars
+60.0s /Audio/Driver/Driver_DrvChr04.bars
+60.0s /Audio/Driver/Driver_SplatoonBoy.bars
+60.0s /Audio/Body/Body_V_Tnd.bars
+60.1s /Audio/Driver/Driver_Peach.bars
+60.1s /Audio/Body/Body_B_Jet.bars
+60.1s /Audio/Driver/Driver_Koopa.bars
+60.1s /Audio/Body/Body_K_Fml.bars
+60.1s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
+60.1s /UI/USen/race/tc_RT_Go_USen^h.bntx
+60.1s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
+60.1s /UI/USen/race/tc_RT_Finish_USen^h.bntx
+60.1s /UI/cmn/race/ym_ClassIconBG050_00^s.bntx
+60.1s /UI/cmn/race/ym_CupIconMushroom_130x130^h.bntx
+60.1s /UI/cmn/race/ym_CupIconMushroom_Line^s.bntx
+game fps (last minute): 21.8
+=== attempt 1 at 0 s
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3267 MB | resident 1785 MB, internal 1729 MB, external 54 MB, compressed 118 MB, purgeable 0 MB, reusable 2 MB, footprint 1976 MB
+[mem] Metal besides the game RAM: 167 MB = textures 110 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 41 MB
+[mem] 58 s: jump to 1784 MB (was 1976 MB), iOS still allows 0 MB
+[mem] 64 s: jump to 2007 MB (was 1784 MB), iOS still allows 0 MB
+--- end of the log
+[shader] ed5a291cb56a901e: compiled while the render thread waited (new render target), 24 ms
+[gfx] pipeline ed5a291cb56a901e/f06ae19aa2e50910: built while the render thread waited (new render target), 6 ms
+[shader] 036e5d3a68d7f3d0: compiled while the render thread waited (new render target), 70 ms
+[shader] 2d90471ed7f68931: compiled while the render thread waited (new render target), 25 ms
+[gfx] pipeline 2d90471ed7f68931/036e5d3a68d7f3d0: built while the render thread waited (new render target), 6 ms
+[shader] b1c5097a41ea8419: compiled while the render thread waited (new render target), 254 ms
+[mem] 64 s: jump to 2007 MB (was 1784 MB), iOS still allows 0 MB
+[shader] 390a585d92b46d47: compiled while the render thread waited (new render target), 241 ms
+[gfx] pipeline 390a585d92b46d47/b1c5097a41ea8419: built while the render thread waited (new render target), 402 ms
+[shader] f54b1d88bbc79e26: compiled while the render thread waited (new render target), 184 ms
+[gfx] pipeline f54b1d88bbc79e26/b1c5097a41ea8419: built while the render thread waited (new render target), 202 ms
+[shader] 556cb53d8c7864a4: compiled while the render thread waited (new render target), 285 ms
+[shader] d9e30c49316cd570: compiled while the render thread waited (new render target), 241 ms
+[gfx] pipeline d9e30c49316cd570/556cb53d8c7864a4: built while the render thread waited (new render target), 312 ms
+[shader] a8dfa73c81f4f3ac: compiled while the render thread waited (new render target), 237 ms
