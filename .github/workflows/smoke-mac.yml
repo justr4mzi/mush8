@@ -235,7 +235,7 @@ jobs:
               } > "out/live-$n.txt" 2>/dev/null
               # only the small progress file goes out now, the full log at the end; plus the last
               # 6 screenshots, small JPEGs in a zip encrypted with the IPA password (repo is public)
-              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out" "$D/shots"; cp "out/live-$n.txt" "$D/out/"
+              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out" "$D/shots"; cp "out/live-$n.txt" "$D/out/"; cp out/stopped-*.txt "$D/out/" 2>/dev/null
                 if [ -n "${IPA_PASSWORD:-}" ] && command -v 7zz >/dev/null; then
                   for f in $(ls -t work/frame/t*.png 2>/dev/null | head -6); do
                     python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((640,360)).save(sys.argv[2], quality=70)" "$f" "$D/shots/$(basename "$f" .png).jpg"
@@ -255,7 +255,7 @@ jobs:
               left=$(( SECS - i ))
               if ! kill -0 $pid 2>/dev/null; then
                 [ $left -lt 600 ] && break
-                echo "=== the game stopped (attempt $k): starting it again" | tee -a "$L"; live; start_game
+                echo "=== the game stopped (attempt $k): starting it again" | tee -a "$L"; tail -n 80 "$L" | cut -c1-300 > "out/stopped-$n-$k.txt"; live; start_game
               elif [ $((i % 30)) = 0 ] && stuck; then
                 [ $left -lt 600 ] && continue
                 echo "=== stuck (attempt $k): restarting the game" | tee -a "$L"; kill $pid; sleep 3; kill -9 $pid 2>/dev/null || true; live; start_game
