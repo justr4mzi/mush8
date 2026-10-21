@@ -1,0 +1,47 @@
+run 1, 14:08 UTC, 4 s
+tracks:
+last game files read:
+2.6s /Audio/Static/MenuDriver_Peach.barslist
+2.6s /Audio/Static/MenuDriver_Rosetta.barslist
+2.6s /Audio/Static/MenuDriver_Roy.barslist
+2.6s /Audio/Static/MenuDriver_Shizue.barslist
+2.6s /Audio/Static/MenuDriver_SplatoonBoy.barslist
+2.6s /Audio/Static/MenuDriver_SplatoonGirl.barslist
+2.6s /Audio/Static/MenuDriver_TanukiMario.barslist
+2.6s /Audio/Static/MenuDriver_Waluigi.barslist
+2.6s /Audio/Static/MenuDriver_Wario.barslist
+2.6s /Audio/Static/MenuDriver_Wendy.barslist
+2.6s /Audio/Static/MenuDriver_Yoshi.barslist
+2.6s /Audio/Static/StaticKart.bars
+2.6s /Audio/Static/StaticKart.barslist
+2.6s /Audio/Static/StaticSysMenu.bars
+2.6s /Audio/Static/StaticSysMenu.barslist
+2.6s /Audio/Static/StaticSysRace.bars
+2.6s /Audio/Static/StaticSysRace.barslist
+2.9s /UI/cmn/filter.sarc
+2.9s /UI/cmn/common.sarc
+3.0s /UI/USen/font.sarc
+3.0s /UI/USen/message.sarc
+3.0s /UI/cmn/boot/bt_TitleLoading_00.szs
+3.1s /Data/contentskey.dat
+3.1s dlc:/version.txt
+3.1s dlc:/contents.dat
+[mem] game modules loaded: app uses 49 MB
+[mem] phone: heat normal
+[mem] detail: game RAM 37 MB, Metal 0 MB | resident 86 MB, internal 49 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 31 MB, footprint 49 MB
+--- end of the log
+[sm] GetServiceHandle pl:u
+[romfs] 3.0 s /UI/USen/font.sarc
+[romfs] 3.0 s /UI/USen/message.sarc
+[romfs] 3.0 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x10252ed78, 0x7dc29672b8)
+[gfx] window crop Some([0, 0, 1280, 720])
+[nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x10252ed78, 0x1)
+[romfs] 3.1 s /Data/contentskey.dat
+[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x10252ed78, 0x7dc29672b8)
+[romfs] add-on content: 2 files
+[romfs] 3.1 s dlc:/version.txt
+[romfs] 3.1 s dlc:/contents.dat
+[ipc] STUB prepo:u cmd 10101 (in 32 bytes, bufs x1 a1 b0 c0)
+-[_MTLCommandEncoder dealloc]:131: failed assertion `Command encoder released without endEncoding'
