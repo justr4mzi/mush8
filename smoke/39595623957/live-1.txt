@@ -1,13 +1,7 @@
-run 1, 12:05 UTC, 209 s
+run 1, 12:06 UTC, 280 s
 tracks:
 7.4s /Course/Gu_Menu
 last game files read:
-40.1s /Driver/Iggy.szs
-40.1s /Kart/Body/BodyK_Kpc.szs
-40.1s /Kart/BodyTex/BodyK_Kpc_F_Alb.szs
-40.1s /Kart/BodyTex/BodyK_Kpc_F_Spm.szs
-40.1s /Kart/WingTex/Wing_Std_Igy_Alb.szs
-41.1s /Driver/LinkBotw.szs
 41.1s /Kart/Body/BodyB_Amb.szs
 41.2s /Kart/Wing/Wing_Prc.szs
 76.7s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
@@ -27,25 +21,31 @@ last game files read:
 143.1s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
 143.1s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
 143.1s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-game fps (last minute): 32.6
-[mem] 186 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
-[mem] 197 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
-[mem] 208 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+201.6s /Kart/Wing/Wing_Jgm.szs
+205.5s /Kart/Wing/Wing_Wlo.szs
+209.3s /Kart/Wing/Wing_Zng.szs
+210.0s /Kart/Wing/Wing_Umb.szs
+210.0s /Kart/WingTex/Wing_Umb_A_Alb.szs
+225.9s /Kart/Wing/Wing_Flw.szs
+game fps (last minute): 30.6
+[hang] thread 0x1103 '': pc libsystem_kernel.dylib+0x29b8 __ulock_wait+0x8 | lr libsystem_pthread.dylib+0x906c _pthread_join+0x260 <- nxhost+0x22b5fc _RNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB5_6Thread4join+0x18 <- nxhost+0xae5a8 _RNvMs1_NtNtCsdnanKjkF2cC_3std6thread9lifecycleINtB5_9JoinInneruE4joinCsiqoAeEVo7TP_6nxhost+0x20 <- nxhost+0xd088c _RNCNvCsiqoAeEVo7TP_6nxhost5starts4_0B3_+0x28 <- nxhost+0xcd0dc _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0+0x0 <- nxhost+0xa9be0 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvCsiqoAeEVo7TP_6nxhost5starts4_0zEs_00B14_+0x3c <- nxhost+0xb5f58 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xab510 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvCsiqoAeEVo7TP_6nxhost5starts4_0zEs_0INtNtNtCs3bJ+0x44 <- nxhost+0x243c88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0x1903 'memlog': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x23ec8c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0xd0c40 _RNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0B5_+0xe0 <- nxhost+0xcd0e8 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0+0x0 <- nxhost+0xa9c18 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0zEs_00B+0x0 <- nxhost+0xb5f64 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xab608 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0zEs_+0x2c <- nxhost+0x243c88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0x2607 'vsync': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x23ec8c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0xcf12c _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_event00B9_+0x1d8 <- nxhost+0xcaeac _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18st+0x0 <- nxhost+0xa9b58 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_inp+0x0 <- nxhost+0xb5f14 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xaa800 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_e+0x34 <- nxhost+0x243c88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0x9e1b 'hid': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x23ec8c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0xcf6d8 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_input_thread00B9_+0x2d4 <- nxhost+0xcaeb8 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state+0x0 <- nxhost+0xa9b84 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5st+0x0 <- nxhost+0xb5f20 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xaa900 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_+0x34 <- nxhost+0x243c88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0xea0b 'gfx-submit': pc libsystem_kernel.dylib+0x43cc __psynch_cvwait+0x8 | lr libsystem_pthread.dylib+0x709c _pthread_cond_wait+0x3d8 <- nxhost+0xd016c _RNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5start00Bb_+0x12c <- nxhost+0xcc494 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5sta+0x0 <- nxhost+0xa9ba4 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvCsiqoAeEVo7TP_6nxhost5starts4_0zEs_00B14_+0x0 <- nxhost+0xb5f2c _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xaaf68 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx+0x2c <- nxhost+0x243c88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 --- end of the log
-[mem] 164 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 150s dumped
-[mem] textures: 36 loaded (2 MB), 398 render targets (86 MB), 0 pipelines kept ready
-[mem] 175 s: app uses 2000 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 160s dumped
-[shader] ee32a5616477227d: compiling took 545 ms
-[gfx] device pipeline archive: 113 pipelines saved this run (7 files, 0 left out)
-[gfx] screen at 170s dumped
-[mem] 186 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
-[gfx] screen at 180s dumped
-[mem] 197 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
-[gfx] screen at 190s dumped
-[mem] 208 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] device pipeline archive: 126 pipelines saved this run (8 files, 0 left out)
+[gfx] screen at 220s dumped
+[romfs] 225.9 s /Kart/Wing/Wing_Flw.szs
+[shader] 61a7c6fc51d246fe: compiling took 551 ms
+[mem] 241 s: app uses 2008 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] device pipeline archive: 130 pipelines saved this run (9 files, 0 left out)
+[gfx] screen at 230s dumped
+[mem] textures: 36 loaded (2 MB), 439 render targets (91 MB), 0 pipelines kept ready
+[mem] 251 s: app uses 2008 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 240s dumped
+[mem] 262 s: app uses 2008 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 36 loaded (2 MB), 439 render targets (91 MB), 0 pipelines kept ready
+[gfx] screen at 250s dumped
+[mem] 273 s: app uses 2008 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 260s dumped
