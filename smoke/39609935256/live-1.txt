@@ -1,0 +1,5 @@
+run 1, 13:45 UTC, 1 s
+tracks:
+last game files read:
+--- end of the log
+/Users/runner/work/_temp/62d6867e-6f02-429b-b3cf-6f9a38d29b05.sh: line 18: ./target/release/nxhost: Argument list too long
