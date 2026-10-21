@@ -23,7 +23,11 @@ seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"), (FAST, "A"), (FAST, "A")])
 ev, t = [], 0.0
 def press(t, b):
-    ev.extend(f"{t + k / 10:.1f}:{b}" for k in range(6))
+    # A/B/L/R/PLUS: held 0.6 s so a press during a menu animation isn't lost.
+    # Directions: a short 0.2 s tap, a longer hold auto-repeats in the menus
+    # (seen on the Mac: 5 DOWN taps moved the rules cursor 3 to 6 rows).
+    n = 2 if b in ("UP", "DOWN", "LEFT", "RIGHT") else 6
+    ev.extend(f"{t + k / 10:.1f}:{b}" for k in range(n))
 for wait, b in seq:
     t += wait
     press(t, b)
