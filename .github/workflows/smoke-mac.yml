@@ -224,7 +224,8 @@ jobs:
                 echo "tracks:"; grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" "$L" | awk '{print $2"s", $4}' | sed -E 's#/course_model.*##'
                 echo "last game files read:"; grep -E "^\[romfs\] [0-9.]+ s " "$L" | tail -25 | awk '{print $2"s", $4}'
                 grep "^\[fps\]" "$L" | tail -60 | awk '{s+=$2;n++} END{if(n) printf "game fps (last minute): %.1f\n", s/n}'
-                grep -E "\[mem\]|\[hang\] no frame|panic|abort" "$L" | tail -5
+                grep -E "^===|panicked|abort|failed assertion|Segmentation|signal" "$L" | tail -12
+                grep -E "\[mem\]|\[hang\] no frame" "$L" | tail -5
                 echo "--- end of the log"; grep -vE "^\[(fps|prof|hang)\]" "$L" | tail -15 | cut -c1-200
                 [ -f work/pipelines.tsv ] && echo "new pipelines so far: $(wc -l < work/pipelines.tsv)"
               } > "out/live-$n.txt" 2>/dev/null
