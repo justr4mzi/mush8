@@ -1,0 +1,24 @@
+run 1, 10:42 UTC, 655 s
+s 
+game fps (last minute): 31.4
+[mem] 630 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
+[mem] 641 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 651 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
+--- end of the log
+[mem] 586 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 580s dumped
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
+[mem] 597 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 600s dumped
+[mem] 608 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
+[mem] 619 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 620s dumped
+[mem] 630 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
+[mem] 641 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 640s dumped
+[mem] 651 s: app uses 1980 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (69 MB), 0 pipelines kept ready
