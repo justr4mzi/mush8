@@ -3214,3 +3214,48 @@ f_ = f_.replace(old, """fn trace_romfs(name: &'static str, s: &DynStorage, off: 
 """ + old)
 fsr.write_text(f_)
 print("patched", fsr, "(NX_TRACE_ROMFS)")
+
+# ---------------------------------------------------------------------------
+# Movies: a guest thread waiting for the next video frame blocked inside its
+# emulated CPU core. When the iOS video decoder stalls (seen after "1 player":
+# AVAssetReader copyNextSampleBuffer never returns), the core stayed taken
+# forever and the threads scheduled on it never ran again: the game froze on
+# the menu while still drawing. Now the wait releases the core, and after
+# 250 ms without a new frame the previous one is shown again (a black frame
+# the first time), so the game never waits on the decoder.
+vd = pathlib.Path("crates/nxhost/src/movie/video.rs")
+v = vd.read_text()
+old = """        let Ok(mut frame) = self.worker.frames.recv() else { return false };
+        std::mem::swap(out, &mut frame);
+        let _ = self.worker.recycle.send(frame);
+        true
+"""
+assert v.count(old) == 1
+v = v.replace(old, """        use std::sync::mpsc::RecvTimeoutError;
+        let r = crate::kernel::blocking(|| self.worker.frames.recv_timeout(std::time::Duration::from_millis(250)));
+        let mut frame = match r {
+            Ok(f) => f,
+            Err(RecvTimeoutError::Disconnected) => return false,
+            Err(RecvTimeoutError::Timeout) => {
+                static WARNED: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+                if !WARNED.swap(true, std::sync::atomic::Ordering::Relaxed) {
+                    eprintln!("[movie] video decoder is late: showing the previous frame instead of waiting");
+                }
+                let size = self.layout.0 * self.layout.1 * 3 / 2;
+                if out.len() != size {
+                    out.clear();
+                    out.resize(size, 0);
+                    out[self.layout.0 * self.layout.1..].fill(128);
+                }
+                return true;
+            }
+        };
+        std::mem::swap(out, &mut frame);
+        let _ = self.worker.recycle.send(frame);
+        true
+""")
+old = "    ready.recv().ok()?.then_some(Worker { frames, recycle })\n"
+assert v.count(old) == 1
+v = v.replace(old, "    crate::kernel::blocking(|| ready.recv_timeout(std::time::Duration::from_secs(5))).ok()?.then_some(Worker { frames, recycle })\n")
+vd.write_text(v)
+print("patched", vd, "(video frames: never hold the core, never wait on a stalled decoder)")
