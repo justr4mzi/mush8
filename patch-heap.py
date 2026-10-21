@@ -4117,7 +4117,7 @@ for a_, b_ in [
     ("struct Proc {\n    name: String,\n    calls: AtomicU64,\n", "struct Proc {\n    name: String,\n    calls: AtomicU64,\n    ns: AtomicU64,\n"),
     ("Proc { name: name.to_string(), calls: AtomicU64::new(0), host: host_impl(name) }", "Proc { name: name.to_string(), calls: AtomicU64::new(0), ns: AtomicU64::new(0), host: host_impl(name) }"),
     ("    if let Some(f) = p.host {\n        return f(a);\n    }\n",
-     "    if let Some(f) = p.host {\n        // timing every call costs ~2 clock reads per call on the game thread: only 1 call in 16 is\n        // timed (and counted 16 times), so the profile stays nearly free\n        if n % 16 != 0 {\n            return f(a);\n        }\n        let t = std::time::Instant::now();\n        let r = f(a);\n        let ns = t.elapsed().as_nanos() as u64 * 16;\n        p.ns.fetch_add(ns, Relaxed);\n        crate::gfx::prof::NVN_NS.fetch_add(ns, Relaxed);\n        return r;\n    }\n"),
+     "    if let Some(f) = p.host {\n        // timing every call took about a third of the game thread's busy time (2 clock reads per\n        // call, measured with a CPU profile on the Mac): only 1 call in 64 is timed (counted 64 times)\n        if n % 64 != 0 {\n            return f(a);\n        }\n        let t = std::time::Instant::now();\n        let r = f(a);\n        let ns = t.elapsed().as_nanos() as u64 * 64;\n        p.ns.fetch_add(ns, Relaxed);\n        crate::gfx::prof::NVN_NS.fetch_add(ns, Relaxed);\n        return r;\n    }\n"),
     ("fn log_limit() -> u64 {\n", """/// The graphics API calls that took the most time since the last call (ms, calls).
 pub fn top_calls(n: usize) -> String {
     let procs = PROCS.lock().unwrap();
