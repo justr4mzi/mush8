@@ -69,15 +69,22 @@ jobs:
           KEYS_URL: ${{ secrets.KEYS_URL }}
           BASE_URL: ${{ secrets.BASE_URL }}
           UPDATE_URL: ${{ secrets.UPDATE_URL }}
+          GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
           FIRMWARE_URL: ${{ secrets.FIRMWARE_URL }}
           DLC_URL: ${{ secrets.DLC_URL }}
         run: |
           mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
-          python3 -m pip install --quiet --break-system-packages gdown pillow || python3 -m pip install --quiet --user gdown pillow
+          python3 -m pip install --quiet --break-system-packages gdown pillow google-auth requests || python3 -m pip install --quiet --user gdown pillow google-auth requests
           export PATH="$PATH:$(python3 -m site --user-base)/bin"
           get() {
             case "$1" in
               *drive.google.com*)
+                if [ -n "${GDRIVE_SA_JSON:-}" ]; then
+                  id="$(python3 .github/drive_token.py --id "$1")"; tok="$(python3 .github/drive_token.py)"
+                  curl -fsSL --retry 5 --retry-all-errors -C - -H "Authorization: Bearer $tok" \
+                    "https://www.googleapis.com/drive/v3/files/$id?alt=media&supportsAllDrives=true&acknowledgeAbuse=true" -o "$2" && return 0
+                  echo "Drive API download failed, trying the public link"
+                fi
                 for i in 1 2 3 4 5; do
                   python3 -m gdown --continue --retries 3 --quiet "$1" -O "$2" && return 0
                   echo "Drive download cut, retry $i"; sleep 10
@@ -107,13 +114,21 @@ jobs:
       - name: Save (secret SAVE_URL; a fresh save stops at the Mii editor)
         env:
           SAVE_URL: ${{ secrets.SAVE_URL }}
+          GDRIVE_SA_JSON: ${{ secrets.GDRIVE_SA_JSON }}
         run: |
           rm -rf smoke-save
           [ -n "$SAVE_URL" ] || { echo "::warning::no SAVE_URL: a fresh save stops at the Mii editor"; exit 0; }
           mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
           export PATH="$PATH:$(python3 -m site --user-base)/bin"
           case "$SAVE_URL" in
-            *drive.google.com*) python3 -m gdown --quiet "$SAVE_URL" -O save.archive ;;
+            *drive.google.com*)
+              if [ -n "${GDRIVE_SA_JSON:-}" ]; then
+                id="$(python3 .github/drive_token.py --id "$SAVE_URL")"; tok="$(python3 .github/drive_token.py)"
+                curl -fsSL --retry 5 -H "Authorization: Bearer $tok" "https://www.googleapis.com/drive/v3/files/$id?alt=media&supportsAllDrives=true&acknowledgeAbuse=true" -o save.archive \
+                  || python3 -m gdown --quiet "$SAVE_URL" -O save.archive
+              else
+                python3 -m gdown --quiet "$SAVE_URL" -O save.archive
+              fi ;;
             *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.archive ;;
             *) curl -fsSL "$SAVE_URL" -o save.archive ;;
           esac
