@@ -184,7 +184,8 @@ jobs:
             # every 10 min: a short progress file on the ci-logs branch (tracks loaded, fps, end of the log)
             live() {
               { echo "run $n, $(date -u +%H:%M) UTC, $(( $(date +%s) - T0 )) s"
-                grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" "$L" | awk '{print $3, $5}' | sed -E 's#/course_model.*##'
+                echo "tracks:"; grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" "$L" | awk '{print $2"s", $4}' | sed -E 's#/course_model.*##'
+                echo "last game files read:"; grep -E "^\[romfs\] [0-9.]+ s " "$L" | tail -25 | awk '{print $2"s", $4}'
                 grep "^\[fps\]" "$L" | tail -60 | awk '{s+=$2;n++} END{if(n) printf "game fps (last minute): %.1f\n", s/n}'
                 grep -E "\[mem\]|\[hang\] no frame|panic|abort" "$L" | tail -5
                 echo "--- end of the log"; grep -vE "^\[(fps|prof|hang)\]" "$L" | tail -15 | cut -c1-200
