@@ -36,7 +36,7 @@ permissions:
 jobs:
   smoke:
     runs-on: ${{ inputs.runner || 'macos-15' }}
-    timeout-minutes: 355
+    timeout-minutes: 360
     steps:
       - name: Use the newest Xcode
         run: |
