@@ -2839,7 +2839,7 @@ fn check_device_archive_os() {
                 }
             }
         }
-        eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.unwrap_or_default());
+        eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.as_deref().unwrap_or_default());
     }
     if old.as_deref() != Some(id.as_str()) {
         let _ = std::fs::create_dir_all(DEVICE_ARCHIVE_DIR);
