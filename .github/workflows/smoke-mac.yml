@@ -29,6 +29,9 @@ on:
       vs96:
         description: "1 = VS race, all tracks in order (tools/vs96.py)"
         default: "0"
+      probe:
+        description: "buttons for tools/probe.py after the character screen (empty = off)"
+        default: ""
 
 permissions:
   contents: write
@@ -162,6 +165,7 @@ jobs:
           RECORD: ${{ inputs.record || '0' }}
           MONKEY: ${{ inputs.monkey || '0' }}
           VS96: ${{ inputs.vs96 || '0' }}
+          PROBE: ${{ inputs.probe }}
           GH_TOKEN: ${{ github.token }}
           IPA_PASSWORD: ${{ secrets.IPA_PASSWORD }}
         run: |
@@ -175,6 +179,7 @@ jobs:
             [ "$RECORD" = 1 ] && rm -f work/pipelines.tsv
             [ "$MONKEY" = 1 ] && INPUT="$(python3 tools/monkey.py "$n$GITHUB_RUN_ID" "$SECS")"
             [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS")"
+            [ -n "$PROBE" ] && INPUT="$(python3 tools/probe.py "$PROBE")"
             mkdir -p work/save
             if [ -d smoke-save ]; then
               if ls -d smoke-save/type* >/dev/null 2>&1; then cp -R smoke-save/. work/save/; else mkdir -p work/save/type1-index0 && cp -R smoke-save/. work/save/type1-index0/; fi
@@ -203,9 +208,9 @@ jobs:
                   done
                   [ -n "$(ls "$D/shots")" ] && 7zz a -tzip -mem=AES256 -p"$IPA_PASSWORD" "$D/out/screens-$n.zip" "$D/shots/"* > /dev/null
                 fi
-                # the owner agreed to plain low-res screenshots: the last 3, 480x270, readable by Claude
-                i=0; for f in $(ls -t work/frame/t*.png 2>/dev/null | head -3); do i=$((i+1))
-                  python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((480,270)).save(sys.argv[2], quality=60)" "$f" "$D/out/shot-$i.jpg"
+                # the owner agreed to plain low-res screenshots: the last 6, 480x270, readable by Claude
+                i=0; for f in $(ls -t work/frame/t*.png 2>/dev/null | head -6); do i=$((i+1))
+                  python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((480,270)).save(sys.argv[2], quality=60)" "$f" "$D/out/shot-$i-$(basename "$f" .png).jpg"
                 done
                 cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
             }
