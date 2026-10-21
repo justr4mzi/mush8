@@ -1,4 +1,4 @@
-run 1, 12:15 UTC, 847 s
+run 1, 12:16 UTC, 917 s
 tracks:
 7.4s /Course/Gu_Menu
 317.7s /Course/Gu_FirstCircuit
@@ -28,26 +28,26 @@ last game files read:
 319.1s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
 319.1s /UI/cmn/race/ym_ModeIconTt_00^l.bntx
 368.9s /Audio/Resource/Stream/pBGM_WU_FIRST_CIRCUIT_N.bfstm
-game fps (last minute): 31.3
+game fps (last minute): 32.9
 [mem] textures: 32 loaded (0 MB), 1036 render targets (283 MB), 0 pipelines kept ready
-[mem] 819 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 894 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] textures: 32 loaded (0 MB), 1036 render targets (283 MB), 0 pipelines kept ready
-[mem] 830 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] 841 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 905 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 916 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
 --- end of the log
-[mem] 786 s: app uses 2199 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 862 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 850s dumped
 [mem] textures: 32 loaded (0 MB), 1036 render targets (283 MB), 0 pipelines kept ready
-[gfx] screen at 780s dumped
-[mem] 797 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 790s dumped
-[mem] 808 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 873 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 860s dumped
+[mem] 883 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 870s dumped
 [mem] textures: 32 loaded (0 MB), 1036 render targets (283 MB), 0 pipelines kept ready
-[gfx] screen at 800s dumped
-[mem] 819 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 810s dumped
+[mem] 894 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 880s dumped
 [mem] textures: 32 loaded (0 MB), 1036 render targets (283 MB), 0 pipelines kept ready
-[mem] 830 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 820s dumped
-[mem] 841 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] screen at 830s dumped
+[mem] 905 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 890s dumped
+[gfx] screen at 900s dumped
+[mem] 916 s: app uses 2200 MB, iOS still allows 0 MB (lowest so far 0 MB)
 new pipelines so far:        2
