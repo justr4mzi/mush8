@@ -1,31 +1,31 @@
-run 1, 21:44 UTC, 16 s, game attempt 2
+run 1, 21:44 UTC, 25 s, game attempt 3
 tracks:
 last game files read:
-2.7s /Audio/Static/MenuDriver_Morton.barslist
-2.7s /Audio/Static/MenuDriver_Nokonoko.barslist
-2.7s /Audio/Static/MenuDriver_Peach.barslist
-2.7s /Audio/Static/MenuDriver_Rosetta.barslist
-2.7s /Audio/Static/MenuDriver_Roy.barslist
-2.7s /Audio/Static/MenuDriver_Shizue.barslist
-2.7s /Audio/Static/MenuDriver_SplatoonBoy.barslist
-2.7s /Audio/Static/MenuDriver_SplatoonGirl.barslist
-2.7s /Audio/Static/MenuDriver_TanukiMario.barslist
-2.7s /Audio/Static/MenuDriver_Waluigi.barslist
-2.7s /Audio/Static/MenuDriver_Wario.barslist
-2.7s /Audio/Static/MenuDriver_Wendy.barslist
-2.7s /Audio/Static/MenuDriver_Yoshi.barslist
-2.7s /Audio/Static/StaticKart.bars
-2.8s /Audio/Static/StaticKart.barslist
-2.8s /Audio/Static/StaticSysMenu.bars
-2.8s /Audio/Static/StaticSysMenu.barslist
-2.8s /Audio/Static/StaticSysRace.bars
-2.8s /Audio/Static/StaticSysRace.barslist
-3.0s /UI/cmn/filter.sarc
-3.0s /UI/cmn/common.sarc
-3.2s /UI/USen/font.sarc
-3.2s /UI/USen/message.sarc
-3.2s /UI/cmn/boot/bt_TitleLoading_00.szs
-3.3s /RaceCommon/AI/AIConfuseTable.byaml
+0.9s /Audio/Static/MenuDriver_Morton.barslist
+0.9s /Audio/Static/MenuDriver_Nokonoko.barslist
+0.9s /Audio/Static/MenuDriver_Peach.barslist
+0.9s /Audio/Static/MenuDriver_Rosetta.barslist
+0.9s /Audio/Static/MenuDriver_Roy.barslist
+0.9s /Audio/Static/MenuDriver_Shizue.barslist
+0.9s /Audio/Static/MenuDriver_SplatoonBoy.barslist
+0.9s /Audio/Static/MenuDriver_SplatoonGirl.barslist
+0.9s /Audio/Static/MenuDriver_TanukiMario.barslist
+0.9s /Audio/Static/MenuDriver_Waluigi.barslist
+0.9s /Audio/Static/MenuDriver_Wario.barslist
+0.9s /Audio/Static/MenuDriver_Wendy.barslist
+0.9s /Audio/Static/MenuDriver_Yoshi.barslist
+0.9s /Audio/Static/StaticKart.bars
+0.9s /Audio/Static/StaticKart.barslist
+0.9s /Audio/Static/StaticSysMenu.bars
+0.9s /Audio/Static/StaticSysMenu.barslist
+0.9s /Audio/Static/StaticSysRace.bars
+0.9s /Audio/Static/StaticSysRace.barslist
+1.3s /UI/cmn/filter.sarc
+1.3s /UI/cmn/common.sarc
+1.4s /UI/USen/font.sarc
+1.4s /UI/USen/message.sarc
+1.4s /UI/cmn/boot/bt_TitleLoading_00.szs
+1.5s /Data/contentskey.dat
 === attempt 1 at 0 s
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 1): starting it again
@@ -33,24 +33,28 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === script variant 0,        0 tracks done, cup keys: 
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 2): starting it again
+=== attempt 3 at 22 s
+=== script variant 0,        0 tracks done, cup keys: 
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+=== the game stopped (attempt 3): starting it again
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
 [mem] game modules loaded: app uses 49 MB
 [mem] phone: heat normal
 [mem] detail: game RAM 37 MB, Metal 0 MB | resident 82 MB, internal 49 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 26 MB, footprint 49 MB
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
 --- end of the log
-[romfs] 3.0 s /UI/cmn/common.sarc
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
-[romfs] 3.2 s /UI/USen/font.sarc
-[romfs] 3.2 s /UI/USen/message.sarc
-[romfs] 3.2 s /UI/cmn/boot/bt_TitleLoading_00.szs
-[romfs] 3.3 s /RaceCommon/AI/AIConfuseTable.byaml
-[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x100284ff8, 0x7dc29672b8)
+[romfs] 1.4 s /UI/USen/font.sarc
+[romfs] 1.4 s /UI/USen/message.sarc
+[romfs] 1.4 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1026a0ff8, 0x7dc29672b8)
+[romfs] 1.5 s /Data/contentskey.dat
 [gfx] window crop Some([0, 0, 1280, 720])
 [nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
-[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x100284ff8, 0x1)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x1026a0ff8, 0x1)
+[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1026a0ff8, 0x7dc29672b8)
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
-=== the game stopped (attempt 2): starting it again
+=== the game stopped (attempt 3): starting it again
