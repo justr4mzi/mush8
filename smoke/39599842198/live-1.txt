@@ -1,0 +1,51 @@
+run 1, 12:34 UTC, 68 s
+tracks:
+7.9s /Course/Gu_Menu
+last game files read:
+34.0s /Kart/Wing/Wing_Umb.szs
+34.0s /Kart/WingTex/Wing_Umb_A_Alb.szs
+34.0s /Kart/Arm/ArmK_Wod.szs
+35.0s /Driver/Iggy.szs
+35.0s /Kart/Body/BodyK_Shp.szs
+35.0s /Kart/BodyTex/BodyK_Shp_Igy_Alb.szs
+35.0s /Kart/WingTex/Wing_Std_Igy_Alb.szs
+35.9s /Driver/DrvChr02.szs
+35.9s /Kart/Body/BodyV_Atv.szs
+35.9s /Kart/BodyTex/BodyV_Atv_Dch02_Alb.szs
+35.9s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
+37.1s /Driver/Kinopico.szs
+37.2s /Kart/Body/BodyK_Cat.szs
+37.2s /Kart/WingTex/Wing_Std_Knc_Alb.szs
+37.2s /Kart/Arm/ArmK_Zof.szs
+41.9s /Driver/SplatoonBoy.szs
+41.9s /DriverTex/SplatoonBoy_Tex00.szs
+41.9s /Kart/Body/BodyB_Std.szs
+41.9s /Kart/BodyTex/BodyB_Std_Spb00_Alb.szs
+41.9s /Kart/BodyTex/BodyB_Std_Spb00_Spm.szs
+41.9s /Kart/WingTex/Wing_Std_Spb00_Alb.szs
+41.9s /Kart/WingTex/Wing_Std_Spb00_Spm.szs
+42.8s /Driver/Ludwig.szs
+42.8s /Kart/Body/BodyB_Jet.szs
+42.9s /Kart/WingTex/Wing_Std_Ldw_Alb.szs
+game fps (last minute): 25.8
+[mem] phone: heat normal
+[mem] detail: game RAM 3110 MB, Metal 3274 MB | resident 1721 MB, internal 1657 MB, external 52 MB, compressed 214 MB, purgeable 0 MB, reusable 11 MB, footprint 1977 MB
+[mem] 66 s: app uses 1974 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3110 MB, Metal 3275 MB | resident 1722 MB, internal 1657 MB, external 52 MB, compressed 214 MB, purgeable 0 MB, reusable 12 MB, footprint 1974 MB
+--- end of the log
+[romfs] 41.9 s /Kart/WingTex/Wing_Std_Spb00_Alb.szs
+[romfs] 41.9 s /Kart/WingTex/Wing_Std_Spb00_Spm.szs
+[mem] textures: 35 loaded (0 MB), 136 render targets (69 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[romfs] 42.8 s /Driver/Ludwig.szs
+[romfs] 42.8 s /Kart/Body/BodyB_Jet.szs
+[romfs] 42.9 s /Kart/WingTex/Wing_Std_Ldw_Alb.szs
+[gfx] screen at 40s dumped
+[mem] 55 s: app uses 1977 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3110 MB, Metal 3274 MB | resident 1721 MB, internal 1657 MB, external 52 MB, compressed 214 MB, purgeable 0 MB, reusable 11 MB, footprint 1977 MB
+[gfx] screen at 50s dumped
+[gfx] device pipeline archive: 85 pipelines saved this run (4 files, 0 left out)
+[mem] 66 s: app uses 1974 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3110 MB, Metal 3275 MB | resident 1722 MB, internal 1657 MB, external 52 MB, compressed 214 MB, purgeable 0 MB, reusable 12 MB, footprint 1974 MB
