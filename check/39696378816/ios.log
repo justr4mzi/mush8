@@ -1,0 +1,15 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+warning: nxhost@0.1.0: NX_MODULES_DIR is not set: the iOS build has no game code
+warning: variable `LIMIT` should have a snake case name
+    --> crates/nxhost/src/nvn/draw/textures.rs:1040:9
+     |
+1040 |     let LIMIT: usize = if left != 0 && left < 600 << 20 { 24 << 20 } else { 96 << 20 };
+     |         ^^^^^ help: convert the identifier to snake case: `limit`
+     |
+     = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 1 warning
+    Finished `release` profile [optimized + debuginfo] target(s) in 43.10s
