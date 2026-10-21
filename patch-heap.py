@@ -3703,3 +3703,18 @@ s_ = s_.replace(old, """                let script = scripted(i);
 """)
 ip.write_text(s_)
 print("patched", ip, "(scripted stick)")
+
+# How much do the kept pipelines weigh? footprint before/after freeing them
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = """pub fn drop_prewarmed() {
+    let n = {"""
+assert u.count(old) == 1
+u = u.replace(old, """pub fn drop_prewarmed() {
+    let before = gfx::footprint() >> 20;
+    let n = {""")
+old = 'eprintln!("[mem] low memory: freed {n} unused prewarmed pipelines");'
+assert u.count(old) == 1
+u = u.replace(old, 'eprintln!("[mem] low memory: freed {n} unused prewarmed pipelines (app {} MB -> {} MB)", before, gfx::footprint() >> 20);')
+st.write_text(u)
+print("patched", st, "(pipeline memory measure)")
