@@ -3170,3 +3170,46 @@ for a_, b_ in reps:
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", md, mn, sw, "(NX_ASYNC_GFX: graphics on a separate thread)")
+
+# ---------------------------------------------------------------------------
+# NX_TRACE_ROMFS=1 (debug): log each game file the first time it is read
+# ("[romfs] 12.3 s /Course/...") so a scripted run shows which track,
+# character or menu got loaded.
+fsr = pathlib.Path("crates/nxhost/src/services/fs.rs")
+f_ = fsr.read_text()
+old = """                let dst = unsafe { std::slice::from_raw_parts_mut(b.addr as *mut u8, size as usize) };
+                if let Err(e) = crate::kernel::blocking(|| self.s.read_at(off, dst)) {"""
+assert f_.count(old) == 1
+f_ = f_.replace(old, """                if self.name == "romfs" {
+                    trace_romfs(&self.s, off);
+                }
+""" + old)
+old = "struct Storage {\n"
+assert f_.count(old) == 1
+f_ = f_.replace(old, """fn trace_romfs(s: &DynStorage, off: u64) {
+    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TRACE_ROMFS").is_some());
+    if !*ON {
+        return;
+    }
+    static T0: std::sync::LazyLock<std::time::Instant> = std::sync::LazyLock::new(std::time::Instant::now);
+    static FILES: std::sync::OnceLock<Vec<(u64, u64, String)>> = std::sync::OnceLock::new();
+    static SEEN: Mutex<Option<std::collections::HashSet<usize>>> = Mutex::new(None);
+    let files = FILES.get_or_init(|| {
+        let mut v: Vec<(u64, u64, String)> = nxfs::romfs::RomFs::open(s.clone()).map(|r| r.files().into_iter().map(|f| (f.offset, f.size, f.path)).collect()).unwrap_or_default();
+        v.sort();
+        eprintln!("[romfs] {} files", v.len());
+        v
+    });
+    let i = files.partition_point(|f| f.0 <= off);
+    if i == 0 || off >= files[i - 1].0 + files[i - 1].1.max(1) {
+        return;
+    }
+    let mut seen = SEEN.lock().unwrap();
+    if seen.get_or_insert_with(Default::default).insert(i - 1) {
+        eprintln!("[romfs] {:.1} s {}", T0.elapsed().as_secs_f32(), files[i - 1].2);
+    }
+}
+
+""" + old)
+fsr.write_text(f_)
+print("patched", fsr, "(NX_TRACE_ROMFS)")

@@ -17,6 +17,12 @@ on:
       seconds:
         description: "seconds per run"
         default: "200"
+      script:
+        description: "NX_AUTOINPUT script (time:BUTTON,...); empty = A every second"
+        default: ""
+      record:
+        description: "1 = start each run with an empty pipeline list and publish what it records"
+        default: "0"
 
 permissions:
   contents: write
@@ -103,21 +109,27 @@ jobs:
         env:
           MODES: ${{ inputs.modes || '0 1' }}
           SECS: ${{ inputs.seconds || '200' }}
+          SCRIPT: ${{ inputs.script }}
+          RECORD: ${{ inputs.record || '0' }}
         run: |
           mkdir -p out
-          INPUT="$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")"
-          DUMPS="$(python3 -c "print(','.join(str(t) for t in range(30, int('$SECS'), 30)))")"
+          INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
+          DUMPS="$(python3 -c "print(','.join(str(t) for t in range(20, int('$SECS'), 20)))")"
+          n=0
           for m in $MODES; do
-            rm -rf work/frame work/save
-            echo "=== NX_ASYNC_GFX=$m ($SECS s)"
-            NX_ASYNC_GFX=$m NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 \
-              NX_AUTOINPUT="$INPUT" NX_DUMP_AT="$DUMPS" ./target/release/nxhost > "out/run-$m.log" 2>&1 &
+            n=$((n+1)); L="out/run-$n-async$m.log"
+            rm -rf work/frame work/save work/pipelines.tsv
+            LIST=data/pipelines.tsv; [ "$RECORD" = 1 ] && LIST=/nonexistent
+            echo "=== run $n: NX_ASYNC_GFX=$m ($SECS s)"
+            NX_ASYNC_GFX=$m NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_PIPELINE_LIST="$LIST" \
+              NX_AUTOINPUT="$INPUT" NX_DUMP_AT="$DUMPS" ./target/release/nxhost > "$L" 2>&1 &
             pid=$!
             for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; done
             if kill -0 $pid 2>/dev/null; then echo "still running after $SECS s: stopping it"; kill $pid; sleep 3; kill -9 $pid 2>/dev/null || true; else wait $pid && echo "exited by itself" || echo "exited by itself with code $?"; fi
-            grep -c "^\[fps\]" "out/run-$m.log" || true
-            python3 - "$m" <<'EOF' | tee -a "out/run-$m.log"
-          import glob, sys
+            grep -c "^\[fps\]" "$L" || true
+            [ -f work/pipelines.tsv ] && cp work/pipelines.tsv "out/pipelines-$n.tsv" && wc -l "out/pipelines-$n.tsv"
+            python3 - <<'EOF' | tee -a "$L"
+          import glob
           from PIL import Image
           for f in sorted(glob.glob("work/frame/t*.png")):
               im = Image.open(f).convert("L").resize((160, 90))
@@ -125,7 +137,7 @@ jobs:
               lit = sum(p > 16 for p in px) / len(px)
               print(f"[smoke] screen {f.split('/')[-1]}: {lit*100:.0f}% not black, mean {sum(px)/len(px):.0f}")
           EOF
-            tail -5 "out/run-$m.log"
+            tail -3 "$L"
           done
 
       - name: Remove game files
