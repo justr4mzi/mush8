@@ -5,8 +5,8 @@ import subprocess, sys
 arg = sys.argv[1]
 if arg.startswith("race:"):
     ev = subprocess.run([sys.executable, __file__.replace("probe.py", "vs96.py"), "340"], capture_output=True, text=True).stdout.strip().split(",")
-    ev = [e for e in ev if float(e.split(":")[0]) < 300]
-    t = 300 + 90.0
+    ev = [e for e in ev if float(e.split(":")[0]) < 340]
+    t = 340 + 90.0
     for b in [x for x in arg[5:].split(",") if x]:
         ev += [f"{t + k / 10:.1f}:{b}" for k in range(6)]
         t += 20
