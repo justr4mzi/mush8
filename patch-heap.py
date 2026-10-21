@@ -3529,3 +3529,34 @@ assert m.count(old) == 1
 m = m.replace(old, old + '    eprintln!("[mem] game modules loaded: app uses {} MB", gfx::footprint() >> 20);\n    gfx::mem_detail();\n')
 mn.write_text(m)
 print("patched", mn, "(memory after loading the game modules)")
+
+# ---------------------------------------------------------------------------
+# Thermal state and Low Power Mode in the memory detail line (FPS drops when
+# the phone throttles), and a "Share the pipeline list" button in Tools.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = '''    let metal = GPU.get().map_or(0, |g| g.device.0.currentAllocatedSize() as u64);
+'''
+assert g.count(old) == 1
+g = g.replace(old, old + '''    let pi = objc2_foundation::NSProcessInfo::processInfo();
+    let heat = ["normal", "fair", "serious (slowed down)", "critical (slowed down)"].get(pi.thermalState().0 as usize).copied().unwrap_or("?");
+    #[cfg(target_os = "ios")]
+    let low_power = pi.isLowPowerModeEnabled();
+    #[cfg(not(target_os = "ios"))]
+    let low_power = false;
+    eprintln!("[mem] phone: heat {heat}{}", if low_power { ", LOW POWER MODE ON (slower CPU)" } else { "" });
+''')
+gm.write_text(g)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+old = '''                    ShareLink(item: docsURL.appendingPathComponent("work/nxhost.prev.log")) {
+                        Label("Share the previous log", systemImage: "square.and.arrow.up")
+                    }
+'''
+assert w.count(old) == 1
+w = w.replace(old, old + '''                    ShareLink(item: docsURL.appendingPathComponent("work/pipelines.tsv")) {
+                        Label("Share the pipeline list", systemImage: "square.and.arrow.up")
+                    }
+''')
+sw.write_text(w)
+print("patched", gm, sw, "(heat / low power in the log, share pipeline list)")
