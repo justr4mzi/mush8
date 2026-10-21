@@ -1,8 +1,7 @@
-run 1, 12:47 UTC, 66 s
+run 1, 12:48 UTC, 140 s
 tracks:
 7.4s /Course/Gu_Menu
 last game files read:
-29.4s /Kart/WingTex/Wing_Std_Igy_Alb.szs
 30.4s /Driver/MetalPeachSuit.szs
 30.4s /Kart/WingTex/Wing_Std_PchG_Alb.szs
 30.4s /Kart/WingTex/Wing_Std_PchG_Spm.szs
@@ -27,25 +26,26 @@ last game files read:
 38.6s /Driver/DrvChr05.szs
 38.6s /Kart/Body/BodyB_Ysi.szs
 38.7s /Kart/WingTex/Wing_Std_Dch05_Alb.szs
-game fps (last minute): 25.7
-[mem] 55 s: app uses 1977 MB, iOS still allows 0 MB (lowest so far 0 MB)
+77.0s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
+game fps (last minute): 30.2
+[mem] detail: game RAM 3117 MB, Metal 3290 MB | resident 1805 MB, internal 1722 MB, external 53 MB, compressed 157 MB, purgeable 0 MB, reusable 29 MB, footprint 1998 MB
+[mem] textures: 35 loaded (2 MB), 332 render targets (83 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
+[mem] 133 s: app uses 1994 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3117 MB, Metal 3274 MB | resident 1776 MB, internal 1709 MB, external 52 MB, compressed 163 MB, purgeable 0 MB, reusable 14 MB, footprint 1977 MB
-[mem] textures: 35 loaded (0 MB), 180 render targets (71 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[mem] 66 s: app uses 1976 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3117 MB, Metal 3291 MB | resident 1806 MB, internal 1722 MB, external 53 MB, compressed 157 MB, purgeable 0 MB, reusable 29 MB, footprint 1994 MB
 --- end of the log
-[mem] textures: 35 loaded (0 MB), 136 render targets (69 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[mem] 44 s: app uses 1973 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[shader] 9ed561837ced940c: compiled while the render thread waited (new render target), 26 ms
+[gfx] pipeline 9ed561837ced940c/f0a79175563e6d66: built while the render thread waited (new render target), 7 ms
+[shader] 655cb61fd11cb08a: compiled while the render thread waited (new render target), 75 ms
+[shader] 28bea45f294c57c0: compiled while the render thread waited (new render target), 27 ms
+[gfx] pipeline 28bea45f294c57c0/655cb61fd11cb08a: built while the render thread waited (new render target), 7 ms
+[gfx] screen at 110s dumped
+[mem] 122 s: app uses 1998 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3117 MB, Metal 3272 MB | resident 1773 MB, internal 1708 MB, external 51 MB, compressed 163 MB, purgeable 0 MB, reusable 13 MB, footprint 1973 MB
-[romfs] 38.6 s /Driver/DrvChr05.szs
-[romfs] 38.6 s /Kart/Body/BodyB_Ysi.szs
-[romfs] 38.7 s /Kart/WingTex/Wing_Std_Dch05_Alb.szs
-[gfx] screen at 40s dumped
-[mem] 55 s: app uses 1977 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3117 MB, Metal 3290 MB | resident 1805 MB, internal 1722 MB, external 53 MB, compressed 157 MB, purgeable 0 MB, reusable 29 MB, footprint 1998 MB
+[mem] textures: 35 loaded (2 MB), 332 render targets (83 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
+[gfx] device pipeline archive: 108 pipelines saved this run (6 files, 0 left out)
+[gfx] screen at 120s dumped
+[mem] 133 s: app uses 1994 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3117 MB, Metal 3274 MB | resident 1776 MB, internal 1709 MB, external 52 MB, compressed 163 MB, purgeable 0 MB, reusable 14 MB, footprint 1977 MB
-[gfx] screen at 50s dumped
-[gfx] device pipeline archive: 85 pipelines saved this run (4 files, 0 left out)
-[mem] textures: 35 loaded (0 MB), 180 render targets (71 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[mem] 66 s: app uses 1976 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3117 MB, Metal 3291 MB | resident 1806 MB, internal 1722 MB, external 53 MB, compressed 157 MB, purgeable 0 MB, reusable 29 MB, footprint 1994 MB
