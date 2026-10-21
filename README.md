@@ -185,7 +185,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 
 ### Debugging (for logs, slow)
 `NX_TRACE_ROMFS` (game files read), `NX_TRACE_IPC`, `NX_TRACE_SVC`, `NX_TRACE_BSD`, `NX_TRACE_MOVIE`,
-`NX_TRACE_THREADS`, `NX_MUTEX_LOG`, `NX_NVN_LOG=<n>` (graphics API calls logged, 400 by default),
+`NX_TRACE_THREADS`, `NX_TRACE_TRACKS` (track names, on by default), `NX_MUTEX_LOG`, `NX_NVN_LOG=<n>` (graphics API calls logged, 400 by default),
 `NX_DUMP_EVERY=<s>` / `NX_DUMP_AT=<s,s,...>` (screenshots into `work/`), `NX_DUMP_FRAME`, `NX_DUMP_MSL`,
 `NX_DUMP_SHADERS`, `NX_SOFT_BC=1` (decode BC on the CPU like an iPhone, on a Mac), `NX_NO_WATCHDOG`,
 `NX_AUTOINPUT` (scripted buttons, below), `NX_STOCK_QOS`, `NX_NO_SCHED`, `NX_COMPACT_MEMORY`.
@@ -201,6 +201,7 @@ Share it from the launcher (**Share the log**; after a crash, **Share the previo
 - `[mem] Metal besides the game RAM: X MB = textures …, draw scratch …, block copies …, uploads in flight …,
   other …` — our own GPU memory, by kind.
 - `[mem] textures: …` and `[mem] BC by format …` — every ~10 s, texture count and size, BC textures by format.
+- `[game] track: Gu_WaterPark (app uses 2300 MB)` — a track loaded (`NX_TRACE_TRACKS=0` to turn off).
 - `[mem] phone: heat …` — `serious`/`critical` = iOS slows the CPU/GPU down (lower FPS, slower shader builds).
 - `[gfx] pipeline …: not in the archive, compiling` / `building took N ms` — a pipeline seen for the first
   time; long times = memory or heat pressure.

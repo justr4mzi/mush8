@@ -4066,3 +4066,40 @@ s_ = s_.replace(old, """                let (_, bufs) = self.in_flight.swap_remo
 """)
 st.write_text(s_)
 print("patched", st, "(smaller draw scratch buffers, spares released)")
+
+# ---------------------------------------------------------------------------
+# "[game] track: <name>" in the log each time a track loads (on by default,
+# NX_TRACE_TRACKS=0 to turn off), so a log tells which track used how much memory.
+fsr = pathlib.Path("crates/nxhost/src/services/fs.rs")
+f_ = fsr.read_text()
+old = """    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TRACE_ROMFS").is_some());
+    if !*ON {
+        return;
+    }
+"""
+assert f_.count(old) == 1
+f_ = f_.replace(old, """    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TRACE_ROMFS").is_some());
+    static TRACKS: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var("NX_TRACE_TRACKS").map_or(true, |v| v.trim() != "0"));
+    if !*ON && !*TRACKS {
+        return;
+    }
+""")
+old = """    if seen.insert(i - 1) {
+        let tag = if name == "romfs" { "" } else { "dlc:" };
+        eprintln!("[romfs] {:.1} s {tag}{}", T0.elapsed().as_secs_f32(), files[i - 1].2);
+    }
+"""
+assert f_.count(old) == 1
+f_ = f_.replace(old, """    if seen.insert(i - 1) {
+        let tag = if name == "romfs" { "" } else { "dlc:" };
+        let path = &files[i - 1].2;
+        if *ON {
+            eprintln!("[romfs] {:.1} s {tag}{}", T0.elapsed().as_secs_f32(), path);
+        }
+        if let Some(track) = path.strip_prefix("/Course/").filter(|p| p.contains("/course_model")).and_then(|p| p.split('/').next()) {
+            eprintln!("[game] track: {track}{} (app uses {} MB)", if tag.is_empty() { "" } else { " (Booster Course Pass)" }, crate::gfx::footprint() >> 20);
+        }
+    }
+""")
+fsr.write_text(f_)
+print("patched", fsr, "(track names in the log)")
