@@ -40,3 +40,4 @@ while k < secs:
     ev.extend(f"{k + 3 + j / 10:.1f}:{side}" for j in range(15))
     ev.extend(f"{k + 6 + j / 10:.1f}:{other}" for j in range(10))
     k += 10
+print(",".join(ev))
