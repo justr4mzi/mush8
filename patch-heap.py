@@ -3450,3 +3450,22 @@ assert u.count(old) == 1
 u = u.replace(old, "pub fn prewarmed_count() -> usize {\n    PREWARMED.lock().unwrap().len()\n}\n\n" + old)
 st.write_text(u)
 print("patched", tx, st, "(memory report)")
+
+# ---------------------------------------------------------------------------
+# Where does the menu's ~2.1 GB go? Log the app's memory before/after the
+# pipeline archives are opened and when the prewarm starts.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "    let archives: Vec<Retained<Archive>> = paths.iter().filter_map(|p| open_archive(Some(p))).collect();\n"
+assert u.count(old) == 1
+u = u.replace(old, """    let before = gfx::footprint() >> 20;
+""" + old + """    eprintln!("[mem] pipeline archives: {} files, app {} MB -> {} MB", archives.len(), before, gfx::footprint() >> 20);
+""")
+old = """            let t0 = std::time::Instant::now();
+            let list = read_list();
+"""
+assert u.count(old) == 1
+u = u.replace(old, old + """            eprintln!("[mem] prewarm starts: app uses {} MB", gfx::footprint() >> 20);
+""")
+st.write_text(u)
+print("patched", st, "(memory at archive load and prewarm start)")
