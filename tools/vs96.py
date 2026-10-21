@@ -27,18 +27,16 @@ for wait, b in seq:
     t += wait
     press(t, b)
 t += SLOW
-# races: A every 10 s (results, next race) and the stick pushed left or right for
-# 0.7 s every 2.5 s so a kart stuck against a wall gets free (sideways stick does
-# not move the cursor of the vertical menus between races)
+# races, every 10 s: A (results, next race), then B held 1.5 s with the stick to
+# one side (reverse out of a wall), then the stick to the other side for 1 s
 import random
 rnd = random.Random(7)
-next_a, k = t, t
+k = t
 while k < secs:
-    if k >= next_a:
-        press(k, "A")
-        next_a += 10
-    else:
-        b = rnd.choice(["SLEFT", "SRIGHT"])
-        ev.extend(f"{k + j / 10:.1f}:{b}" for j in range(7))
-    k += 2.5
-print(",".join(ev))
+    press(k, "A")
+    side = rnd.choice(["SLEFT", "SRIGHT"])
+    other = "SRIGHT" if side == "SLEFT" else "SLEFT"
+    ev.extend(f"{k + 3 + j / 10:.1f}:B" for j in range(15))
+    ev.extend(f"{k + 3 + j / 10:.1f}:{side}" for j in range(15))
+    ev.extend(f"{k + 6 + j / 10:.1f}:{other}" for j in range(10))
+    k += 10
