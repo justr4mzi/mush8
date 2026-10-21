@@ -36,7 +36,8 @@ while k < secs:
     press(k, "A")
     side = rnd.choice(["SLEFT", "SRIGHT"])
     other = "SRIGHT" if side == "SLEFT" else "SLEFT"
-    ev.extend(f"{k + 3 + j / 10:.1f}:B" for j in range(15))
+    if k >= t + 60:   # not before the race has started (B goes back in the menus)
+        ev.extend(f"{k + 3 + j / 10:.1f}:B" for j in range(15))
     ev.extend(f"{k + 3 + j / 10:.1f}:{side}" for j in range(15))
     ev.extend(f"{k + 6 + j / 10:.1f}:{other}" for j in range(10))
     k += 10
