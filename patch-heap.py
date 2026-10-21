@@ -4117,7 +4117,7 @@ for a_, b_ in [
     ("struct Proc {\n    name: String,\n    calls: AtomicU64,\n", "struct Proc {\n    name: String,\n    calls: AtomicU64,\n    ns: AtomicU64,\n"),
     ("Proc { name: name.to_string(), calls: AtomicU64::new(0), host: host_impl(name) }", "Proc { name: name.to_string(), calls: AtomicU64::new(0), ns: AtomicU64::new(0), host: host_impl(name) }"),
     ("    if let Some(f) = p.host {\n        return f(a);\n    }\n",
-     "    if let Some(f) = p.host {\n        let t = std::time::Instant::now();\n        let r = f(a);\n        let ns = t.elapsed().as_nanos() as u64;\n        p.ns.fetch_add(ns, Relaxed);\n        crate::gfx::prof::NVN_NS.fetch_add(ns, Relaxed);\n        return r;\n    }\n"),
+     "    if let Some(f) = p.host {\n        // timing every call costs ~2 clock reads per call on the game thread: only 1 call in 16 is\n        // timed (and counted 16 times), so the profile stays nearly free\n        if n % 16 != 0 {\n            return f(a);\n        }\n        let t = std::time::Instant::now();\n        let r = f(a);\n        let ns = t.elapsed().as_nanos() as u64 * 16;\n        p.ns.fetch_add(ns, Relaxed);\n        crate::gfx::prof::NVN_NS.fetch_add(ns, Relaxed);\n        return r;\n    }\n"),
     ("fn log_limit() -> u64 {\n", """/// The graphics API calls that took the most time since the last call (ms, calls).
 pub fn top_calls(n: usize) -> String {
     let procs = PROCS.lock().unwrap();
@@ -4363,3 +4363,17 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, old + "    cpu_report();\n")
 gm.write_text(s_)
 print("patched", sv, gm, "(CPU profile in the log)")
+
+# ---------------------------------------------------------------------------
+# The game's main thread (the first one, guest-0x50, which runs the game logic)
+# gets "interactive" priority like the render thread, so iOS keeps it on a fast
+# core when the phone is hot (NX_STOCK_QOS=1 keeps the old priorities).
+kr = pathlib.Path("crates/nxhost/src/kernel.rs")
+s_ = kr.read_text()
+old = "            unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_USER_INITIATED, 0) };\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """            let qos = if t.id == 0x50 { libc::qos_class_t::QOS_CLASS_USER_INTERACTIVE } else { libc::qos_class_t::QOS_CLASS_USER_INITIATED };
+            unsafe { libc::pthread_set_qos_class_self_np(qos, 0) };
+""")
+kr.write_text(s_)
+print("patched", kr, "(main game thread priority)")
