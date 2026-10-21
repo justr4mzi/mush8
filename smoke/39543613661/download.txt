@@ -1,0 +1,29 @@
+Failed to retrieve file url:
+
+	Cannot retrieve the public link of the file. You may need to change
+	the permission to 'Anyone with the link', or have had many accesses.
+	Check FAQ in https://github.com/wkentaro/gdown?tab=readme-ov-file#faq.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1ny9DyRXi0wf6PH7VNbLpSFxw2gAzwgiz
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 1
+Failed to retrieve file url:
+
+	Cannot retrieve the public link of the file. You may need to change
+	the permission to 'Anyone with the link', or have had many accesses.
+	Check FAQ in https://github.com/wkentaro/gdown?tab=readme-ov-file#faq.
+
+You may still be able to access the file from the browser:
+
+	https://drive.google.com/uc?id=1ny9DyRXi0wf6PH7VNbLpSFxw2gAzwgiz
+
+but Gdown can't. Please check connections and permissions.
+Drive download cut, retry 2
+-rw-------  1 runner  staff   6.8G Oct 17 18:31 base.nsp
+-rw-------  1 runner  staff    14K Oct 17 18:24 prod.keys
+-rw-r--r--  1 runner  staff   4.5G Oct 21 04:27 upd4-0-1.nsp
+Firmware:      238 files
+       1
