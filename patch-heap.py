@@ -3359,3 +3359,59 @@ assert y.count(old) == 1
 y = y.replace(old, '.unwrap_or(400) << 20);\n        if N.fetch_add(1, Relaxed) % 8 != 0')
 tx.write_text(y)
 print("patched", tx, "(smaller upload window and earlier emergency trim when memory is low)")
+
+# ---------------------------------------------------------------------------
+# Black objects at the start of every race: the prewarm did not keep the
+# pipelines it found in the device archive (to save memory), so the race asked
+# for them again, ~130 at once while it loads, and getting them back from the
+# archive took 0.5 to 10 s each (132 "building took" lines, 0 archive misses).
+# Now the prewarm keeps every pipeline it builds (NX_KEEP_PREWARMED=0 for the
+# old way); the log says what it costs. If memory gets critical while a race
+# loads, the emergency trim lets go of the ones not used yet.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = """                                    if !from_archive {
+                                        PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));
+                                    }
+"""
+assert u.count(old) == 1
+u = u.replace(old, """                                    static KEEP: LazyLock<bool> = LazyLock::new(|| std::env::var_os("NX_KEEP_PREWARMED").is_none_or(|v| v != "0"));
+                                    if *KEEP || !from_archive {
+                                        PREWARMED.lock().unwrap().insert(r.clone(), Shared(p));
+                                    }
+""")
+old = """            eprintln!("[gfx] prewarmed {}/{} recorded pipelines in {:.1} s ({} from the device archive)", built.into_inner(), list.len(), t0.elapsed().as_secs_f32(), PREWARM_HITS.load(Relaxed));
+"""
+assert u.count(old) == 1
+u = u.replace(old, old + """            eprintln!("[gfx] prewarm: {} pipelines kept ready in memory, app now uses {} MB", PREWARMED.lock().unwrap().len(), gfx::footprint() >> 20);
+""")
+st.write_text(u)
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """        let frame = self.frame;
+        let old: std::collections::HashSet<TexKey> = self
+            .uploaded
+            .keys()
+            .filter(|k| self.last_used.get(*k).is_none_or(|&f| f + 1 < frame))"""
+assert y.count(old) == 1
+y = y.replace(old, """        super::state::drop_prewarmed();
+""" + old)
+tx.write_text(y)
+print("patched", st, tx, "(keep prewarmed pipelines; emergency trim frees them)")
+
+# The separate graphics thread is on by default (launcher switch to turn it off)
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("async_gfx").as_deref() == Some("true") {\n'
+assert m.count(old) == 1
+m = m.replace(old, '    if field("async_gfx").as_deref() != Some("false") {\n')
+mn.write_text(m)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+for a_, b_ in [("    @Published var asyncGfx = false\n", "    @Published var asyncGfx = true\n"),
+               ('        asyncGfx = json["async_gfx"] as? Bool ?? false\n', '        asyncGfx = json["async_gfx"] as? Bool ?? true\n'),
+               ("asyncTextures = false; asyncGfx = false", "asyncTextures = false; asyncGfx = true")]:
+    assert w.count(a_) == 1, a_
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, sw, "(separate graphics thread on by default)")
