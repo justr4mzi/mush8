@@ -3682,3 +3682,24 @@ y = y.replace(old, """    /// Make the purgeable textures over `addr` normal aga
 """ + old)
 tx.write_text(y)
 print("patched", tx, "(purgeable textures: shared storage)")
+
+# ---------------------------------------------------------------------------
+# NX_AUTOINPUT: SLEFT / SRIGHT push the left stick (steering), for the Mac runs.
+ip = pathlib.Path("crates/nxhost/src/input.rs")
+s_ = ip.read_text()
+old = '("LEFT", LEFT), ("UP", UP), ("RIGHT", RIGHT), ("DOWN", DOWN),'
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + ' ("SLEFT", 1 << 40), ("SRIGHT", 1 << 41),')
+old = "                let mut acc = Acc { buttons: scripted(i), ..Default::default() };\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """                let script = scripted(i);
+                let mut acc = Acc { buttons: script & 0xFFFF_FFFF, ..Default::default() };
+                if script & 1 << 40 != 0 {
+                    acc.lx = -1.0;
+                }
+                if script & 1 << 41 != 0 {
+                    acc.lx = 1.0;
+                }
+""")
+ip.write_text(s_)
+print("patched", ip, "(scripted stick)")
