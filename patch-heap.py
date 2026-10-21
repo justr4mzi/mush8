@@ -2885,3 +2885,288 @@ u = u.replace(old, """        Err(e) => {
 """)
 st.write_text(u)
 print("patched", st, "(devarch cleared on iOS/GPU change, retry failed pipelines)")
+
+# ---------------------------------------------------------------------------
+# NX_ASYNC_GFX=1 (launcher: "Graphics on a separate thread", experimental):
+# translating the game's NVN command buffers to Metal (textures, pipelines,
+# draws) ran on the game's render thread, so game logic + translation added up
+# (~18 + ~10 ms a frame in races). Now QueueSubmitCommands only hands the
+# recorded commands to a "gfx-submit" thread and returns, like a real GPU
+# queue; the game goes on with the next frame while the previous one is
+# translated. Order is kept: fences, presents and freed memory pools go
+# through the same queue, SyncWait waits for its fence to be reached,
+# QueueFinish / texel reads and writes wait for everything queued. The game
+# can be at most one presented frame ahead.
+md = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+z = md.read_text()
+
+def rep(old, new, count=1):
+    global z
+    assert z.count(old) == count, old[:80]
+    z = z.replace(old, new)
+
+# command buffers referenced by a queued submit are kept alive with it
+rep("cmd::recording(*h)", "lookup(*h)", 4)
+rep("pub fn submit(handles: &[u64]) {\n", """thread_local! {
+    static PINNED: std::cell::RefCell<HashMap<u64, std::sync::Arc<Vec<Cmd>>>> = Default::default();
+    static JOB_FRAME: std::cell::Cell<Option<u64>> = const { std::cell::Cell::new(None) };
+}
+
+fn lookup(h: u64) -> Option<std::sync::Arc<Vec<Cmd>>> {
+    PINNED.with(|p| p.borrow().get(&h).cloned()).or_else(|| cmd::recording(h))
+}
+
+/// The frame a command buffer belongs to (on the graphics thread: the frame
+/// that was current when it was submitted).
+fn cur_frame() -> u64 {
+    JOB_FRAME.with(|f| f.get()).unwrap_or_else(|| FRAME.load(Relaxed))
+}
+
+fn pin_tree(h: u64, depth: usize, out: &mut HashMap<u64, std::sync::Arc<Vec<Cmd>>>) {
+    if out.contains_key(&h) {
+        return;
+    }
+    let Some(c) = cmd::recording(h) else { return };
+    out.insert(h, c.clone());
+    if depth < 8 {
+        for x in c.iter() {
+            if let Cmd::Call(hs) = x {
+                for &s in hs {
+                    pin_tree(s, depth + 1, out);
+                }
+            }
+        }
+    }
+}
+
+mod async_gfx {
+    use super::*;
+    use std::collections::VecDeque;
+    use std::sync::Condvar;
+    use std::sync::atomic::{AtomicU64, Ordering::SeqCst};
+
+    pub enum Job {
+        Submit { handles: Vec<u64>, pinned: HashMap<u64, std::sync::Arc<Vec<Cmd>>>, frame: u64 },
+        Fence(u64),
+        Present(TexBuilder),
+        Forget(u64, u64),
+    }
+
+    static QUEUE: Mutex<VecDeque<(u64, Job)>> = Mutex::new(VecDeque::new());
+    static WORK: Condvar = Condvar::new();
+    static DONE_LOCK: Mutex<()> = Mutex::new(());
+    static DONE_CV: Condvar = Condvar::new();
+    static ENQ: AtomicU64 = AtomicU64::new(0);
+    static DONE: AtomicU64 = AtomicU64::new(0);
+    static LAST_PRESENT: AtomicU64 = AtomicU64::new(0);
+    static WAIT_NS: AtomicU64 = AtomicU64::new(0);
+    pub static FENCES: LazyLock<Mutex<HashMap<u64, u64>>> = LazyLock::new(Default::default);
+
+    pub fn on() -> bool {
+        static ON: LazyLock<bool> = LazyLock::new(|| std::env::var_os("NX_ASYNC_GFX").is_some_and(|v| v != "0"));
+        *ON
+    }
+
+    pub fn take_wait_ms() -> f64 {
+        gfx::prof::take_ms(&WAIT_NS)
+    }
+
+    pub fn push(job: Job) -> u64 {
+        start();
+        let present = matches!(job, Job::Present(_));
+        let seq = {
+            let mut q = QUEUE.lock().unwrap();
+            let seq = ENQ.fetch_add(1, SeqCst) + 1;
+            q.push_back((seq, job));
+            seq
+        };
+        WORK.notify_one();
+        if present {
+            // at most one presented frame ahead of the screen
+            wait_for(LAST_PRESENT.swap(seq, SeqCst));
+        } else if seq > DONE.load(SeqCst) + 512 {
+            wait_for(seq - 256);
+        }
+        seq
+    }
+
+    pub fn wait_for(seq: u64) {
+        if DONE.load(SeqCst) >= seq {
+            return;
+        }
+        let t0 = std::time::Instant::now();
+        crate::kernel::blocking(|| {
+            let mut g = DONE_LOCK.lock().unwrap();
+            while DONE.load(SeqCst) < seq {
+                g = DONE_CV.wait(g).unwrap();
+            }
+        });
+        WAIT_NS.fetch_add(t0.elapsed().as_nanos() as u64, Relaxed);
+    }
+
+    /// Wait until everything queued so far has been handed to Metal.
+    pub fn drain() {
+        if on() {
+            wait_for(ENQ.load(SeqCst));
+        }
+    }
+
+    pub fn submit(handles: &[u64]) {
+        let mut pinned = HashMap::new();
+        for &h in handles {
+            pin_tree(h, 0, &mut pinned);
+        }
+        push(Job::Submit { handles: handles.to_vec(), pinned, frame: FRAME.load(Relaxed) });
+    }
+
+    fn start() {
+        static ONCE: std::sync::Once = std::sync::Once::new();
+        ONCE.call_once(|| {
+            std::thread::Builder::new()
+                .name("gfx-submit".into())
+                .stack_size(8 << 20)
+                .spawn(|| {
+                    unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_USER_INTERACTIVE, 0) };
+                    eprintln!("[gfx] graphics on a separate thread (NX_ASYNC_GFX)");
+                    loop {
+                        let (seq, job) = {
+                            let mut q = QUEUE.lock().unwrap();
+                            loop {
+                                if let Some(j) = q.pop_front() {
+                                    break j;
+                                }
+                                q = WORK.wait(q).unwrap();
+                            }
+                        };
+                        match job {
+                            Job::Submit { handles, pinned, frame } => {
+                                PINNED.with(|p| *p.borrow_mut() = pinned);
+                                JOB_FRAME.with(|f| f.set(Some(frame)));
+                                submit_now(&handles);
+                                PINNED.with(|p| p.borrow_mut().clear());
+                            }
+                            Job::Fence(s) => fence_now(s),
+                            Job::Present(b) => present_now(b),
+                            Job::Forget(a, s) => DEAD.lock().unwrap().push((a, a + s)),
+                        }
+                        {
+                            let _g = DONE_LOCK.lock().unwrap();
+                            DONE.store(seq, SeqCst);
+                        }
+                        DONE_CV.notify_all();
+                    }
+                })
+                .expect("graphics thread");
+        });
+    }
+}
+
+pub fn submit(handles: &[u64]) {
+    if async_gfx::on() {
+        async_gfx::submit(handles);
+    } else {
+        submit_now(handles);
+    }
+}
+
+fn submit_now(handles: &[u64]) {
+""")
+
+rep("""pub fn forget_memory(addr: u64, size: u64) {
+    if size > 0 {
+""", """pub fn forget_memory(addr: u64, size: u64) {
+    if size > 0 && async_gfx::on() {
+        async_gfx::push(async_gfx::Job::Forget(addr, size));
+        return;
+    }
+    if size > 0 {
+""")
+rep("""pub fn fence_sync(sync: u64) {
+    let mut e""", """pub fn fence_sync(sync: u64) {
+    if async_gfx::on() {
+        let mut f = async_gfx::FENCES.lock().unwrap();
+        let seq = async_gfx::push(async_gfx::Job::Fence(sync));
+        f.insert(sync, seq);
+        return;
+    }
+    fence_now(sync);
+}
+
+fn fence_now(sync: u64) {
+    let mut e""")
+rep("""pub fn finish() {
+""", """pub fn finish() {
+    async_gfx::drain();
+""")
+rep("""pub fn sync_wait(sync: u64) -> u64 {
+""", """pub fn sync_wait(sync: u64) -> u64 {
+    if async_gfx::on() {
+        let seq = async_gfx::FENCES.lock().unwrap().remove(&sync);
+        if let Some(seq) = seq {
+            async_gfx::wait_for(seq);
+        }
+    }
+""")
+rep("""pub fn write_texels(mut b: TexBuilder, view: u64, region: [i32; 6], data: *const u8, strides: Option<(usize, usize)>) {
+""", """pub fn write_texels(mut b: TexBuilder, view: u64, region: [i32; 6], data: *const u8, strides: Option<(usize, usize)>) {
+    async_gfx::drain();
+""")
+rep("""    objc2::rc::autoreleasepool(|_| {
+        let b = super::objects::texture(texture).map(|t| t.builder);
+        let Some(b) = b else { return };
+        let t = {""", """    let b = super::objects::texture(texture).map(|t| t.builder);
+    let Some(b) = b else { return };
+    if async_gfx::on() {
+        async_gfx::push(async_gfx::Job::Present(b));
+    } else {
+        present_now(b);
+    }
+}
+
+fn present_now(b: TexBuilder) {
+    objc2::rc::autoreleasepool(|_| {
+        let t = {""")
+# frameskip decisions use the frame the commands were recorded in
+rep("    *N > 0 && FRAME.load(Relaxed) % (*N + 1) != 0\n", "    *N > 0 && cur_frame() % (*N + 1) != 0\n")
+rep("    let frame = FRAME.load(Relaxed);\n    let mut last = LAST.lock().unwrap();\n", "    let frame = cur_frame();\n    let mut last = LAST.lock().unwrap();\n")
+# profile line: with the graphics thread, "game" is the time the game thread
+# did not spend waiting for it
+rep("""            ((secs - submit - wait) / frames).max(0.0),""", """            ((if async_gfx::on() { secs - gfx_waited } else { secs - submit - wait }) / frames).max(0.0),""")
+rep("""        let gpu = gpu_ms();
+        let draws = gfx::prof::DRAWS.swap(0, Relaxed);""", """        let gpu = gpu_ms();
+        let gfx_waited = async_gfx::take_wait_ms();
+        let draws = gfx::prof::DRAWS.swap(0, Relaxed);""")
+rep("""            skipped
+        );
+""", """            skipped
+        );
+        if async_gfx::on() {
+            eprintln!("[prof] graphics thread: busy {:.1} ms per frame, game thread waited for it {:.1} ms per frame", submit / frames, gfx_waited / frames);
+        }
+""")
+md.write_text(z)
+
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("async_textures").as_deref() != Some("true") {\n'
+assert m.count(old) == 1
+m = m.replace(old, '''    if field("async_gfx").as_deref() == Some("true") {
+        def("NX_ASYNC_GFX", "1");
+    }
+''' + old)
+mn.write_text(m)
+
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+reps = [
+("    @Published var asyncTextures = false\n", "    @Published var asyncTextures = false\n    @Published var asyncGfx = false\n"),
+('        asyncTextures = json["async_textures"] as? Bool ?? false\n', '        asyncTextures = json["async_textures"] as? Bool ?? false\n        asyncGfx = json["async_gfx"] as? Bool ?? false\n'),
+('        json["async_textures"] = asyncTextures\n', '        json["async_textures"] = asyncTextures\n        json["async_gfx"] = asyncGfx\n'),
+('                    Toggle("Background texture loading", isOn: $s.asyncTextures)\n', '                    Toggle("Background texture loading", isOn: $s.asyncTextures)\n                    Toggle("Graphics on a separate thread", isOn: $s.asyncGfx)\n'),
+("Background texture loading (experimental): fewer small hitches, but can run out of memory while a race loads.", "Background texture loading (experimental): fewer small hitches, but can run out of memory while a race loads. Graphics on a separate thread (experimental): the game and the graphics run on two CPU cores at once, more FPS."),
+]
+for a_, b_ in reps:
+    assert w.count(a_) == 1, a_[:60]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", md, mn, sw, "(NX_ASYNC_GFX: graphics on a separate thread)")
