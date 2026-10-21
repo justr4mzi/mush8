@@ -23,6 +23,9 @@ on:
       record:
         description: "1 = start each run with an empty pipeline list and publish what it records"
         default: "0"
+      monkey:
+        description: "1 = random play (tools/monkey.py, a new seed each run) instead of A every second"
+        default: "0"
 
 permissions:
   contents: write
@@ -30,7 +33,7 @@ permissions:
 jobs:
   smoke:
     runs-on: ${{ inputs.runner || 'macos-15' }}
-    timeout-minutes: 120
+    timeout-minutes: 355
     steps:
       - name: Use the newest Xcode
         run: |
@@ -134,6 +137,7 @@ jobs:
           SECS: ${{ inputs.seconds || '200' }}
           SCRIPT: ${{ inputs.script }}
           RECORD: ${{ inputs.record || '0' }}
+          MONKEY: ${{ inputs.monkey || '0' }}
         run: |
           mkdir -p out
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
@@ -141,7 +145,9 @@ jobs:
           n=0
           for m in $MODES; do
             n=$((n+1)); L="out/run-$n-async$m.log"
-            rm -rf work/frame work/save work/pipelines.tsv
+            rm -rf work/frame work/save
+            [ "$RECORD" = 1 ] && rm -f work/pipelines.tsv
+            [ "$MONKEY" = 1 ] && INPUT="$(python3 tools/monkey.py "$n$GITHUB_RUN_ID" "$SECS")"
             mkdir -p work/save
             if [ -d smoke-save ]; then
               if ls -d smoke-save/type* >/dev/null 2>&1; then cp -R smoke-save/. work/save/; else mkdir -p work/save/type1-index0 && cp -R smoke-save/. work/save/type1-index0/; fi
