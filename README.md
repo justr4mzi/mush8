@@ -38,7 +38,11 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   CPU. BC1 textures are now rewritten block by block as ASTC 4x4, a format the iPhone reads natively:
   1 byte per pixel instead of 4, same colours (within 2/255, checked on 20 000 random blocks against
   reference decoders; a block that mixes transparent pixels with several colours gets their average colour).
-  The other BC formats are still decoded to RGBA (converting them would lose quality).
+- **BC3 textures as ASTC** too, per texture: same colours as before (within 4/255), alpha exact on opaque,
+  constant and cut-out (on/off) blocks. ASTC keeps only 4 alpha levels in a 4x4 block whose alpha varies,
+  so a texture with soft alpha gradients (smoke, glass...) on more than 1% of its blocks stays RGBA (no
+  visible loss). Measured on Mario Circuit: BC3 textures took 113 MB decoded, ~28 MB as ASTC.
+  `NX_BC3_ASTC=0` turns it off. BC4/BC5/BC7 are still decoded (BC4 to 1 byte per pixel, BC5 to 2).
   `NX_BC1_ASTC=0` turns it off. Measured on the iPhone during a race: BC1 textures take 131 MB as ASTC,
   they'd take ~524 MB decoded; the race peaked at 2.57 GB with 500 MB to spare (it used to be killed).
 - **Low-memory trim** (`NX_TRIM_MB`, 900 MB by default): when iOS allows less than that, textures unused
@@ -139,6 +143,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_TRIM_MB` | 900 | Below this much memory left (MB), drop textures unused for 5 s |
 | `NX_TRIM_EMERGENCY_MB` | 400 | Below this, while loading: release prewarmed pipelines and every texture not used right now. `0` = off |
 | `NX_BC1_ASTC` | 1 | `0` = decode BC1 textures to RGBA like before (4x more memory) |
+| `NX_BC3_ASTC` | 1 | `0` = decode BC3 textures to RGBA like before |
 | `NX_PURGEABLE` | 1 | `0` = don't let iOS reclaim unused textures |
 | `NX_PURGEABLE_ALL` | 0 | `1` = every decoded texture can be reclaimed by iOS (costs FPS) |
 | `NX_KEEP_PREWARMED` | 1 | `0` = drop prewarmed pipelines after the prewarm (less memory, black objects for a moment) |
@@ -205,6 +210,8 @@ Share it from the launcher (**Share the log**; after a crash, **Share the previo
   other …` — our own GPU memory, by kind.
 - `[mem] textures: …` and `[mem] BC by format …` — every ~10 s, texture count and size, BC textures by format.
 - `[game] track: Gu_WaterPark (app uses 2300 MB)` — a track loaded (`NX_TRACE_TRACKS=0` to turn off).
+- `[cpu] …% of a core in all: guest-0x51 60%, gfx-submit 25%, …` and `[cpu] system calls: …` — every 10 s,
+  the CPU used by each thread and the game's most frequent system calls.
 - `[mem] phone: heat …` — `serious`/`critical` = iOS slows the CPU/GPU down (lower FPS, slower shader builds).
 - `[gfx] pipeline …: not in the archive, compiling` / `building took N ms` — a pipeline seen for the first
   time; long times = memory or heat pressure.

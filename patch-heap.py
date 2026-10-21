@@ -4182,3 +4182,184 @@ s_ = s_.replace(old, old + """    thread_local!(static RAISED: std::cell::Cell<b
 """)
 cm.write_text(s_)
 print("patched", cm, "(render thread priority)")
+
+# ---------------------------------------------------------------------------
+# BC3 textures as ASTC 4x4 too (iPhone): 1 byte per pixel instead of 4 once
+# decoded. Colours are the same as with RGBA (within 4/255); alpha is exact for
+# opaque, constant and cut-out (on/off) blocks. ASTC only has 4 alpha levels per
+# 4x4 block with a varying alpha, so a texture with soft alpha gradients (smoke,
+# glass...) on more than 1% of its blocks stays RGBA. Checked on 6000 blocks
+# against reference decoders. NX_BC3_ASTC=0 turns it off.
+bcp = pathlib.Path("crates/nxhost/src/gfx/bc.rs")
+s_ = bcp.read_text()
+for a_, b_ in [
+    ("    Bc7,\n}\n", "    Bc7,\n    /// BC3 data stored as ASTC 4x4 (chosen per texture, see bc3_astc_ok)\n    Bc3Astc,\n}\n"),
+    ("            Kind::Bc7 => bcdec_rs::bc7(b, &mut tmp, 16),\n", "            Kind::Bc7 => bcdec_rs::bc7(b, &mut tmp, 16),\n            Kind::Bc3Astc => bcdec_rs::bc3(b, &mut tmp, 16),\n"),
+    ("    if k == Kind::Bc1 && astc_bc1() { h.div_ceil(4) } else { h }\n", "    if (k == Kind::Bc1 && astc_bc1()) || k == Kind::Bc3Astc { h.div_ceil(4) } else { h }\n"),
+    ("    if k == Kind::Bc1 && astc_bc1() {\n", "    if k == Kind::Bc3Astc {\n        return bc3_to_astc(src, row_bytes, w, h, images);\n    }\n    if k == Kind::Bc1 && astc_bc1() {\n"),
+    ("pub fn out_rows(", """pub fn astc_bc3() -> bool {
+    static S: LazyLock<bool> = LazyLock::new(|| astc_bc1() && std::env::var("NX_BC3_ASTC").map_or(true, |v| v.trim() != "0"));
+    *S
+}
+
+/// The decode to use for a texture: BC3 textures created as ASTC get the ASTC transcode.
+pub fn kind_for(nvn: u32, format: MTLPixelFormat) -> Option<Kind> {
+    match soft(nvn)? {
+        Kind::Bc3 if matches!(format, MTLPixelFormat::ASTC_4x4_LDR | MTLPixelFormat::ASTC_4x4_sRGB) => Some(Kind::Bc3Astc),
+        k => Some(k),
+    }
+}
+
+/// Can this BC3 data (raw blocks, any layout) go to ASTC: soft alpha on at most 1% of the blocks.
+pub fn bc3_astc_ok(data: &[u8]) -> bool {
+    let blocks = data.chunks_exact(16);
+    let n = blocks.len().max(1);
+    let soft = data.chunks_exact(16).filter(|b| bc3_soft_alpha(b)).count();
+    soft * 100 <= n
+}
+
+fn bc3_to_astc(src: &[u8], row_bytes: usize, w: usize, h: usize, images: usize) -> (Vec<u8>, usize) {
+    static TRITS: LazyLock<[u8; 243]> = LazyLock::new(trit_table);
+    let (bw, bh) = (w.div_ceil(4), h.div_ceil(4));
+    let mut out = vec![0u8; bw * bh * 16 * images];
+    for img in 0..images {
+        for by in 0..bh {
+            for bx in 0..bw {
+                let o = (img * bh + by) * row_bytes + bx * 16;
+                let Some(b) = src.get(o..o + 16) else { continue };
+                let d = ((img * bh + by) * bw + bx) * 16;
+                out[d..d + 16].copy_from_slice(&bc3_block_astc(b, &TRITS));
+            }
+        }
+    }
+    (out, bw * 16)
+}
+
+""" + 'const U48: [u32; 48] = [0, 255, 16, 239, 32, 223, 48, 207, 65, 190, 81, 174, 97, 158, 113, 142, 5, 250, 21, 234, 38, 217, 54, 201, 70, 185, 86, 169, 103, 152, 119, 136, 11, 244, 27, 228, 43, 212, 59, 196, 76, 179, 92, 163, 108, 147, 124, 131];\n\nfn near48(v: u32) -> usize {\n    (0..48).min_by_key(|&q| (U48[q] as i32 - v as i32).abs()).unwrap()\n}\n\nfn bc3_alpha(b: &[u8]) -> [u32; 16] {\n    let (a0, a1) = (b[0] as u32, b[1] as u32);\n    let idx = u64::from_le_bytes([b[2], b[3], b[4], b[5], b[6], b[7], 0, 0]);\n    let mut pal = [0u32; 8];\n    pal[0] = a0;\n    pal[1] = a1;\n    if a0 > a1 {\n        for i in 1..7 {\n            pal[i + 1] = ((7 - i as u32) * a0 + i as u32 * a1) / 7;\n        }\n    } else {\n        for i in 1..5 {\n            pal[i + 1] = ((5 - i as u32) * a0 + i as u32 * a1) / 5;\n        }\n        pal[6] = 0;\n        pal[7] = 255;\n    }\n    let mut out = [0u32; 16];\n    for (i, o) in out.iter_mut().enumerate() {\n        *o = pal[((idx >> (3 * i)) & 7) as usize];\n    }\n    out\n}\n\n/// Soft alpha (more than 4 levels over a wide range) in this BC3 block: ASTC keeps only 4 alpha levels per block.\npub fn bc3_soft_alpha(b: &[u8]) -> bool {\n    let a = bc3_alpha(b);\n    let (lo, hi) = (a.iter().min().unwrap(), a.iter().max().unwrap());\n    if hi - lo <= 32 {\n        return false;\n    }\n    let mut seen = [false; 256];\n    let mut n = 0;\n    for v in a {\n        if !seen[v as usize] {\n            seen[v as usize] = true;\n            n += 1;\n        }\n    }\n    n > 4\n}\n\nfn trit_put(vals: &[u32], m: u32, bits: &mut u128, pos: &mut u32, trits: &[u8; 243]) {\n    let tb: [(u32, u32); 5] = [(0, 2), (2, 2), (4, 1), (5, 2), (7, 1)];\n    for g in (0..vals.len()).step_by(5) {\n        let n = (vals.len() - g).min(5);\n        let t = |k: usize| if k < n { (vals[g + k] >> m) as usize } else { 0 };\n        let tv = trits[t(0) + 3 * t(1) + 9 * t(2) + 27 * t(3) + 81 * t(4)] as u32;\n        for i in 0..n {\n            *bits |= ((vals[g + i] & ((1 << m) - 1)) as u128) << *pos;\n            *pos += m;\n            let (s, c) = tb[i];\n            *bits |= (((tv >> s) & ((1 << c) - 1)) as u128) << *pos;\n            *pos += c;\n        }\n    }\n}\n\npub fn bc3_block_astc(b: &[u8], trits: &[u8; 243]) -> [u8; 16] {\n    let alpha = bc3_alpha(b);\n    let c0 = u16::from_le_bytes([b[8], b[9]]);\n    let c1 = u16::from_le_bytes([b[10], b[11]]);\n    let ci = u32::from_le_bytes([b[12], b[13], b[14], b[15]]);\n    let x = |c: u16| -> [u32; 3] {\n        let (r, g, bl) = ((c >> 11) as u32 & 31, (c >> 5) as u32 & 63, c as u32 & 31);\n        [r << 3 | r >> 2, g << 2 | g >> 4, bl << 3 | bl >> 2]\n    };\n    let (mut e0, mut e1) = (x(c0), x(c1));\n    let mut w = [0u32; 16];\n    for (i, w) in w.iter_mut().enumerate() {\n        *w = [0, 3, 1, 2][((ci >> (2 * i)) & 3) as usize];\n    }\n    let put = |bits: &mut u128, pos: u32, v: u32, n: u32| *bits |= ((v & ((1u32 << n) - 1)) as u128) << pos;\n    let mut bits: u128 = 0;\n    let mut ws: u128 = 0;\n    let (lo, hi) = (*alpha.iter().min().unwrap(), *alpha.iter().max().unwrap());\n    if lo == hi {\n        if e1.iter().sum::<u32>() < e0.iter().sum::<u32>() {\n            std::mem::swap(&mut e0, &mut e1);\n            w = w.map(|v| 3 - v);\n        }\n        put(&mut bits, 0, 66, 11);\n        let vals: Vec<u32> = if lo == 255 {\n            put(&mut bits, 13, 8, 4);\n            vec![e0[0], e1[0], e0[1], e1[1], e0[2], e1[2]]\n        } else {\n            put(&mut bits, 13, 12, 4);\n            vec![e0[0], e1[0], e0[1], e1[1], e0[2], e1[2], lo, lo]\n        };\n        for (i, v) in vals.into_iter().enumerate() {\n            put(&mut bits, 17 + 8 * i as u32, v, 8);\n        }\n        for (i, v) in w.iter().enumerate() {\n            put(&mut ws, 2 * i as u32, *v, 2);\n        }\n        return (bits | ws.reverse_bits()).to_le_bytes();\n    }\n    // varying alpha: dual plane, alpha on plane 1, endpoints in the 48-level range\n    let mut q0 = e0.map(near48);\n    let mut q1 = e1.map(near48);\n    let mut order: Vec<usize> = (0..48).collect();\n    order.sort_by_key(|&q| U48[q]);\n    let mut rank = [0usize; 48];\n    for (i, &q) in order.iter().enumerate() {\n        rank[q] = i;\n    }\n    let lev = |a0: u32, a1: u32| [0u32, 21, 43, 64].map(|u| (a0 * (64 - u) + a1 * u + 32) / 64);\n    let mut best = (u64::MAX, 0usize, 0usize);\n    for d0 in -2i32..=2 {\n        for d1 in -2i32..=2 {\n            let i0 = (rank[near48(lo)] as i32 + d0).clamp(0, 47) as usize;\n            let i1 = (rank[near48(hi)] as i32 + d1).clamp(0, 47) as usize;\n            let l = lev(U48[order[i0]], U48[order[i1]]);\n            let e: u64 = alpha.iter().map(|&a| l.iter().map(|&v| ((v as i64 - a as i64) * (v as i64 - a as i64)) as u64).min().unwrap()).sum();\n            if e < best.0 {\n                best = (e, order[i0], order[i1]);\n            }\n        }\n    }\n    let (mut qa0, mut qa1) = (best.1, best.2);\n    let s = |q: [usize; 3]| q.iter().map(|&v| U48[v]).sum::<u32>();\n    if s(q1) < s(q0) {\n        std::mem::swap(&mut q0, &mut q1);\n        std::mem::swap(&mut qa0, &mut qa1);\n        w = w.map(|v| 3 - v);\n    }\n    let l = lev(U48[qa0], U48[qa1]);\n    let wa = alpha.map(|a| (0..4).min_by_key(|&k| (l[k] as i32 - a as i32).abs()).unwrap() as u32);\n    put(&mut bits, 0, 0x442, 11);\n    put(&mut bits, 13, 12, 4);\n    let mut pos = 17;\n    let vals = [q0[0], q1[0], q0[1], q1[1], q0[2], q1[2], qa0, qa1].map(|v| v as u32);\n    trit_put(&vals, 4, &mut bits, &mut pos, trits);\n    for i in 0..16 {\n        put(&mut ws, 4 * i as u32, w[i], 2);\n        put(&mut ws, 4 * i as u32 + 2, wa[i], 2);\n    }\n    bits |= 3u128 << (128 - 64 - 2);\n    (bits | ws.reverse_bits()).to_le_bytes()\n}\n' + "\npub fn out_rows("),
+]:
+    assert s_.count(a_) == 1, a_[:60]
+    s_ = s_.replace(a_, b_)
+bcp.write_text(s_)
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        let levels = levels - sh;\n        let d = MTLTextureDescriptor::new();\n"
+assert y.count(old) == 1
+y = y.replace(old, """        let levels = levels - sh;
+        // BC3 -> ASTC when the texture has (almost) no soft alpha gradient
+        let format = if !render_target && gfx::bc::soft(key.format) == Some(gfx::bc::Kind::Bc3) && gfx::bc::astc_bc3() {
+            let len = storage_len(b, &key);
+            let ok = len > 0 && gfx::heap().is_some_and(|h| h.gpu_addr(key.addr).is_some() && h.gpu_addr(key.addr + len - 1).is_some()) && {
+                let data = unsafe { std::slice::from_raw_parts(key.addr as *const u8, (len as usize).min(16 << 20)) };
+                gfx::bc::bc3_astc_ok(data)
+            };
+            if ok { if key.format == 72 { MTLPixelFormat::ASTC_4x4_sRGB } else { MTLPixelFormat::ASTC_4x4_LDR } } else { format }
+        } else {
+            format
+        };
+        let d = MTLTextureDescriptor::new();
+""")
+old = "    let soft = gfx::bc::soft(key.format);\n"
+assert y.count(old) == 1
+y = y.replace(old, "    let soft = gfx::bc::kind_for(key.format, tex.pixelFormat());\n")
+tx.write_text(y)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+for a_, b_ in [
+    ("        let decoded = gfx::bc::soft(key.format).map(|k| {\n", "        let decoded = gfx::bc::kind_for(key.format, tex.0.pixelFormat()).map(|k| {\n"),
+    ("px.len() / d.max(1) / gfx::bc::soft(key.format).map_or(h, |k| gfx::bc::out_rows(k, h))", "px.len() / d.max(1) / gfx::bc::kind_for(key.format, tex.0.pixelFormat()).map_or(h, |k| gfx::bc::out_rows(k, h))"),
+]:
+    assert s_.count(a_) == 1, a_[:60]
+    s_ = s_.replace(a_, b_)
+dm.write_text(s_)
+print("patched", bcp, tx, dm, "(BC3 stored as ASTC 4x4 when it has no soft alpha)")
+
+# ---------------------------------------------------------------------------
+# CPU profile in the log every 10 s: CPU time of each thread (game threads,
+# graphics thread...) and the most frequent system calls of the game, to see
+# what keeps the CPU busy when the FPS drops on a hot phone.
+sv = pathlib.Path("crates/nxhost/src/svc.rs")
+s_ = sv.read_text()
+old = "fn dispatch_inner(f: &mut Frame) {\n    let n = f.x[16] as u32;\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """/// Number of each system call since the last CPU report.
+pub static SVC_COUNTS: [std::sync::atomic::AtomicU32; 256] = [const { std::sync::atomic::AtomicU32::new(0) }; 256];
+
+""" + old + "    SVC_COUNTS[(n & 0xFF) as usize].fetch_add(1, std::sync::atomic::Ordering::Relaxed);\n")
+sv.write_text(s_)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+s_ = gm.read_text()
+old = "/// Where the memory goes (see start_memlog).\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """/// CPU used by each thread since the last call (percent of one core), and the most frequent system calls.
+pub fn cpu_report() {
+    #[repr(C)]
+    struct ExtInfo {
+        user_ns: u64,
+        system_ns: u64,
+        cpu_usage: i32,
+        policy: i32,
+        run_state: i32,
+        flags: i32,
+        sleep_time: i32,
+        curpri: i32,
+        priority: i32,
+        maxpriority: i32,
+        name: [u8; 64],
+    }
+    unsafe extern "C" {
+        static mach_task_self_: u32;
+        fn task_threads(task: u32, list: *mut *mut u32, count: *mut u32) -> i32;
+        fn thread_info(thread: u32, flavor: i32, info: *mut i32, count: *mut u32) -> i32;
+        fn mach_port_deallocate(task: u32, name: u32) -> i32;
+        fn vm_deallocate(task: u32, addr: usize, size: usize) -> i32;
+    }
+    static LAST: std::sync::Mutex<Option<(std::time::Instant, std::collections::HashMap<String, u64>)>> = std::sync::Mutex::new(None);
+    let mut now_times = std::collections::HashMap::new();
+    unsafe {
+        let mut list: *mut u32 = std::ptr::null_mut();
+        let mut count = 0u32;
+        if task_threads(mach_task_self_, &mut list, &mut count) != 0 {
+            return;
+        }
+        for i in 0..count as usize {
+            let th = *list.add(i);
+            let mut info: ExtInfo = std::mem::zeroed();
+            let mut n = (size_of::<ExtInfo>() / 4) as u32;
+            if thread_info(th, 5, &mut info as *mut ExtInfo as *mut i32, &mut n) == 0 {
+                let end = info.name.iter().position(|&c| c == 0).unwrap_or(64);
+                let mut name = String::from_utf8_lossy(&info.name[..end]).into_owned();
+                if name.is_empty() {
+                    name = format!("thread-{th:#x}");
+                }
+                *now_times.entry(name).or_insert(0u64) += info.user_ns + info.system_ns;
+            }
+            mach_port_deallocate(mach_task_self_, th);
+        }
+        vm_deallocate(mach_task_self_, list as usize, count as usize * 4);
+    }
+    let t = std::time::Instant::now();
+    let mut last = LAST.lock().unwrap();
+    if let Some((t0, prev)) = last.as_ref() {
+        let secs = t.duration_since(*t0).as_secs_f64().max(0.001);
+        let mut v: Vec<(String, f64)> = now_times.iter().map(|(k, &ns)| (k.clone(), ns.saturating_sub(*prev.get(k).unwrap_or(&0)) as f64 / 1e9 / secs * 100.0)).filter(|x| x.1 >= 1.0).collect();
+        v.sort_by(|a, b| b.1.total_cmp(&a.1));
+        let total: f64 = v.iter().map(|x| x.1).sum();
+        let top: Vec<String> = v.iter().take(10).map(|(k, p)| format!("{k} {p:.0}%")).collect();
+        eprintln!("[cpu] {:.0}% of a core in all: {}", total, top.join(", "));
+        let mut svcs: Vec<(usize, u32)> = (0..256).map(|i| (i, crate::svc::SVC_COUNTS[i].swap(0, std::sync::atomic::Ordering::Relaxed))).filter(|x| x.1 > 0).collect();
+        svcs.sort_by(|a, b| b.1.cmp(&a.1));
+        let s: Vec<String> = svcs.iter().take(8).map(|(i, c)| format!("{i:#04x} {:.0}/s", *c as f64 / secs)).collect();
+        eprintln!("[cpu] system calls: {}", s.join(", "));
+    }
+    *last = Some((t, now_times));
+}
+
+""" + old)
+old = """    } else {
+        eprintln!("[mem] detail: game RAM {} MB, Metal {} MB", mb(game), mb(metal));
+    }
+"""
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "    cpu_report();\n")
+gm.write_text(s_)
+print("patched", sv, gm, "(CPU profile in the log)")
