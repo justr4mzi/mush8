@@ -1,4 +1,4 @@
-run 1, 12:22 UTC, 493 s
+run 1, 12:23 UTC, 565 s
 tracks:
 8.0s /Course/Gu_Menu
 317.8s /Course/Gu_FirstCircuit
@@ -28,26 +28,26 @@ last game files read:
 318.8s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
 318.8s /UI/cmn/race/ym_ModeIconTt_00^l.bntx
 366.5s /Audio/Resource/Stream/pBGM_WU_FIRST_CIRCUIT_N.bfstm
-game fps (last minute): 34.7
-[mem] detail: game RAM 3112 MB, Metal 3520 MB | resident 1772 MB, internal 1712 MB, external 31 MB, compressed 162 MB, purgeable 0 MB, reusable 28 MB, footprint 2196 MB
-[mem] 486 s: app uses 2196 MB, iOS still allows 0 MB (lowest so far 0 MB)
+game fps (last minute): 35.7
+[mem] detail: game RAM 3111 MB, Metal 3521 MB | resident 1771 MB, internal 1711 MB, external 31 MB, compressed 163 MB, purgeable 0 MB, reusable 27 MB, footprint 2198 MB
+[mem] textures: 30 loaded (0 MB), 1036 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[mem] 563 s: app uses 2197 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3520 MB | resident 1772 MB, internal 1712 MB, external 31 MB, compressed 162 MB, purgeable 0 MB, reusable 28 MB, footprint 2196 MB
-[mem] textures: 30 loaded (0 MB), 1033 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[mem] detail: game RAM 3111 MB, Metal 3521 MB | resident 1772 MB, internal 1711 MB, external 31 MB, compressed 163 MB, purgeable 0 MB, reusable 29 MB, footprint 2197 MB
 --- end of the log
-[mem] textures: 30 loaded (0 MB), 1033 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
-[mem] 463 s: app uses 2196 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 541 s: app uses 2198 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3520 MB | resident 1771 MB, internal 1712 MB, external 31 MB, compressed 162 MB, purgeable 0 MB, reusable 27 MB, footprint 2196 MB
-[gfx] screen at 450s dumped
-[mem] textures: 30 loaded (0 MB), 1033 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
-[gfx] screen at 460s dumped
-[mem] 475 s: app uses 2196 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3111 MB, Metal 3521 MB | resident 1769 MB, internal 1711 MB, external 31 MB, compressed 163 MB, purgeable 0 MB, reusable 26 MB, footprint 2198 MB
+[mem] textures: 30 loaded (0 MB), 1036 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[gfx] screen at 530s dumped
+[gfx] device pipeline archive: 328 pipelines saved this run (20 files, 0 left out)
+[mem] 552 s: app uses 2198 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3520 MB | resident 1772 MB, internal 1712 MB, external 31 MB, compressed 162 MB, purgeable 0 MB, reusable 28 MB, footprint 2196 MB
-[gfx] screen at 470s dumped
-[mem] 486 s: app uses 2196 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3111 MB, Metal 3521 MB | resident 1771 MB, internal 1711 MB, external 31 MB, compressed 163 MB, purgeable 0 MB, reusable 27 MB, footprint 2198 MB
+[gfx] screen at 540s dumped
+[mem] textures: 30 loaded (0 MB), 1036 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[mem] 563 s: app uses 2197 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3520 MB | resident 1772 MB, internal 1712 MB, external 31 MB, compressed 162 MB, purgeable 0 MB, reusable 28 MB, footprint 2196 MB
-[mem] textures: 30 loaded (0 MB), 1033 render targets (284 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[mem] detail: game RAM 3111 MB, Metal 3521 MB | resident 1772 MB, internal 1711 MB, external 31 MB, compressed 163 MB, purgeable 0 MB, reusable 29 MB, footprint 2197 MB
+[gfx] screen at 550s dumped
 new pipelines so far:        2
