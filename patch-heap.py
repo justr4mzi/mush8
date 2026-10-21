@@ -3337,3 +3337,25 @@ w = w.replace(old, old + """                .confirmationDialog("Put every setti
 """)
 sw.write_text(w)
 print("patched", sw, "(reset settings to default)")
+
+# ---------------------------------------------------------------------------
+# Race loading, more margin: the load spike (2.24 -> 2.98 GB in one second,
+# ~200 MB of it upload buffers) killed the app even with the recommended
+# settings. When less than 600 MB is left, at most 24 MB of texture upload
+# buffers stay in flight (instead of 96 MB), and the emergency trim starts at
+# 400 MB left instead of 300.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """    const LIMIT: usize = 96 << 20;
+    let mut q = STAGING.lock().unwrap();"""
+assert y.count(old) == 1
+y = y.replace(old, """    let left = gfx::available_memory();
+    let LIMIT: usize = if left != 0 && left < 600 << 20 { 24 << 20 } else { 96 << 20 };
+    let mut q = STAGING.lock().unwrap();""")
+y = y.replace('eprintln!("[gfx] texture uploads: waited for the GPU (over 96 MB of upload buffers in flight)");',
+              'eprintln!("[gfx] texture uploads: waited for the GPU (over {} MB of upload buffers in flight)", LIMIT >> 20);')
+old = '.unwrap_or(300) << 20);\n        if N.fetch_add(1, Relaxed) % 8 != 0'
+assert y.count(old) == 1
+y = y.replace(old, '.unwrap_or(400) << 20);\n        if N.fetch_add(1, Relaxed) % 8 != 0')
+tx.write_text(y)
+print("patched", tx, "(smaller upload window and earlier emergency trim when memory is low)")
