@@ -3751,3 +3751,46 @@ s_ = s_.replace(old, '''    let lo = SCRIPT.partition_point(|(at, _, _)| *at <= 
     SCRIPT[lo..].iter().take_while(|(at, _, _)| *at <= t).filter(|(at, _, p)| *p == player + 1 && t < at + 0.15).fold(0, |m, (_, b, _)| m | b)''')
 ip.write_text(s_)
 print("patched", ip, "(script from a file, binary search)")
+
+# ---------------------------------------------------------------------------
+# A render pass that is dropped while still open (an early exit somewhere in
+# the replay) made Metal abort the whole app ("Command encoder released
+# without endEncoding", seen on a macOS 14 Mac). End it on drop instead.
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+for a_, b_ in [("    fixed: Option<EncState>,\n}\n", "    fixed: Option<EncState>,\n    ended: bool,\n}\n\nimpl Drop for Pass {\n    fn drop(&mut self) {\n        if !self.ended {\n            self.enc.endEncoding();\n        }\n    }\n}\n"),
+               ("fresh, keys, fixed: None });", "fresh, keys, fixed: None, ended: false });"),
+               ("        if let Some(p) = self.pass.take() {\n            p.enc.endEncoding();\n", "        if let Some(mut p) = self.pass.take() {\n            p.enc.endEncoding();\n            p.ended = true;\n")]:
+    assert s_.count(a_) == 1, a_
+    s_ = s_.replace(a_, b_)
+dm.write_text(s_)
+print("patched", dm, "(open render pass ended on drop)")
+
+# ---------------------------------------------------------------------------
+# Memory report: how much the BC textures cost once decoded on the CPU (iPhone
+# GPUs have no BC support, so they are stored 4-8x bigger than on the Switch).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """                let size = objc2_metal::MTLResource::allocatedSize(&*t.0);
+                if self.uploaded.contains_key(k) {"""
+assert y.count(old) == 1
+y = y.replace(old, """                let size = objc2_metal::MTLResource::allocatedSize(&*t.0);
+                if gfx::bc::soft(k.format).is_some() {
+                    bc_n += 1;
+                    bc_bytes += size;
+                    // compressed size on the Switch: BC1/BC4 half a byte per pixel, the others one
+                    let (dec, comp) = match k.format { 65 | 66 | 69 | 70 => (8, 1), 73 | 74 => (2, 1), 75 | 76 => (2, 2), 79 | 80 => (8, 2), _ => (4, 1) };
+                    bc_native += size * comp / dec;
+                }
+                if self.uploaded.contains_key(k) {""")
+old = "            let (mut n, mut bytes, mut rn, mut rbytes) = (0usize, 0usize, 0usize, 0usize);\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "            let (mut bc_n, mut bc_bytes, mut bc_native) = (0usize, 0usize, 0usize);\n")
+old = "            eprintln!(\"[mem] textures: {n} loaded"
+assert y.count(old) == 1
+y = y.replace(old, """            if bc_n > 0 {
+                eprintln!("[mem] BC textures decoded on the CPU: {bc_n}, {} MB (would be {} MB compressed)", bc_bytes >> 20, bc_native >> 20);
+            }
+""" + old)
+tx.write_text(y)
+print("patched", tx, "(BC texture cost in the memory report)")
