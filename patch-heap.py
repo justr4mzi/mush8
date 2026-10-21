@@ -3560,3 +3560,125 @@ w = w.replace(old, old + '''                    ShareLink(item: docsURL.appendin
 ''')
 sw.write_text(w)
 print("patched", gm, sw, "(heat / low power in the log, share pipeline list)")
+
+# ---------------------------------------------------------------------------
+# Purgeable textures (NX_PURGEABLE=0 to turn off): a decoded texture unused for
+# ~2 s (120 frames) is marked "volatile". iOS does not count volatile memory
+# against the app's limit and may take it back when memory runs short, instead
+# of killing the app. When the game uses the texture again it is made
+# non-volatile; if iOS took it, it is decoded again from the game's memory.
+# Only textures with their own storage (not views, not textures over the game's
+# memory, not render targets) are concerned.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "#[derive(Default)]\npub struct Textures {\n"
+assert y.count(old) == 1
+y = y.replace(old, """static VOLATILE: std::sync::Mutex<Option<std::collections::HashSet<TexKey>>> = std::sync::Mutex::new(None);
+static PURGED: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+
+fn purgeable_on() -> bool {
+    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_PURGEABLE").is_none_or(|v| v != "0"));
+    *ON
+}
+
+""" + old)
+old = """        self.last_used.retain(|k, _| !gone(k));
+    }
+"""
+assert y.count(old) == 1
+y = y.replace(old, """        self.last_used.retain(|k, _| !gone(k));
+        if let Some(v) = VOLATILE.lock().unwrap().as_mut() {
+            v.retain(|k| !gone(k));
+        }
+    }
+
+    /// Mark decoded textures unused for ~2 s as purgeable (see purgeable_on).
+    fn make_volatile(&mut self) {
+        if !purgeable_on() {
+            return;
+        }
+        let frame = self.frame;
+        let mut vol = VOLATILE.lock().unwrap();
+        let vol = vol.get_or_insert_with(Default::default);
+        let mut n = 0;
+        for k in self.uploaded.keys() {
+            if vol.contains(k) || self.last_used.get(k).is_none_or(|&f| f + 120 > frame) || self.aliases.contains_key(k) {
+                continue;
+            }
+            let Some(t) = self.map.get(k) else { continue };
+            #[allow(unused_unsafe)]
+            let own = unsafe { t.0.buffer().is_none() && t.0.parentTexture().is_none() };
+            if !own || self.views.keys().any(|(vk, _, _)| vk == k) {
+                continue;
+            }
+            objc2_metal::MTLResource::setPurgeableState(&*t.0, MTLPurgeableState::Volatile);
+            vol.insert(*k);
+            n += 1;
+        }
+        let _ = n;
+    }
+""")
+old = """        if let Some(t) = self.map.get(&key) {
+            let t = t.clone();
+            let frame = self.frame;
+            self.last_used.insert(key, frame);
+"""
+assert y.count(old) == 1
+y = y.replace(old, """        if purgeable_on() && VOLATILE.lock().unwrap().as_mut().is_some_and(|v| v.remove(&key)) {
+            if let Some(t) = self.map.get(&key) {
+                let was = objc2_metal::MTLResource::setPurgeableState(&*t.0, MTLPurgeableState::NonVolatile);
+                if was == MTLPurgeableState::Empty {
+                    // iOS took it back: decode it again below
+                    self.evict(&|k| *k == key);
+                    PURGED.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+                }
+            }
+        }
+""" + old)
+old = """            eprintln!("[mem] textures: {n} loaded ({} MB), {rn} render targets ({} MB), {} pipelines kept ready", bytes >> 20, rbytes >> 20, super::state::prewarmed_count());
+"""
+assert y.count(old) == 1
+y = y.replace(old, """            eprintln!("[mem] textures: {n} loaded ({} MB), {rn} render targets ({} MB), {} pipelines kept ready, {} purgeable, {} taken back by iOS", bytes >> 20, rbytes >> 20, super::state::prewarmed_count(), VOLATILE.lock().unwrap().as_ref().map_or(0, |v| v.len()), PURGED.load(std::sync::atomic::Ordering::Relaxed));
+""")
+old = "    pub fn trim(&mut self) {\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "        self.make_volatile();\n")
+tx.write_text(y)
+print("patched", tx, "(purgeable textures)")
+# a new texture over the same memory reuses an existing one (views, block
+# copies): make every purgeable texture at that address safe first
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        let base_key = TexKey { format: 0, ..key };\n"
+assert y.count(old) == 1
+y = y.replace(old, "        self.restore_addr(key.addr);\n" + old)
+old = "    /// Mark decoded textures unused for ~2 s as purgeable (see purgeable_on).\n"
+assert y.count(old) == 1
+y = y.replace(old, """    /// Make the purgeable textures over `addr` normal again; if iOS took one back,
+    /// forget everything at that address so it is all created again.
+    fn restore_addr(&mut self, addr: u64) {
+        if !purgeable_on() {
+            return;
+        }
+        let keys: Vec<TexKey> = VOLATILE.lock().unwrap().as_mut().map_or(Vec::new(), |v| {
+            let ks: Vec<TexKey> = v.iter().filter(|k| k.addr == addr).copied().collect();
+            for k in &ks {
+                v.remove(k);
+            }
+            ks
+        });
+        let mut purged = false;
+        for k in keys {
+            if let Some(t) = self.map.get(&k) {
+                purged |= objc2_metal::MTLResource::setPurgeableState(&*t.0, MTLPurgeableState::NonVolatile) == MTLPurgeableState::Empty;
+            }
+        }
+        if purged {
+            self.evict(&|k| k.addr == addr);
+            PURGED.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        }
+    }
+
+""" + old)
+tx.write_text(y)
+print("patched", tx, "(purgeable textures: shared storage)")
