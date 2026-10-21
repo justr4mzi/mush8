@@ -44,7 +44,7 @@ GitHub workflows.
   another iPhone).
 - **Failed pipelines are retried** (the iOS shader compiler sometimes dies mid-build), instead of
   staying black until the next launch.
-- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 2708 pipelines): their shaders are
+- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 3424 pipelines): their shaders are
   compiled ahead of time on the build Mac, so a phone that never ran the game (iPhone 14...) doesn't
   have to compile them for minutes.
 - **Full prewarm before playing**: holds the game until every known pipeline is ready, with a progress
