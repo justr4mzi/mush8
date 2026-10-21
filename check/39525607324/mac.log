@@ -1,0 +1,51 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+error[E0382]: borrow of moved value: `old`
+   --> crates/nxhost/src/nvn/draw/state.rs:519:8
+    |
+507 |     let old = std::fs::read_to_string(&stamp).map(|s| s.trim().to_string()).ok();
+    |         --- move occurs because `old` has type `Option<std::string::String>`, which does not implement the `Copy` trait
+...
+517 |         eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.unwrap_or_default());
+    |                                                                                                             ------------------- `old` moved due to this method call
+518 |     }
+519 |     if old.as_deref() != Some(id.as_str()) {
+    |        ^^^ value borrowed here after move
+    |
+note: `std::option::Option::<T>::unwrap_or_default` takes ownership of the receiver `self`, which moves `old`
+   --> /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/core/src/option.rs:1091:35
+help: consider calling `.as_ref()` to borrow the value's contents
+    |
+517 |         eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.as_ref().unwrap_or_default());
+    |                                                                                                            +++++++++
+help: consider calling `.as_mut()` to mutably borrow the value's contents
+    |
+517 |         eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.as_mut().unwrap_or_default());
+    |                                                                                                            +++++++++
+help: you can `clone` the value and consume it, but this might not be your desired behavior
+    |
+517 |         eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.clone().unwrap_or_default());
+    |                                                                                                            ++++++++
+
+warning: unused variable: `n`
+   --> crates/nxhost/src/nvn/draw/state.rs:742:14
+    |
+742 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |              ^ help: if this is intentional, prefix it with an underscore: `_n`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `total`
+   --> crates/nxhost/src/nvn/draw/state.rs:742:17
+    |
+742 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |                 ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+For more information about this error, try `rustc --explain E0382`.
+warning: `nxhost` (bin "nxhost") generated 2 warnings
+error: could not compile `nxhost` (bin "nxhost") due to 1 previous error; 2 warnings emitted
+warning: build failed, waiting for other jobs to finish...
