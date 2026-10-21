@@ -1,0 +1,80 @@
+[prof] per frame: game/other 21.5 ms, gfx cpu 3.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 291 draws | pipeline builds 0 ms/s, frames not shown 23
+[prof] graphics thread: busy 3.3 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 2.9 ms per frame (of which waiting for GPU fences 3.7 ms)
+[fps] 45.9 fps, worst frame 121.6 ms
+[prof] per frame: game/other 21.8 ms, gfx cpu 3.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 266 draws | pipeline builds 0 ms/s, frames not shown 23
+[prof] graphics thread: busy 3.4 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.5 ms per frame (of which waiting for GPU fences 3.7 ms)
+[prof] slowest graphics calls (10 s): QueueSubmitCommands 176 ms, BufferGetAddress 163 ms, BufferMap 116 ms, CommandBufferCallCommands 110 ms, CommandBufferBindProgram 102 ms, QueuePresentTexture 85 ms
+[gfx] device pipeline archive: 146 pipelines saved this run (148 files, 0 left out)
+[fps] 9.0 fps, worst frame 820.4 ms
+[prof] per frame: game/other 111.3 ms, gfx cpu 3.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 93.7 ms, 232 draws | pipeline builds 17 ms/s, frames not shown 5
+[prof] graphics thread: busy 3.2 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.2 ms per frame (of which waiting for GPU fences 89.6 ms)
+[fps] 41.7 fps, worst frame 104.0 ms
+[prof] per frame: game/other 24.0 ms, gfx cpu 2.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 4.8 ms, 258 draws | pipeline builds 0 ms/s, frames not shown 21
+[prof] graphics thread: busy 2.4 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.3 ms per frame (of which waiting for GPU fences 3.0 ms)
+[fps] 42.3 fps, worst frame 66.2 ms
+[prof] per frame: game/other 23.6 ms, gfx cpu 4.6 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.9 ms, 256 draws | pipeline builds 0 ms/s, frames not shown 21
+[prof] graphics thread: busy 4.6 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.9 ms per frame (of which waiting for GPU fences 2.8 ms)
+[fps] 41.5 fps, worst frame 64.5 ms
+[prof] per frame: game/other 24.1 ms, gfx cpu 3.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 215 draws | pipeline builds 0 ms/s, frames not shown 21
+[prof] graphics thread: busy 3.4 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.3 ms per frame (of which waiting for GPU fences 1.8 ms)
+[mem] textures: 29 loaded (0 MB), 1731 render targets (405 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[fps] 47.1 fps, worst frame 98.3 ms
+[prof] per frame: game/other 21.2 ms, gfx cpu 2.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.1 ms, 190 draws | pipeline builds 0 ms/s, frames not shown 24
+[prof] graphics thread: busy 2.4 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.9 ms per frame (of which waiting for GPU fences 3.5 ms)
+[mem] 973 s: app uses 2246 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3122 MB, Metal 3524 MB | resident 1931 MB, internal 1810 MB, external 101 MB, compressed 82 MB, purgeable 0 MB, reusable 19 MB, footprint 2246 MB
+[cpu] 64% of a core in all: guest-0x50 28%, gfx-submit 13%, guest-0x55 5%, guest-0x56 3%, thread-0x1865f 2%, thread-0x19163 2%, guest-0x6c 2%, guest-0x51 2%, thread-0x3f03 2%, thread-0x2d03 1%
+[cpu] system calls: 0x1d 3921/s, 0x1b 1885/s, 0x1c 1687/s, 0x34 883/s, 0x35 883/s, 0x21 216/s, 0x1a 197/s, 0x17 138/s
+[mem] Metal besides the game RAM: 424 MB = textures 375 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 32 MB
+[fps] 43.0 fps, worst frame 91.7 ms
+[prof] per frame: game/other 23.3 ms, gfx cpu 2.7 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 7.4 ms, 183 draws | pipeline builds 0 ms/s, frames not shown 22
+[prof] graphics thread: busy 2.7 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.8 ms per frame (of which waiting for GPU fences 3.6 ms)
+[fps] 44.7 fps, worst frame 122.1 ms
+[prof] per frame: game/other 22.4 ms, gfx cpu 2.0 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.3 ms, 163 draws | pipeline builds 0 ms/s, frames not shown 23
+[prof] graphics thread: busy 2.0 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.1 ms per frame (of which waiting for GPU fences 3.0 ms)
+[fps] 41.8 fps, worst frame 125.4 ms
+[prof] per frame: game/other 23.9 ms, gfx cpu 2.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.9 ms, 156 draws | pipeline builds 0 ms/s, frames not shown 21
+[prof] graphics thread: busy 2.1 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.0 ms per frame (of which waiting for GPU fences 3.4 ms)
+[fps] 41.0 fps, worst frame 129.3 ms
+[prof] per frame: game/other 24.4 ms, gfx cpu 2.7 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.9 ms, 192 draws | pipeline builds 0 ms/s, frames not shown 21
+[prof] graphics thread: busy 2.7 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.7 ms per frame (of which waiting for GPU fences 3.4 ms)
+[fps] 48.7 fps, worst frame 137.3 ms
+[prof] per frame: game/other 20.5 ms, gfx cpu 3.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 8.0 ms, 251 draws | pipeline builds 0 ms/s, frames not shown 24
+[prof] graphics thread: busy 3.4 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 2.1 ms per frame (of which waiting for GPU fences 5.7 ms)
+[prof] slowest graphics calls (10 s): QueueSubmitCommands 160 ms, BufferGetAddress 99 ms, BufferMap 61 ms, CommandBufferBindProgram 55 ms, CommandBufferCallCommands 45 ms, CommandBufferSetRenderTargets 30 ms
+[fps] 46.5 fps, worst frame 75.6 ms
+[prof] per frame: game/other 21.5 ms, gfx cpu 3.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 8.5 ms, 288 draws | pipeline builds 0 ms/s, frames not shown 24
+[prof] graphics thread: busy 3.8 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.7 ms per frame (of which waiting for GPU fences 6.2 ms)
+[fps] 53.8 fps, worst frame 42.8 ms
+[prof] per frame: game/other 18.6 ms, gfx cpu 4.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 8.7 ms, 385 draws | pipeline builds 0 ms/s, frames not shown 27
+[prof] graphics thread: busy 4.9 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 2.2 ms per frame (of which waiting for GPU fences 7.5 ms)
+[fps] 50.5 fps, worst frame 35.8 ms
+[prof] per frame: game/other 19.8 ms, gfx cpu 6.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 8.5 ms, 462 draws | pipeline builds 0 ms/s, frames not shown 26
+[prof] graphics thread: busy 6.1 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 3.5 ms per frame (of which waiting for GPU fences 8.1 ms)
+[fps] 43.5 fps, worst frame 105.9 ms
+[prof] per frame: game/other 23.0 ms, gfx cpu 6.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 8.3 ms, 514 draws | pipeline builds 0 ms/s, frames not shown 22
+[prof] graphics thread: busy 6.5 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 2.7 ms per frame (of which waiting for GPU fences 7.1 ms)
+[shader] 72863bb1ec85ce2d: compiling took 1311 ms
+[fps] 26.7 fps, worst frame 98.7 ms
+[prof] per frame: game/other 37.5 ms, gfx cpu 14.1 ms (texture uploads 0.0), waiting for display 0.2 ms, gpu 10.0 ms, 492 draws | pipeline builds 0 ms/s, frames not shown 13
+[prof] graphics thread: busy 14.1 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 3.4 ms per frame (of which waiting for GPU fences 7.0 ms)
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+=== the game stopped (attempt 4): starting it again
