@@ -3814,6 +3814,8 @@ s_ = s_.replace(old, r"""pub fn astc_bc1() -> bool {
     static S: LazyLock<bool> = LazyLock::new(|| {
         let on = enabled()
             && std::env::var("NX_BC1_ASTC").map_or(true, |v| v.trim() != "0")
+            && sixteen() == 0
+            && std::env::var("NX_TEX_DROP").map_or(true, |v| v.trim() == "0")
             && super::gpu().device.0.supportsFamily(objc2_metal::MTLGPUFamily::Apple2);
         if on {
             eprintln!("[gfx] BC1 textures stored as ASTC 4x4 (4x less memory than decoded)");
@@ -3858,6 +3860,10 @@ y = tx.read_text()
 old = "        (p.offset, p.row, p.image) = (offset, bpr, bpr * h as usize);\n"
 assert y.count(old) == 1
 y = y.replace(old, "        (p.offset, p.row, p.image) = (offset, bpr, bpr * gfx::bc::out_rows(k, h as usize));\n")
+tx.write_text(y)
+old = "    h ^= (gfx::bc::sixteen() as u64) << 60;\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "    h ^= (gfx::bc::astc_bc1() as u64) << 59; // cached RGBA and ASTC data differ\n")
 tx.write_text(y)
 dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
 s_ = dm.read_text()
