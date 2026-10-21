@@ -1,0 +1,51 @@
+run 1, 12:00 UTC, 68 s
+tracks:
+8.1s /Course/Gu_Menu
+last game files read:
+25.9s /Kart/WingTex/Wing_Std_KopB_Alb.szs
+30.2s /Driver/Yoshi.szs
+30.2s /DriverTex/Yoshi_Tex00.szs
+30.2s /Kart/Body/BodyV_Hnc.szs
+30.2s /Kart/Wing/Wing_Flw.szs
+31.8s /Driver/KoopaJr.szs
+31.8s /Kart/BodyTex/BodyB_Std_KopJ_Alb.szs
+31.8s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
+32.9s /Driver/BbMario.szs
+32.9s /Kart/Body/BodyB_Ysi.szs
+33.0s /Kart/WingTex/Wing_Std_MroB_Alb.szs
+33.8s /Driver/Iggy.szs
+33.8s /Kart/Body/BodyK_Sbm.szs
+33.8s /Kart/Wing/Wing_Prf.szs
+33.9s /Kart/Arm/ArmK_Mtl.szs
+34.8s /Kart/Body/BodyK_Pwc.szs
+34.9s /Kart/Arm/ArmK_Zst.szs
+35.9s /Driver/DrvChr04.szs
+35.9s /Kart/BodyTex/BodyB_Std_Dch04_Alb.szs
+35.9s /Kart/WingTex/Wing_Std_Dch04_Alb.szs
+40.7s /Driver/Koopa.szs
+40.7s /Kart/Body/BodyK_Shp.szs
+40.7s /Kart/BodyTex/BodyK_Shp_A_Alb.szs
+40.7s /Kart/Wing/Wing_Kpa.szs
+40.7s /Kart/Arm/ArmK_Wod.szs
+game fps (last minute): 26.3
+[mem] 44 s: app uses 1973 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 136 render targets (69 MB), 0 pipelines kept ready
+[mem] 54 s: app uses 1974 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 66 s: app uses 1975 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (71 MB), 0 pipelines kept ready
+--- end of the log
+[gfx] screen at 30s dumped
+[gfx] device pipeline archive: 76 pipelines saved this run (3 files, 0 left out)
+[mem] 44 s: app uses 1973 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[romfs] 40.7 s /Driver/Koopa.szs
+[romfs] 40.7 s /Kart/Body/BodyK_Shp.szs
+[romfs] 40.7 s /Kart/BodyTex/BodyK_Shp_A_Alb.szs
+[romfs] 40.7 s /Kart/Wing/Wing_Kpa.szs
+[romfs] 40.7 s /Kart/Arm/ArmK_Wod.szs
+[mem] textures: 35 loaded (0 MB), 136 render targets (69 MB), 0 pipelines kept ready
+[gfx] screen at 40s dumped
+[mem] 54 s: app uses 1974 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] device pipeline archive: 85 pipelines saved this run (4 files, 0 left out)
+[gfx] screen at 50s dumped
+[mem] 66 s: app uses 1975 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 180 render targets (71 MB), 0 pipelines kept ready
