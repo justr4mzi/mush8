@@ -1,0 +1,147 @@
+[host] RomFS: 12.13 GB
+[host] guest address space at 0x7d80000000..0x8000000000
+[phone] iPhones can join as controllers (_mush8-pad._udp)
+[loader] 13 imports resolved to logging stubs
+[loader] main     at 0x7d80004000 (text 0xb55af0, trampolines 0x23958)
+[loader] subsdk0  at 0x7d81398000 (text 0x30a028, trampolines 0x526e0)
+[loader] sdk      at 0x7d81adc000 (text 0x40e4a0, trampolines 0x45760)
+[host] main thread 0x10: prio 44 core 0 stack 0x100000; entering nn::init::Start
+[hle] UNIMPL nnosGetDefaultUserExceptionStackForApplication
+[sm] GetServiceHandle lm
+[sm] GetServiceHandle apm
+[sm] GetServiceHandle appletOE
+[ipc] STUB am::ISelfController cmd 13 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 16 (in 12 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle aoc:u
+[sm] GetServiceHandle pctl
+[sm] GetServiceHandle pctl:s
+[sm] GetServiceHandle pctl:a
+[sm] GetServiceHandle pctl:r
+[gfx] Apple Paravirtual device (air64_v27)
+[gfx] wrap_heap: request 0xc1c00000, maxBufferLength 0xe0000000, recommendedMaxWorkingSetSize 0x12aaac000, available memory 0x0
+[gfx] guest heap 0x7d90000000+0xc1c00000 mapped for the GPU at 0x1500068000
+[sm] GetServiceHandle fsp-srv
+[sm] GetServiceHandle nvdrv
+[ipc] STUB nvdrv cmd 3 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 8 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 13 (in 16 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle vi:m
+[sm] GetServiceHandle vi:s
+[sm] GetServiceHandle vi:u
+[nvn] window origin mode 1
+[nvn] #0 STUB nvnCommandBufferSetMemoryCallback(0x7da4e654c0, 0x7d80a886b8, 0x8, 0x130087ec8)
+[nvn] #1 STUB nvnCommandBufferSetMemoryCallbackData(0x7da4e654c0, 0x7da4e654c0, 0x104e082a6, 0x104da9980)
+[nvn] #2 STUB nvnCommandBufferAddCommandMemory(0x7da4e654c0, 0x7da4e65580, 0x0, 0x200000)
+[nvn] #3 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[sm] GetServiceHandle hid
+[ipc] STUB hid cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB hid cmd 103 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB hid cmd 102 (in 20 bytes, bufs x1 a0 b0 c0)
+[sm] GetServiceHandle time:u
+[sm] GetServiceHandle acc:u0
+[ipc] STUB hid cmd 128 (in 20 bytes, bufs x0 a0 b0 c0)
+[set] language en-US (device: en-US)
+[sm] GetServiceHandle set
+[ipc] STUB am::ISelfController cmd 1 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 2 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 12 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 14 (in 12 bytes, bufs x0 a0 b0 c0)
+[nvn] #4 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x104b8afcc, 0x1)
+[nvn] #5 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a010f8, 0x104e082a6, 0x104da9980)
+[nvn] #6 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #7 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x104b8afcc, 0x1)
+[nvn] #8 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a01258, 0x104e082a6, 0x104da9980)
+[nvn] #9 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #10 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x104b8afcc, 0x1)
+[nvn] #11 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a013b8, 0x104e082a6, 0x104da9980)
+[nvn] #12 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[sm] GetServiceHandle mii:e
+[fs] system data 0100000000000802 unavailable: not in Firmware (needs keys for its key generation?) nor system/0100000000000802.nsp
+[abort]  in  at :0
+[abort] result 0x7d402 (module 2, description 1002)
+        at 0x104b990c4
+        at sdk+0x52250 nn::fs::detail::QueryMountDataCacheSize(unsigned long*, nn::ncm::DataId, nn::ncm::StorageId)+0x214
+        at sdk+0x52064 nn::fs::detail::QueryMountDataCacheSize(unsigned long*, nn::ncm::DataId, nn::ncm::StorageId)+0x28
+        at sdk+0x6c9f0 nn::fs::QueryMountSystemDataCacheSize(unsigned long*, nn::ncm::SystemDataId)+0x74
+        at main+0x8e1eac operator delete[](void*, std::nothrow_t const&)+0x2e6f9c
+        at main+0x811f88 operator delete[](void*, std::nothrow_t const&)+0x217078
+        at main+0x811d20 operator delete[](void*, std::nothrow_t const&)+0x216e10
+        at main+0x810258 operator delete[](void*, std::nothrow_t const&)+0x215348
+        at main+0x80fa80 operator delete[](void*, std::nothrow_t const&)+0x214b70
+        at main+0x4dd9c __nnDetailNintendoSdkRuntimeObjectFile+0x4dbec
+        at main+0x7e4050 operator delete[](void*, std::nothrow_t const&)+0x1e9140
+        at main+0x7e3c18 operator delete[](void*, std::nothrow_t const&)+0x1e8d08
+        at main+0x6033a8 operator delete[](void*, std::nothrow_t const&)+0x8498
+        at main+0x3d68ac __nnDetailNintendoSdkRuntimeObjectFile+0x3d66fc
+        at main+0x7e5b58 operator delete[](void*, std::nothrow_t const&)+0x1eac48
+        at main+0x7e675c operator delete[](void*, std::nothrow_t const&)+0x1eb84c
+        at main+0x6033a8 operator delete[](void*, std::nothrow_t const&)+0x8498
+        at main+0x7e6900 operator delete[](void*, std::nothrow_t const&)+0x1eb9f0
+        at main+0x7e37b4 operator delete[](void*, std::nothrow_t const&)+0x1e88a4
+        at main+0x7e67f0 operator delete[](void*, std::nothrow_t const&)+0x1eb8e0
+        at main+0x602104 operator delete[](void*, std::nothrow_t const&)+0x71f4
+        at main+0x60211c operator delete[](void*, std::nothrow_t const&)+0x720c
+        at main+0x60211c operator delete[](void*, std::nothrow_t const&)+0x720c
+        at main+0x6020bc operator delete[](void*, std::nothrow_t const&)+0x71ac
+        at main+0xa847d4 nnnifmGetCurrentProxySetting+0x2a6e4
+        at main+0xa84758 nnnifmGetCurrentProxySetting+0x2a668
+        at main+0x624378 operator delete[](void*, std::nothrow_t const&)+0x29468
+        at main+0x7e35b4 operator delete[](void*, std::nothrow_t const&)+0x1e86a4
+        at sdk+0x6edfc nn::init::Start(unsigned long, unsigned long, void (*)(), void (*)())+0x4c
+        at 0x104c7af08
+[fatal] guest SDK abort
+[nvn] host/stub functions called:
+[nvn]        1  host  nvnDeviceInitialize
+[nvn]      124  host  nvnDeviceGetInteger
+[nvn]       26  host  nvnDeviceGetTextureHandle
+[nvn]        1  host  nvnDeviceSetWindowOriginMode
+[nvn]        1  host  nvnQueueInitialize
+[nvn]        1  host  nvnQueueSubmitCommands
+[nvn]        1  host  nvnQueueFlush
+[nvn]        1  host  nvnQueueAcquireTexture
+[nvn]        1  host  nvnWindowInitialize
+[nvn]     2030  host  nvnProgramInitialize
+[nvn]     2030  host  nvnProgramSetShaders
+[nvn]       44  host  nvnMemoryPoolInitialize
+[nvn]        2  host  nvnMemoryPoolSetDebugLabel
+[nvn]       76  host  nvnMemoryPoolFlushMappedRange
+[nvn]        2  host  nvnMemoryPoolMapVirtual
+[nvn]        1  host  nvnTexturePoolInitialize
+[nvn]      146  host  nvnTexturePoolRegisterTexture
+[nvn]        1  host  nvnSamplerPoolInitialize
+[nvn]       34  host  nvnSamplerPoolRegisterSampler
+[nvn]      307  host  nvnBufferInitialize
+[nvn]      197  host  nvnBufferSetDebugLabel
+[nvn]     2570  host  nvnBufferMap
+[nvn]      464  host  nvnBufferGetAddress
+[nvn]       37  host  nvnTextureBuilderGetStorageSize
+[nvn]       38  host  nvnTextureBuilderGetStorageAlignment
+[nvn]      205  host  nvnTextureBuilderGetStorageClass
+[nvn]      149  host  nvnTextureInitialize
+[nvn]       28  host  nvnTextureWriteTexels
+[nvn]       28  host  nvnTextureFlushTexels
+[nvn]       29  host  nvnTextureCompare
+[nvn]      137  host  nvnSamplerInitialize
+[nvn]       26  host  nvnSamplerFinalize
+[nvn]       79  host  nvnSamplerSetDebugLabel
+[nvn]       24  host  nvnSamplerCompare
+[nvn]      117  host  nvnCommandBufferInitialize
+[nvn]      116  host  nvnCommandBufferFinalize
+[nvn]      117  STUB  nvnCommandBufferSetMemoryCallback
+[nvn]      117  STUB  nvnCommandBufferSetMemoryCallbackData
+[nvn]      117  STUB  nvnCommandBufferAddCommandMemory
+[nvn]      117  host  nvnCommandBufferAddControlMemory
+[nvn]      117  host  nvnCommandBufferGetCommandMemoryUsed
+[nvn]      117  host  nvnCommandBufferGetControlMemoryUsed
+[nvn]      117  host  nvnCommandBufferBeginRecording
+[nvn]      117  host  nvnCommandBufferEndRecording
+[nvn]       64  host  nvnCommandBufferBindPolygonState
+[nvn]       13  host  nvnCommandBufferBindUniformBuffer
+[nvn]       26  host  nvnCommandBufferDrawElementsInstanced
+[nvn]        2  host  nvnCommandBufferReportCounter
+[nvn]        1  host  nvnCommandBufferSetTexturePool
+[nvn]        1  host  nvnCommandBufferSetSamplerPool
+[nvn]        1  STUB  nvnCommandBufferSetShaderScratchMemory
+[nvn]        2  host  nvnSyncInitialize
+[nvn]        1  host  nvnQueueFenceSync
