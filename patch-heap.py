@@ -3798,3 +3798,71 @@ y = y.replace(old, """            if bc_n > 0 {
 """ + old)
 tx.write_text(y)
 print("patched", tx, "(BC texture cost in the memory report)")
+
+# ---------------------------------------------------------------------------
+# iPhone GPUs cannot read BC textures, so they were decoded to RGBA: a BC1
+# texture took 8x its Switch size (most of the RAM jump when a race loads).
+# BC1 is now rewritten block by block as ASTC 4x4, which iPhones read natively:
+# 1 byte per pixel instead of 4, same colors (within 2/255; blocks mixing
+# transparent pixels with several colors get their colors averaged).
+# NX_BC1_ASTC=0 goes back to RGBA.
+bcp = pathlib.Path("crates/nxhost/src/gfx/bc.rs")
+s_ = bcp.read_text()
+old = "pub fn format(nvn: u32) -> Option<MTLPixelFormat> {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, r"""pub fn astc_bc1() -> bool {
+    static S: LazyLock<bool> = LazyLock::new(|| {
+        let on = enabled()
+            && std::env::var("NX_BC1_ASTC").map_or(true, |v| v.trim() != "0")
+            && super::gpu().device.0.supportsFamily(objc2_metal::MTLGPUFamily::Apple2);
+        if on {
+            eprintln!("[gfx] BC1 textures stored as ASTC 4x4 (4x less memory than decoded)");
+        }
+        on
+    });
+    *S
+}
+
+/// Rows of the decoded data for an image `h` pixels high (block rows for ASTC).
+pub fn out_rows(k: Kind, h: usize) -> usize {
+    if k == Kind::Bc1 && astc_bc1() { h.div_ceil(4) } else { h }
+}
+
+fn bc1_to_astc(src: &[u8], row_bytes: usize, w: usize, h: usize, images: usize) -> (Vec<u8>, usize) {
+    static TRITS: LazyLock<[u8; 243]> = LazyLock::new(trit_table);
+    let (bw, bh) = (w.div_ceil(4), h.div_ceil(4));
+    let mut out = vec![0u8; bw * bh * 16 * images];
+    for img in 0..images {
+        for by in 0..bh {
+            for bx in 0..bw {
+                let o = (img * bh + by) * row_bytes + bx * 8;
+                let Some(b) = src.get(o..o + 8) else { continue };
+                let d = ((img * bh + by) * bw + bx) * 16;
+                out[d..d + 16].copy_from_slice(&bc1_block_astc(b, &TRITS));
+            }
+        }
+    }
+    (out, bw * 16)
+}
+
+""" + 'fn trit_table() -> [u8; 243] {\n    let mut t = [0u8; 243];\n    let mut seen = [false; 243];\n    for b in 0..256u32 {\n        let bit = |i: u32| (b >> i) & 1;\n        let bits = |hi: u32, lo: u32| (b >> lo) & ((1 << (hi - lo + 1)) - 1);\n        let (c, t4, t3);\n        if bits(4, 2) == 7 {\n            c = (bits(7, 5) << 2) | bits(1, 0);\n            t4 = 2;\n            t3 = 2;\n        } else {\n            c = bits(4, 0);\n            if bits(6, 5) == 3 {\n                t4 = 2;\n                t3 = bit(7);\n            } else {\n                t4 = bit(7);\n                t3 = bits(6, 5);\n            }\n        }\n        let cb = |i: u32| (c >> i) & 1;\n        let (t2, t1, t0);\n        if c & 3 == 3 {\n            t2 = 2;\n            t1 = cb(4);\n            t0 = (cb(3) << 1) | (cb(2) & !cb(3) & 1);\n        } else if (c >> 2) & 3 == 3 {\n            t2 = 2;\n            t1 = 2;\n            t0 = c & 3;\n        } else {\n            t2 = cb(4);\n            t1 = (c >> 2) & 3;\n            t0 = (cb(1) << 1) | (cb(0) & !cb(1) & 1);\n        }\n        let i = (t0 + 3 * t1 + 9 * t2 + 27 * t3 + 81 * t4) as usize;\n        if !seen[i] {\n            seen[i] = true;\n            t[i] = b as u8;\n        }\n    }\n    t\n}\n\n/// One BC1 block as one ASTC 4x4 block: the same colors (within 2/255), except\n/// blocks mixing transparent pixels with several colors (their colors are averaged).\npub fn bc1_block_astc(b: &[u8], trits: &[u8; 243]) -> [u8; 16] {\n    let c0 = u16::from_le_bytes([b[0], b[1]]);\n    let c1 = u16::from_le_bytes([b[2], b[3]]);\n    let idx = u32::from_le_bytes([b[4], b[5], b[6], b[7]]);\n    let x = |c: u16| -> [u32; 3] {\n        let (r, g, bl) = ((c >> 11) as u32 & 31, (c >> 5) as u32 & 63, c as u32 & 31);\n        [r << 3 | r >> 2, g << 2 | g >> 4, bl << 3 | bl >> 2]\n    };\n    let (mut e0, mut e1) = (x(c0), x(c1));\n    let ix = |i: usize| (idx >> (2 * i)) & 3;\n    let mut bits: u128 = 0;\n    let mut ws: u128 = 0;\n    let put = |bits: &mut u128, pos: u32, v: u32, n: u32| *bits |= ((v & ((1u32 << n) - 1)) as u128) << pos;\n    let transparent = c0 <= c1 && (0..16).any(|i| ix(i) == 3);\n    if transparent {\n        // RGBA: transparent black to the (average) opaque color\n        let pal = [e0, e1, [(e0[0] + e1[0]) / 2, (e0[1] + e1[1]) / 2, (e0[2] + e1[2]) / 2]];\n        let (mut sum, mut n) = ([0u32; 3], 0u32);\n        for i in 0..16 {\n            let k = ix(i) as usize;\n            if k != 3 {\n                for c in 0..3 {\n                    sum[c] += pal[k][c];\n                }\n                n += 1;\n            }\n        }\n        let m = if n == 0 { [0; 3] } else { sum.map(|s| (s + n / 2) / n) };\n        put(&mut bits, 0, 66, 11);\n        put(&mut bits, 13, 12, 4);\n        for (i, v) in [0, m[0], 0, m[1], 0, m[2], 0, 255].into_iter().enumerate() {\n            put(&mut bits, 17 + 8 * i as u32, v, 8);\n        }\n        for i in 0..16 {\n            put(&mut ws, 2 * i as u32, if ix(i) == 3 { 0 } else { 3 }, 2);\n        }\n        return (bits | ws.reverse_bits()).to_le_bytes();\n    }\n    let four = c0 > c1;\n    let mut w = [0u32; 16];\n    for (i, w) in w.iter_mut().enumerate() {\n        *w = if four { [0, 3, 1, 2][ix(i) as usize] } else { [0, 2, 1, 0][ix(i) as usize] };\n    }\n    let top = if four { 3 } else { 2 };\n    if e1.iter().sum::<u32>() < e0.iter().sum::<u32>() {\n        std::mem::swap(&mut e0, &mut e1);\n        w = w.map(|v| top - v);\n    }\n    put(&mut bits, 0, if four { 66 } else { 81 }, 11);\n    put(&mut bits, 13, 8, 4);\n    for (i, v) in [e0[0], e1[0], e0[1], e1[1], e0[2], e1[2]].into_iter().enumerate() {\n        put(&mut bits, 17 + 8 * i as u32, v, 8);\n    }\n    if four {\n        for i in 0..16 {\n            put(&mut ws, 2 * i as u32, w[i], 2);\n        }\n    } else {\n        for g in 0..4 {\n            let t = |k: usize| w.get(g * 5 + k).copied().unwrap_or(0) as usize;\n            let v = trits[t(0) + 3 * t(1) + 9 * t(2) + 27 * t(3) + 81 * t(4)] as u32;\n            put(&mut ws, 8 * g as u32, v, 8);\n        }\n        ws &= (1u128 << 26) - 1;\n    }\n    (bits | ws.reverse_bits()).to_le_bytes()\n}\n' + "\n" + old)
+old = "        _ if srgb => P::RGBA8Unorm_sRGB,\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "        Kind::Bc1 if astc_bc1() => if srgb { P::ASTC_4x4_sRGB } else { P::ASTC_4x4_LDR },\n" + old)
+old = "    let px = pixel_bytes(k);\n    let mut out = vec![0u8; w * h * px * images];\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    if k == Kind::Bc1 && astc_bc1() {\n        return bc1_to_astc(src, row_bytes, w, h, images);\n    }\n" + old)
+bcp.write_text(s_)
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        (p.offset, p.row, p.image) = (offset, bpr, bpr * h as usize);\n"
+assert y.count(old) == 1
+y = y.replace(old, "        (p.offset, p.row, p.image) = (offset, bpr, bpr * gfx::bc::out_rows(k, h as usize));\n")
+tx.write_text(y)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = "            Some(px) => (px.as_ptr(), px.len() / d.max(1) / h, px.len() / d.max(1)),\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "            Some(px) => (px.as_ptr(), px.len() / d.max(1) / gfx::bc::soft(key.format).map_or(h, |k| gfx::bc::out_rows(k, h)), px.len() / d.max(1)),\n")
+dm.write_text(s_)
+print("patched", bcp, "(BC1 stored as ASTC 4x4)")
