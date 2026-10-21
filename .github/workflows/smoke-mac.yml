@@ -26,6 +26,9 @@ on:
       monkey:
         description: "1 = random play (tools/monkey.py, a new seed each run) instead of A every second"
         default: "0"
+      vs96:
+        description: "1 = VS race, all tracks in order (tools/vs96.py)"
+        default: "0"
 
 permissions:
   contents: write
@@ -141,6 +144,7 @@ jobs:
           SCRIPT: ${{ inputs.script }}
           RECORD: ${{ inputs.record || '0' }}
           MONKEY: ${{ inputs.monkey || '0' }}
+          VS96: ${{ inputs.vs96 || '0' }}
         run: |
           mkdir -p out
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
@@ -151,6 +155,7 @@ jobs:
             rm -rf work/frame work/save
             [ "$RECORD" = 1 ] && rm -f work/pipelines.tsv
             [ "$MONKEY" = 1 ] && INPUT="$(python3 tools/monkey.py "$n$GITHUB_RUN_ID" "$SECS")"
+            [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS")"
             mkdir -p work/save
             if [ -d smoke-save ]; then
               if ls -d smoke-save/type* >/dev/null 2>&1; then cp -R smoke-save/. work/save/; else mkdir -p work/save/type1-index0 && cp -R smoke-save/. work/save/type1-index0/; fi
@@ -175,6 +180,12 @@ jobs:
           EOF
             tail -3 "$L"
           done
+
+      - name: Keep the pipelines recorded so far (also when the job is stopped)
+        if: always()
+        run: |
+          mkdir -p out
+          [ -f work/pipelines.tsv ] && cp work/pipelines.tsv out/pipelines-final.tsv && wc -l out/pipelines-final.tsv || true
 
       - name: Remove game files
         if: always()

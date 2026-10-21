@@ -3259,3 +3259,81 @@ assert v.count(old) == 1
 v = v.replace(old, "    crate::kernel::blocking(|| ready.recv_timeout(std::time::Duration::from_secs(5))).ok()?.then_some(Worker { frames, recycle })\n")
 vd.write_text(v)
 print("patched", vd, "(video frames: never hold the core, never wait on a stalled decoder)")
+
+# ---------------------------------------------------------------------------
+# Memory while a race loads: the low-memory trim runs every 30 frames, but a
+# race loads its textures in one or two very long frames (2+ s), so memory went
+# from 1.9 to 2.95 GB before any trim and iOS killed the app. Now every 8 new
+# textures the remaining memory is checked; under NX_TRIM_EMERGENCY_MB
+# (default 300) the textures not used in the current or previous frame (the
+# menu's) are dropped at once. They come back if needed.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        let tex = self.create(b, key, format, render_target)?;\n"
+assert y.count(old) == 1
+y = y.replace(old, "        self.emergency_trim();\n" + old)
+old = "    pub fn trim(&mut self) {\n"
+assert y.count(old) == 1
+y = y.replace(old, """    fn emergency_trim(&mut self) {
+        use std::sync::atomic::{AtomicU32, Ordering::Relaxed};
+        static N: AtomicU32 = AtomicU32::new(0);
+        static LIMIT: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_TRIM_EMERGENCY_MB").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(300) << 20);
+        if N.fetch_add(1, Relaxed) % 8 != 0 || *LIMIT == 0 {
+            return;
+        }
+        let left = gfx::available_memory();
+        if left == 0 || left > *LIMIT {
+            return;
+        }
+        let frame = self.frame;
+        let old: std::collections::HashSet<TexKey> = self
+            .uploaded
+            .keys()
+            .filter(|k| self.last_used.get(*k).is_none_or(|&f| f + 1 < frame))
+            .copied()
+            .collect();
+        if old.is_empty() {
+            return;
+        }
+        self.evict(&|k| old.contains(k));
+        self.last_used.retain(|k, _| !old.contains(k));
+        eprintln!("[mem] memory almost full while loading ({} MB left): dropped {} textures not used right now", left >> 20, old.len());
+    }
+
+""" + old)
+tx.write_text(y)
+print("patched", tx, "(emergency trim while loading)")
+
+# Launcher: "Reset settings to default" (keeps the Online server address)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+old = "    func save() throws {\n"
+assert w.count(old) == 1
+w = w.replace(old, """    func resetToDefaults() {
+        network = "off"; prewarm = true; rumble = true; backgroundCompile = true; motion = false
+        handheld = true; phonePads = false; showFps = true; mixAudio = true; frameskip = true
+        textureQuality = "ultralow"; unlockedSave = false; asyncTextures = false; asyncGfx = false
+        showMemory = true; fullPrewarm = true; autoFullPrewarm = false; quiet = false; precompiled = false
+        gameVolume = 1.0
+    }
+
+""" + old)
+old = """                    Button("Clear the shader cache", role: .destructive) { confirmClear = true }
+"""
+assert w.count(old) == 1
+w = w.replace(old, old + """                    Button("Reset settings to default") { confirmReset = true }
+""")
+old = "    @State private var confirmClear = false\n"
+assert w.count(old) == 1
+w = w.replace(old, old + "    @State private var confirmReset = false\n")
+old = """                .confirmationDialog("Clear the shader cache? The next start will be slow while everything compiles again.", isPresented: $confirmClear, titleVisibility: .visible) {
+                    Button("Clear", role: .destructive) { toolMessage = clearShaderCache() }
+                }
+"""
+assert w.count(old) == 1
+w = w.replace(old, old + """                .confirmationDialog("Put every setting back to its default?", isPresented: $confirmReset, titleVisibility: .visible) {
+                    Button("Reset", role: .destructive) { s.resetToDefaults(); toolMessage = "Settings reset to default." }
+                }
+""")
+sw.write_text(w)
+print("patched", sw, "(reset settings to default)")
