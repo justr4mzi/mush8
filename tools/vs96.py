@@ -15,6 +15,9 @@ variant = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 # (a second session starts where the first one stopped; "in order" goes on from the chosen cup)
 # third argument: keys on the cup screen before choosing ("DOWN+RIGHT+RIGHT", or a number of RIGHT presses)
 cup_arg = sys.argv[3] if len(sys.argv) > 3 else ""
+# fourth argument "random": courses in random order instead of in order (a second session
+# then also reaches the later tracks; the order "in order" always starts at the first track)
+random_courses = len(sys.argv) > 4 and sys.argv[4] == "random"
 cup_keys = ["RIGHT"] * int(cup_arg) if cup_arg.isdigit() else [k for k in cup_arg.split("+") if k]
 SLOW, FAST = 30.0 * (1 + 0.5 * variant), 4.0 + 3.0 * variant
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
@@ -28,7 +31,8 @@ seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"),
         (8.0, "A"), (8.0, "A"),          # tires -> glider -> OK (seen on the Mac: 3 A on this screen)
         (SLOW, "RIGHT"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"),
-        (FAST, "RIGHT"), (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
+        (FAST, "RIGHT"), *([(FAST, "RIGHT")] if random_courses else []),   # courses: in order (random: one more)
+        (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
         *([(SLOW if i == 0 else FAST, k) for i, k in enumerate(cup_keys)] + [(FAST, "A")] if cup_keys else [(SLOW, "A")]),
         (FAST, "A"), (FAST, "A")])
 ev, t = [], 0.0

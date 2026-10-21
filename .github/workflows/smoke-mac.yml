@@ -29,6 +29,9 @@ on:
       vs96:
         description: "1 = VS race, all tracks in order (tools/vs96.py)"
         default: "0"
+      courses:
+        description: "VS run: inorder or random"
+        default: "inorder"
       cups_right:
         description: "VS run: cups already done before this session (start at the next cup, see tools/cupkeys.py)"
         default: "0"
@@ -175,6 +178,7 @@ jobs:
           MONKEY: ${{ inputs.monkey || '0' }}
           VS96: ${{ inputs.vs96 || '0' }}
           CUPS_RIGHT: ${{ inputs.cups_right || '0' }}
+          COURSES: ${{ inputs.courses || 'inorder' }}
           PROBE: ${{ inputs.probe }}
           SAMPLE_AT: ${{ inputs.sample_at }}
           GH_TOKEN: ${{ github.token }}
@@ -192,7 +196,7 @@ jobs:
             rm -rf work/frame work/save
             [ "$RECORD" = 1 ] && rm -f work/pipelines.tsv
             [ "$MONKEY" = 1 ] && INPUT="$(python3 tools/monkey.py "$n$GITHUB_RUN_ID" "$SECS")"
-            [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS")"
+            [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS" 0 "" "$COURSES")"
             [ -n "$PROBE" ] && INPUT="$(python3 tools/probe.py "$PROBE")"
             mkdir -p work/save
             if [ -d smoke-save ]; then
@@ -212,7 +216,7 @@ jobs:
                 # starting at a later cup does not work ("in order" has no cup screen: the extra
                 # keys landed on the start-race prompt and the menus never reached a race)
                 CUPS=""
-                python3 tools/vs96.py "$SECS" "$VARIANT" "$CUPS" > work/autoinput.txt && echo "=== script variant $VARIANT, $DONE tracks done, cup keys: $CUPS" >> "$L"
+                python3 tools/vs96.py "$SECS" "$VARIANT" "$CUPS" "$COURSES" > work/autoinput.txt && echo "=== script variant $VARIANT, $DONE tracks done, cup keys: $CUPS" >> "$L"
               fi
               NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY="$DUMP_EVERY" NX_PIPELINE_LIST="$LIST" \
                 NX_AUTOINPUT="@$PWD/work/autoinput.txt" NX_DUMP_AT="$DUMPS" ./target/release/nxhost >> "$L" 2>&1 &
@@ -227,9 +231,11 @@ jobs:
               # VS run: a new track every ~4 min when the rules are right ("in order"); the log
               # lists each file once, so with the wrong rules (same track again) nothing new
               # comes: no new track for 10 min after 15 min -> next, slower menu script variant
-              if [ "$VS96" = 1 ] && [ $since -gt 900 ]; then
+              # (random courses repeat tracks, which the log lists once: 30 min there)
+              local quiet=600; [ "$COURSES" = random ] && quiet=1800
+              if [ "$VS96" = 1 ] && [ $since -gt $(( quiet + 300 )) ]; then
                 local last; last=$(printf '%s\n' "$part" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | grep -v Gu_Menu | tail -1 | awk '{print int($2)}')
-                if [ -z "$last" ] || [ $(( since - last )) -gt 600 ]; then
+                if [ -z "$last" ] || [ $(( since - last )) -gt $quiet ]; then
                   VARIANT=$((VARIANT+1)); echo "=== no new track for 10 min: menu script variant $VARIANT" >> "$L"; return 0
                 fi
               fi
