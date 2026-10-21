@@ -1,0 +1,80 @@
+[romfs] 0.7 s /Audio/Static/MenuDriver_BbPeach.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_BbRosetta.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_CatPeach.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DK.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Daisy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr01.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr02.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr03.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr04.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr05.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr06.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr07.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_DrvChr08.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_GoldMario.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Heyho.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_HoneKoopa.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Iggy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Jugem.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Karon.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_KingTeresa.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Kinopico.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Kinopio.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Koopa.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_KoopaJr.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Larry.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Lemmy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Link.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_LinkBotw.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Ludwig.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Luigi.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mario.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_MetalMario.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_MetalPeach.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_F01.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_F02.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_F03.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_F04.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_M01.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_M02.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_M03.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Mii_M04.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Morton.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Nokonoko.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Peach.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Rosetta.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Roy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Shizue.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_SplatoonBoy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_SplatoonGirl.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_TanukiMario.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Waluigi.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Wario.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Wendy.barslist
+[romfs] 0.7 s /Audio/Static/MenuDriver_Yoshi.barslist
+[romfs] 0.7 s /Audio/Static/StaticKart.bars
+[romfs] 0.7 s /Audio/Static/StaticKart.barslist
+[romfs] 0.7 s /Audio/Static/StaticSysMenu.bars
+[romfs] 0.7 s /Audio/Static/StaticSysMenu.barslist
+[romfs] 0.7 s /Audio/Static/StaticSysRace.bars
+[romfs] 0.7 s /Audio/Static/StaticSysRace.barslist
+[romfs] 0.8 s /UI/cmn/filter.sarc
+[romfs] 0.8 s /UI/cmn/common.sarc
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[romfs] 0.8 s /UI/USen/font.sarc
+[romfs] 0.8 s /UI/USen/message.sarc
+[romfs] 0.8 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x104550ff8, 0x7dc29672b8)
+[gfx] window crop Some([0, 0, 1280, 720])
+[nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x104550ff8, 0x1)
+[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x104550ff8, 0x7dc29672b8)
+[romfs] 0.9 s /Data/contentskey.dat
+[romfs] add-on content: 2 files
+[romfs] 0.9 s dlc:/version.txt
+[romfs] 0.9 s dlc:/contents.dat
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+[ipc] STUB prepo:u cmd 10101=== the game stopped (attempt 9): starting it again
