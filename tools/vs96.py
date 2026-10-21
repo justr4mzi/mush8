@@ -13,7 +13,9 @@ secs = int(sys.argv[1])
 variant = int(sys.argv[2]) if len(sys.argv) > 2 else 0
 # third argument: RIGHT presses on the cup screen before choosing, to start further in the list
 # (a second session starts where the first one stopped; "in order" goes on from the chosen cup)
-cups_right = int(sys.argv[3]) if len(sys.argv) > 3 else 0
+# third argument: keys on the cup screen before choosing ("DOWN+RIGHT+RIGHT", or a number of RIGHT presses)
+cup_arg = sys.argv[3] if len(sys.argv) > 3 else ""
+cup_keys = ["RIGHT"] * int(cup_arg) if cup_arg.isdigit() else [k for k in cup_arg.split("+") if k]
 SLOW, FAST = 30.0 * (1 + 0.5 * variant), 4.0 + 3.0 * variant
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
 seq = ([(45, "A"),                       # title (accepted later on the Mac)
@@ -27,7 +29,7 @@ seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (8.0, "A"), (8.0, "A"),          # tires -> glider -> OK (seen on the Mac: 3 A on this screen)
         (SLOW, "RIGHT"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"),
         (FAST, "RIGHT"), (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
-        *([(SLOW, "RIGHT")] + [(FAST, "RIGHT")] * (cups_right - 1) + [(FAST, "A")] if cups_right else [(SLOW, "A")]),
+        *([(SLOW if i == 0 else FAST, k) for i, k in enumerate(cup_keys)] + [(FAST, "A")] if cup_keys else [(SLOW, "A")]),
         (FAST, "A"), (FAST, "A")])
 ev, t = [], 0.0
 def press(t, b):
