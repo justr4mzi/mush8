@@ -32,6 +32,9 @@ on:
       probe:
         description: "buttons for tools/probe.py after the character screen (empty = off)"
         default: ""
+      soft_bc:
+        description: "1 = decode BC textures on the CPU like an iPhone (memory test)"
+        default: "0"
 
 permissions:
   contents: write
@@ -187,7 +190,7 @@ jobs:
             LIST=data/pipelines.tsv; [ "$RECORD" = 1 ] && LIST=/nonexistent
             mkdir -p work && printf '%s' "$INPUT" > work/autoinput.txt; echo "input script: $(wc -c < work/autoinput.txt) bytes"
             echo "=== run $n: NX_ASYNC_GFX=$m ($SECS s)"
-            NX_ASYNC_GFX=$m NX_SOFT_BC=1 NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY=60 NX_PIPELINE_LIST="$LIST" \
+            NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY=60 NX_PIPELINE_LIST="$LIST" \
               NX_AUTOINPUT="@$PWD/work/autoinput.txt" NX_DUMP_AT="$DUMPS" ./target/release/nxhost > "$L" 2>&1 &
             pid=$!
             # every 10 min: a short progress file on the ci-logs branch (tracks loaded, fps, end of the log)
