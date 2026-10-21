@@ -1,51 +1,51 @@
-run 1, 13:02 UTC, 284 s
+run 1, 13:03 UTC, 355 s
 tracks:
 7.4s /Course/Gu_Menu
 last game files read:
-37.3s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
-76.8s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
-143.2s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
-143.2s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
-143.2s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
-143.2s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
-143.2s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
-143.2s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-233.7s /Kart/Wing/Wing_Jgm.szs
-237.6s /Kart/Wing/Wing_Wlo.szs
-241.6s /Kart/Wing/Wing_Zng.szs
-246.0s /Kart/Wing/Wing_Umb.szs
-246.0s /Kart/WingTex/Wing_Umb_A_Alb.szs
-249.5s /Kart/Wing/Wing_Prc.szs
-257.7s /Kart/Wing/Wing_Prf.szs
-game fps (last minute): 31.0
-[hang] thread 0xd203 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24078c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0xe96ac _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0xe5b40 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0xadf10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0xbbe7c _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0xb162c _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x245788 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[mem] 274 s: app uses 2006 MB, iOS still allows 0 MB (lowest so far 0 MB)
+306.7s /Kart/Arm/ArmK_Ofr.szs
+307.5s /Driver/BbDaisy.szs
+307.5s /Kart/Body/BodyK_Ten.szs
+307.5s /Kart/BodyTex/BodyK_Ten_D_Alb.szs
+307.5s /Kart/WingTex/Wing_Std_DsyB_Alb.szs
+308.4s /Kart/BodyTex/BodyB_Std_Igy_Alb.szs
+308.4s /Kart/BodyTex/BodyB_Std_Igy_Spm.szs
+309.2s /Driver/Kinopio.szs
+309.2s /Kart/Body/BodyK_Skl.szs
+309.2s /Kart/BodyTex/BodyK_Skl_E_Alb.szs
+310.1s /Driver/BbMario.szs
+310.2s /Kart/BodyTex/BodyK_Ten_A_Alb.szs
+310.2s /Kart/WingTex/Wing_Std_MroB_Alb.szs
+311.0s /Kart/Body/BodyK_Shp.szs
+311.0s /Kart/BodyTex/BodyK_Shp_A_Alb.szs
+311.0s /Kart/Arm/ArmK_Wod.szs
+311.9s /Driver/Jugem.szs
+312.0s /Kart/Body/BodyB_Kid.szs
+312.9s /Driver/Wendy.szs
+312.9s /Kart/Body/BodyK_Snk.szs
+312.9s /Kart/BodyTex/BodyK_Snk_D_Alb.szs
+312.9s /Kart/BodyTex/BodyK_Snk_D_Spm.szs
+313.8s /Kart/Body/BodyV_Spl.szs
+313.8s /Kart/BodyTex/BodyV_Spl_Spb00_Alb.szs
+313.8s /Kart/BodyTex/BodyV_Spl_Spb00_Spm.szs
+game fps (last minute): 32.6
+[mem] detail: game RAM 3110 MB, Metal 3308 MB | resident 1773 MB, internal 1695 MB, external 54 MB, compressed 189 MB, purgeable 0 MB, reusable 23 MB, footprint 2014 MB
+[mem] textures: 36 loaded (2 MB), 533 render targets (99 MB), 0 pipelines kept ready, 4 purgeable, 0 taken back by iOS
+[mem] 351 s: app uses 2014 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3301 MB | resident 1770 MB, internal 1692 MB, external 54 MB, compressed 190 MB, purgeable 0 MB, reusable 22 MB, footprint 2006 MB
-[mem] textures: 36 loaded (2 MB), 446 render targets (92 MB), 0 pipelines kept ready, 3 purgeable, 0 taken back by iOS
+[mem] detail: game RAM 3110 MB, Metal 3308 MB | resident 1774 MB, internal 1695 MB, external 54 MB, compressed 189 MB, purgeable 0 MB, reusable 24 MB, footprint 2014 MB
 --- end of the log
-[romfs] 249.5 s /Kart/Wing/Wing_Prc.szs
-[mem] textures: 36 loaded (2 MB), 441 render targets (91 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[gfx] screen at 250s dumped
-[gfx] device pipeline archive: 125 pipelines saved this run (9 files, 0 left out)
-[romfs] 257.7 s /Kart/Wing/Wing_Prf.szs
-[mem] 263 s: app uses 2006 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 310s dumped
+[mem] 329 s: app uses 2014 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3301 MB | resident 1769 MB, internal 1692 MB, external 54 MB, compressed 190 MB, purgeable 0 MB, reusable 22 MB, footprint 2006 MB
-[gfx] device pipeline archive: 128 pipelines saved this run (10 files, 0 left out)
-[gfx] screen at 260s dumped
-[mem] 274 s: app uses 2006 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3110 MB, Metal 3308 MB | resident 1773 MB, internal 1695 MB, external 54 MB, compressed 189 MB, purgeable 0 MB, reusable 23 MB, footprint 2014 MB
+[gfx] screen at 320s dumped
+[mem] textures: 36 loaded (2 MB), 532 render targets (99 MB), 0 pipelines kept ready, 4 purgeable, 0 taken back by iOS
+[gfx] screen at 330s dumped
+[mem] 340 s: app uses 2014 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3301 MB | resident 1770 MB, internal 1692 MB, external 54 MB, compressed 190 MB, purgeable 0 MB, reusable 22 MB, footprint 2006 MB
-[mem] textures: 36 loaded (2 MB), 446 render targets (92 MB), 0 pipelines kept ready, 3 purgeable, 0 taken back by iOS
-[gfx] screen at 270s dumped
+[mem] detail: game RAM 3110 MB, Metal 3308 MB | resident 1773 MB, internal 1695 MB, external 54 MB, compressed 189 MB, purgeable 0 MB, reusable 23 MB, footprint 2014 MB
+[gfx] screen at 340s dumped
+[mem] textures: 36 loaded (2 MB), 533 render targets (99 MB), 0 pipelines kept ready, 4 purgeable, 0 taken back by iOS
+[mem] 351 s: app uses 2014 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3110 MB, Metal 3308 MB | resident 1774 MB, internal 1695 MB, external 54 MB, compressed 189 MB, purgeable 0 MB, reusable 24 MB, footprint 2014 MB
