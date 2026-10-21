@@ -1,51 +1,52 @@
-run 1, 16:02 UTC, 351 s, game attempt 1
+run 1, 16:04 UTC, 423 s, game attempt 1
 tracks:
 6.7s /Course/Gu_Menu
+366.6s /Course/Gu_FirstCircuit
 last game files read:
-327.5s /Kart/BodyTex/BodyB_Std_KopJ_Alb.szs
-327.5s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
-328.5s /Kart/BodyTex/BodyK_Std_Dch04_Alb.szs
-328.5s /Kart/WingTex/Wing_Std_Dch04_Alb.szs
-329.5s /Kart/BodyTex/BodyB_Std_Igy_Alb.szs
-329.5s /Kart/BodyTex/BodyB_Std_Igy_Spm.szs
-330.5s /Driver/DrvChr05.szs
-330.6s /Kart/Body/BodyK_Skl.szs
-330.6s /Kart/BodyTex/BodyK_Skl_Dch05_Alb.szs
-330.6s /Kart/Arm/ArmK_Rng.szs
-331.4s /Driver/DrvChr02.szs
-331.4s /Kart/BodyTex/BodyV_Atv_Dch02_Alb.szs
-331.4s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
-332.4s /Driver/Nokonoko.szs
-332.4s /Kart/BodyTex/BodyK_Std_Nok_Alb.szs
-332.4s /Kart/WingTex/Wing_Std_Nok_Alb.szs
-333.3s /Driver/DrvChr01.szs
-333.3s /DriverTex/DrvChr01_Tex00.szs
-333.3s /Kart/BodyTex/BodyB_Std_Dch0100_Alb.szs
-333.3s /Kart/WingTex/Wing_Std_Dch0100_Alb.szs
-334.2s /Driver/MetalPeach.szs
-334.2s /Kart/BodyTex/BodyK_Std_PchG_Alb.szs
-334.2s /Kart/BodyTex/BodyK_Std_PchG_Spm.szs
-334.2s /Kart/WingTex/Wing_Std_PchG_Alb.szs
-334.2s /Kart/WingTex/Wing_Std_PchG_Spm.szs
-game fps (last minute): 32.5
-[mem] 342 s: app uses 2013 MB, iOS still allows 0 MB (lowest so far 0 MB)
+367.7s /Audio/Driver/Driver_Luigi.bars
+367.7s /Audio/Body/Body_B_Std.bars
+367.7s /Audio/Driver/Driver_KoopaJr.bars
+367.7s /Audio/Driver/Driver_DrvChr04.bars
+367.7s /Audio/Driver/Driver_Iggy.bars
+367.7s /Audio/Driver/Driver_DrvChr05.bars
+367.7s /Audio/Body/Body_K_Skl.bars
+367.7s /Audio/Driver/Driver_DrvChr02.bars
+367.7s /Audio/Body/Body_V_Atv.bars
+367.7s /Audio/Driver/Driver_Nokonoko.bars
+367.8s /Audio/Driver/Driver_DrvChr01.bars
+367.8s /Audio/Driver/Driver_MetalPeach.bars
+367.8s /Audio/Driver/Driver_BbDaisy.bars
+367.8s /Audio/Body/Body_V_Hnc.bars
+367.8s /Audio/Driver/Driver_Morton.bars
+367.8s /Audio/Body/Body_K_Kpc.bars
+367.8s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
+367.8s /UI/USen/race/tc_RT_Go_USen^h.bntx
+367.8s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
+367.8s /UI/USen/race/tc_RT_Finish_USen^h.bntx
+367.8s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
+367.8s /UI/cmn/race/ym_ModeIconBGVs_00^s.bntx
+367.8s /UI/cmn/race/ym_ModeIconVs_00^l.bntx
+392.0s /Audio/Resource/Stream/BGM_COURSE_IN.bfstm
+403.2s /Audio/Resource/Stream/BGM_START_GRID_VS.bfstm
+game fps (last minute): 29.7
+[mem] textures: 30 loaded (0 MB), 1377 render targets (385 MB), 0 pipelines kept ready, 1 purgeable, 3 taken back by iOS
+[mem] 419 s: app uses 2266 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3109 MB, Metal 3304 MB | resident 1603 MB, internal 1548 MB, external 24 MB, compressed 339 MB, purgeable 0 MB, reusable 29 MB, footprint 2013 MB
-[mem] Metal besides the game RAM: 204 MB = textures 106 MB (of which 0 MB outside the main list), draw scratch 80 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
-[mem] textures: 35 loaded (2 MB), 544 render targets (128 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
+[mem] detail: game RAM 3112 MB, Metal 3583 MB | resident 1873 MB, internal 1816 MB, external 33 MB, compressed 96 MB, purgeable 0 MB, reusable 23 MB, footprint 2266 MB
+[mem] Metal besides the game RAM: 483 MB = textures 356 MB (of which 0 MB outside the main list), draw scratch 96 MB, block copies 1 MB, uploads in flight 0 MB, other 30 MB
 --- end of the log
-[romfs] 333.3 s /DriverTex/DrvChr01_Tex00.szs
-[romfs] 333.3 s /Kart/BodyTex/BodyB_Std_Dch0100_Alb.szs
-[romfs] 333.3 s /Kart/WingTex/Wing_Std_Dch0100_Alb.szs
-[romfs] 334.2 s /Driver/MetalPeach.szs
-[romfs] 334.2 s /Kart/BodyTex/BodyK_Std_PchG_Alb.szs
-[romfs] 334.2 s /Kart/BodyTex/BodyK_Std_PchG_Spm.szs
-[romfs] 334.2 s /Kart/WingTex/Wing_Std_PchG_Alb.szs
-[romfs] 334.2 s /Kart/WingTex/Wing_Std_PchG_Spm.szs
-[gfx] screen at 330s dumped
-[mem] 342 s: app uses 2013 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 408 s: app uses 2249 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3109 MB, Metal 3304 MB | resident 1603 MB, internal 1548 MB, external 24 MB, compressed 339 MB, purgeable 0 MB, reusable 29 MB, footprint 2013 MB
-[mem] Metal besides the game RAM: 204 MB = textures 106 MB (of which 0 MB outside the main list), draw scratch 80 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
-[mem] textures: 35 loaded (2 MB), 544 render targets (128 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
-[gfx] screen at 340s dumped
+[mem] detail: game RAM 3112 MB, Metal 3567 MB | resident 1861 MB, internal 1808 MB, external 32 MB, compressed 96 MB, purgeable 0 MB, reusable 20 MB, footprint 2249 MB
+[mem] Metal besides the game RAM: 467 MB = textures 107 MB (of which 0 MB outside the main list), draw scratch 96 MB, block copies 1 MB, uploads in flight 0 MB, other 263 MB
+[gfx] device pipeline archive: 252 pipelines saved this run (16 files, 0 left out)
+[gfx] screen at 400s dumped
+[gfx] device pipeline archive: 284 pipelines saved this run (17 files, 0 left out)
+[gfx] device pipeline archive: 316 pipelines saved this run (18 files, 0 left out)
+[mem] textures: 30 loaded (0 MB), 1377 render targets (385 MB), 0 pipelines kept ready, 1 purgeable, 3 taken back by iOS
+[gfx] device pipeline archive: 348 pipelines saved this run (19 files, 0 left out)
+[mem] 419 s: app uses 2266 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3112 MB, Metal 3583 MB | resident 1873 MB, internal 1816 MB, external 33 MB, compressed 96 MB, purgeable 0 MB, reusable 23 MB, footprint 2266 MB
+[mem] Metal besides the game RAM: 483 MB = textures 356 MB (of which 0 MB outside the main list), draw scratch 96 MB, block copies 1 MB, uploads in flight 0 MB, other 30 MB
+[gfx] screen at 410s dumped
