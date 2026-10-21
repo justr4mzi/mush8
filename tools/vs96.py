@@ -14,7 +14,9 @@ seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (FAST, "DOWN"), (FAST, "DOWN"), (SLOW, "A"),   # VS race
         (SLOW, "A"),                     # 150cc
         (FAST, "A"),                     # character
-        (FAST, "PLUS"), (FAST, "L"), (FAST, "R"), (FAST, "PLUS"), (FAST, "A"),  # vehicle + assists
+        # vehicle screen (needs ~20 s to be ready on the Mac): + opens the panel,
+        # L = smart steering, R = auto accelerate (seen toggling on the probe), + closes
+        (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"), (8.0, "A"),
         (SLOW, "RIGHT"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"),
         (FAST, "RIGHT"), (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
         (SLOW, "A"), (FAST, "A"), (FAST, "A")])
