@@ -190,7 +190,8 @@ jobs:
                 echo "--- end of the log"; grep -vE "^\[(fps|prof|hang)\]" "$L" | tail -15 | cut -c1-200
                 [ -f work/pipelines.tsv ] && echo "new pipelines so far: $(wc -l < work/pipelines.tsv)"
               } > "out/live-$n.txt" 2>/dev/null
-              bash .github/publish-logs.sh smoke > /dev/null 2>&1 || true
+              # only the small progress file goes out now, the full log at the end
+              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out"; cp "out/live-$n.txt" "$D/out/"; cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
             }
             T0=$(date +%s)
             for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; [ $((i % 600)) = 0 ] && live; done
