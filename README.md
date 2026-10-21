@@ -39,14 +39,20 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   1 byte per pixel instead of 4, same colours (within 2/255, checked on 20 000 random blocks against
   reference decoders; a block that mixes transparent pixels with several colours gets their average colour).
   The other BC formats are still decoded to RGBA (converting them would lose quality).
-  `NX_BC1_ASTC=0` turns it off.
+  `NX_BC1_ASTC=0` turns it off. Measured on the iPhone during a race: BC1 textures take 131 MB as ASTC,
+  they'd take ~524 MB decoded; the race peaked at 2.57 GB with 500 MB to spare (it used to be killed).
 - **Low-memory trim** (`NX_TRIM_MB`, 900 MB by default): when iOS allows less than that, textures unused
   for 5 s are dropped (they come back when needed).
 - **Emergency trim** (`NX_TRIM_EMERGENCY_MB`, 400 MB by default): checked every 8 new textures while a
-  race loads; below that, the prewarmed pipelines are released and every texture not used right now is
-  dropped.
-- **Purgeable textures**: textures unused for 120 frames are marked "volatile", so iOS can take their
-  memory back instead of killing the app; they're rebuilt if iOS did (`NX_PURGEABLE=0` to turn off).
+  race loads; below that, every texture not used right now is dropped. The prewarmed pipelines are kept
+  (releasing them freed nothing measurable on the iPhone and left objects black for 2 laps while 96 of them
+  were rebuilt); they're only released below 150 MB.
+- **Purgeable textures**: every texture decoded from the game's data and not drawn for ~2 s (120 frames) is
+  marked "volatile". iOS doesn't count that memory against the app and takes it back first when memory runs
+  out, instead of killing the app; the texture is decoded again if it's needed after that. Textures the game
+  renders into are never marked. `NX_PURGEABLE=0` turns it off.
+- **Draw data buffers**: 4 MB pieces instead of 16 MB (less half-empty space per frame in flight), at most 4
+  spare pieces kept, none when less than 600 MB is left (they used 96 MB on the iPhone).
 - **Upload limit**: at most 96 MB of texture upload buffers in flight while a race loads, 24 MB when
   less than 600 MB is left.
 - **Detailed memory log** (every 10 s, see "Reading the log").
@@ -55,7 +61,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **Pipeline prewarm** at startup, which pauses as soon as the game needs a pipeline.
 - **Prewarmed pipelines are kept** in memory (`NX_KEEP_PREWARMED=0` for the old behaviour): before, they
   were thrown away and rebuilt from the archive at the start of a race, which showed black objects for
-  0.5 to 10 s. They're released by the emergency trim if memory runs out.
+  0.5 to 10 s (up to 2 laps when memory is tight). Only released when iOS is about to kill the app.
 - **Device pipeline archive** (`work/devarch/`): every pipeline compiled on the phone is saved and found
   again on the next launch. It is **cleared by itself** when iOS or the GPU changes (iOS update, `work/`
   copied from another iPhone), since an archive made for another iOS/GPU is useless.

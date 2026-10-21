@@ -3964,3 +3964,105 @@ y = y.replace(old, """        if left < 150 << 20 {
 """)
 tx.write_text(y)
 print("patched", tx, "(emergency trim keeps the prewarmed pipelines)")
+
+# ---------------------------------------------------------------------------
+# Purgeable textures, part 2: every texture decoded from the game's data (BC,
+# ASTC...) that hasn't been drawn for ~2 s is marked purgeable, not only the
+# few the game can rewrite. iOS doesn't count purgeable memory against the app
+# and takes it back first when memory runs out, instead of killing the app;
+# the texture is decoded again if it's needed after that. Textures the game
+# ever renders into are never marked (their content can't be rebuilt).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "fn purgeable_on() -> bool {\n"
+assert y.count(old) == 1
+y = y.replace(old, """/// Textures decoded from the game's data, and textures the game rendered into.
+static SAMPLED: std::sync::Mutex<Option<std::collections::HashSet<TexKey>>> = std::sync::Mutex::new(None);
+static RT_USED: std::sync::Mutex<Option<std::collections::HashSet<TexKey>>> = std::sync::Mutex::new(None);
+
+""" + old)
+old = """        if !render_target && !depth_format {
+            upload(b, &key, &tex.0, levels);
+        }
+"""
+assert y.count(old) == 1
+y = y.replace(old, """        if !render_target && !depth_format {
+            upload(b, &key, &tex.0, levels);
+            SAMPLED.lock().unwrap().get_or_insert_with(Default::default).insert(key);
+        }
+""")
+old = """        if purgeable_on() && VOLATILE.lock().unwrap().as_mut().is_some_and(|v| v.remove(&key)) {"""
+assert y.count(old) == 1
+y = y.replace(old, """        if render_target && purgeable_on() {
+            RT_USED.lock().unwrap().get_or_insert_with(Default::default).insert(key);
+        }
+""" + old)
+old = """        let _ = n;
+    }
+"""
+assert y.count(old) == 1
+y = y.replace(old, """        let sampled = SAMPLED.lock().unwrap();
+        let rt = RT_USED.lock().unwrap();
+        if let Some(sampled) = sampled.as_ref() {
+            for k in sampled {
+                if vol.contains(k) || rt.as_ref().is_some_and(|r| r.contains(k)) || self.aliases.contains_key(k) {
+                    continue;
+                }
+                if self.last_used.get(k).is_none_or(|&f| f + 120 > frame) {
+                    continue;
+                }
+                let Some(t) = self.map.get(k) else { continue };
+                #[allow(unused_unsafe)]
+                let own = unsafe { t.0.buffer().is_none() && t.0.parentTexture().is_none() };
+                if !own {
+                    continue;
+                }
+                objc2_metal::MTLResource::setPurgeableState(&*t.0, MTLPurgeableState::Volatile);
+                vol.insert(*k);
+                n += 1;
+            }
+        }
+        let _ = n;
+    }
+""")
+old = """    pub fn evict(&mut self, gone: &dyn Fn(&TexKey) -> bool) {
+"""
+assert y.count(old) == 1
+y = y.replace(old, old + """        if let Some(s) = SAMPLED.lock().unwrap().as_mut() {
+            s.retain(|k| !gone(k));
+        }
+        if let Some(s) = RT_USED.lock().unwrap().as_mut() {
+            s.retain(|k| !gone(k));
+        }
+""")
+tx.write_text(y)
+print("patched", tx, "(every decoded texture can be purgeable)")
+
+# ---------------------------------------------------------------------------
+# Draw data scratch buffers: 4 MB pieces instead of 16 MB (less half-empty
+# space per frame in flight), at most 4 spare pieces kept, big one-off pieces
+# not kept, and none kept when memory is low. Measured on the iPhone: 96 MB.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = st.read_text()
+old = "const CHUNK: usize = 16 << 20;\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "const CHUNK: usize = 4 << 20;\n")
+old = """                let (_, bufs) = self.in_flight.swap_remove(i);
+                self.free.extend(bufs);
+"""
+assert s_.count(old) == 1
+s_ = s_.replace(old, """                let (_, bufs) = self.in_flight.swap_remove(i);
+                self.free.extend(bufs);
+                let low = { let l = gfx::available_memory(); l != 0 && l < 600 << 20 };
+                let keep = if low { 0 } else { 4 };
+                let mut dropped = 0usize;
+                self.free.retain(|b| b.0.length() <= CHUNK || { dropped += b.0.length(); false });
+                while self.free.len() > keep {
+                    dropped += self.free.pop().map_or(0, |b| b.0.length());
+                }
+                if dropped > 0 {
+                    gfx::OURS[0].fetch_sub(dropped as u64, std::sync::atomic::Ordering::Relaxed);
+                }
+""")
+st.write_text(s_)
+print("patched", st, "(smaller draw scratch buffers, spares released)")
