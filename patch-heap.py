@@ -4106,3 +4106,79 @@ f_ = f_.replace(old, """    if seen.insert(i - 1) {
 """)
 fsr.write_text(f_)
 print("patched", fsr, "(track names in the log)")
+
+# ---------------------------------------------------------------------------
+# Profile of the game thread: time spent in the graphics API calls we translate
+# (per call, the 6 slowest every 10 s) and time waiting for GPU fences, so the
+# log says what the game thread does when a frame takes 40 ms instead of 16.
+nm = pathlib.Path("crates/nxhost/src/nvn/mod.rs")
+s_ = nm.read_text()
+for a_, b_ in [
+    ("struct Proc {\n    name: String,\n    calls: AtomicU64,\n", "struct Proc {\n    name: String,\n    calls: AtomicU64,\n    ns: AtomicU64,\n"),
+    ("Proc { name: name.to_string(), calls: AtomicU64::new(0), host: host_impl(name) }", "Proc { name: name.to_string(), calls: AtomicU64::new(0), ns: AtomicU64::new(0), host: host_impl(name) }"),
+    ("    if let Some(f) = p.host {\n        return f(a);\n    }\n",
+     "    if let Some(f) = p.host {\n        let t = std::time::Instant::now();\n        let r = f(a);\n        let ns = t.elapsed().as_nanos() as u64;\n        p.ns.fetch_add(ns, Relaxed);\n        crate::gfx::prof::NVN_NS.fetch_add(ns, Relaxed);\n        return r;\n    }\n"),
+    ("fn log_limit() -> u64 {\n", """/// The graphics API calls that took the most time since the last call (ms, calls).
+pub fn top_calls(n: usize) -> String {
+    let procs = PROCS.lock().unwrap();
+    let mut v: Vec<(u64, u64, &str)> = procs.iter().map(|p| (p.ns.swap(0, Relaxed), p.calls.load(Relaxed), p.name.as_str())).filter(|x| x.0 > 0).collect();
+    v.sort_by(|a, b| b.0.cmp(&a.0));
+    v.iter().take(n).map(|(ns, _, name)| format!("{} {:.0} ms", name.trim_start_matches("nvn"), *ns as f64 / 1e6)).collect::<Vec<_>>().join(", ")
+}
+
+fn log_limit() -> u64 {
+"""),
+]:
+    assert s_.count(a_) == 1, a_[:50]
+    s_ = s_.replace(a_, b_)
+nm.write_text(s_)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+s_ = gm.read_text()
+old = "    pub static PIPE_NS: AtomicU64 = AtomicU64::new(0);\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "    pub static NVN_NS: AtomicU64 = AtomicU64::new(0);\n    pub static FENCE_NS: AtomicU64 = AtomicU64::new(0);\n")
+gm.write_text(s_)
+cm = pathlib.Path("crates/nxhost/src/nvn/cmd.rs")
+s_ = cm.read_text()
+old = "pub fn sync_wait(a: &Args) -> u64 {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "    let _t = crate::gfx::prof::Timer::new(&crate::gfx::prof::FENCE_NS);\n")
+cm.write_text(s_)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = """        if async_gfx::on() {
+            eprintln!("[prof] graphics thread: busy {:.1} ms per frame, game thread waited for it {:.1} ms per frame", submit / frames, gfx_waited / frames);
+        }
+"""
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + """        {
+            let nvn = gfx::prof::take_ms(&gfx::prof::NVN_NS);
+            let fence = gfx::prof::take_ms(&gfx::prof::FENCE_NS);
+            eprintln!("[prof] game thread: graphics calls {:.1} ms per frame (of which waiting for GPU fences {:.1} ms)", nvn / frames, fence / frames);
+            static TICK: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+            if TICK.fetch_add(1, Relaxed) % 10 == 9 {
+                eprintln!("[prof] slowest graphics calls (10 s): {}", super::top_calls(6));
+            }
+        }
+""")
+dm.write_text(s_)
+print("patched", nm, cm, dm, "(game thread profile)")
+
+# ---------------------------------------------------------------------------
+# The thread that presents frames (the game's render thread) gets the same
+# "interactive" priority as our graphics thread, so iOS keeps it on a fast core
+# instead of letting other game threads or our helpers take its place
+# (NX_STOCK_QOS=1 keeps the old priorities).
+cm = pathlib.Path("crates/nxhost/src/nvn/cmd.rs")
+s_ = cm.read_text()
+old = "pub fn present(a: &Args) -> u64 {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + """    thread_local!(static RAISED: std::cell::Cell<bool> = const { std::cell::Cell::new(false) });
+    if !RAISED.get() && std::env::var_os("NX_STOCK_QOS").is_none() {
+        RAISED.set(true);
+        unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_USER_INTERACTIVE, 0) };
+        eprintln!("[host] the game's render thread now has interactive priority");
+    }
+""")
+cm.write_text(s_)
+print("patched", cm, "(render thread priority)")

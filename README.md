@@ -80,6 +80,8 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **30 fps lock (frameskip)**: one frame out of two is drawn, evenly paced, while the game still updates
   at 60 Hz (multiplayer timing unchanged). Render targets drawn rarely are never skipped.
 - Texture change checks every 2 frames instead of every frame.
+- **Render thread priority**: the game thread that presents frames gets "interactive" priority (like our
+  graphics thread), so iOS keeps it on a fast core (`NX_STOCK_QOS=1` for the old priorities).
 
 ### Fixes
 - **Menu freeze after "Single Player"**: the video decoder waited for its next frame while holding a lock
@@ -206,7 +208,10 @@ Share it from the launcher (**Share the log**; after a crash, **Share the previo
 - `[mem] phone: heat …` — `serious`/`critical` = iOS slows the CPU/GPU down (lower FPS, slower shader builds).
 - `[gfx] pipeline …: not in the archive, compiling` / `building took N ms` — a pipeline seen for the first
   time; long times = memory or heat pressure.
-- `[fps] …` / `[prof] …` — frame rate and where the time goes.
+- `[fps] …` / `[prof] …` — frame rate and where the time goes. `[prof] game thread: graphics calls X ms
+  (of which waiting for GPU fences Y ms)` = time the game spends in the graphics calls we translate;
+  every 10 s `[prof] slowest graphics calls` lists the 6 that took the most time. With the 30 fps lock,
+  30 fps on screen needs the game itself at 60 (one frame out of two is drawn).
 - `[hang] no frame for 6 s` — the watchdog: what every thread was doing.
 
 ## Building the IPA with GitHub Actions
