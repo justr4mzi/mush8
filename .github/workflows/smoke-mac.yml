@@ -192,7 +192,7 @@ jobs:
             rm -rf work/frame work/save
             [ "$RECORD" = 1 ] && rm -f work/pipelines.tsv
             [ "$MONKEY" = 1 ] && INPUT="$(python3 tools/monkey.py "$n$GITHUB_RUN_ID" "$SECS")"
-            [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS" 0 "$(python3 tools/cupkeys.py $(( 4 * ${CUPS_RIGHT:-0} )))")"
+            [ "$VS96" = 1 ] && INPUT="$(python3 tools/vs96.py "$SECS")"
             [ -n "$PROBE" ] && INPUT="$(python3 tools/probe.py "$PROBE")"
             mkdir -p work/save
             if [ -d smoke-save ]; then
@@ -209,7 +209,9 @@ jobs:
               # VS run, next attempts: start at the cup after the tracks already played (all attempts)
               if [ "$VS96" = 1 ] && [ $k -gt 1 ]; then
                 DONE=$(grep -oE "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" "$L" | awk '{print $4}' | grep -v Gu_Menu | sort -u | wc -l)
-                CUPS="$(python3 tools/cupkeys.py $(( DONE + 4 * ${CUPS_RIGHT:-0} )))"
+                # starting at a later cup does not work ("in order" has no cup screen: the extra
+                # keys landed on the start-race prompt and the menus never reached a race)
+                CUPS=""
                 python3 tools/vs96.py "$SECS" "$VARIANT" "$CUPS" > work/autoinput.txt && echo "=== script variant $VARIANT, $DONE tracks done, cup keys: $CUPS" >> "$L"
               fi
               NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY="$DUMP_EVERY" NX_PIPELINE_LIST="$LIST" \
