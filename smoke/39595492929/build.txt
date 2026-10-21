@@ -1,0 +1,102 @@
+patched crates/nxhost/src/gfx/mod.rs
+patched crates/nxhost/src/services/am.rs
+patched crates/nxhost/src/nvn/draw/state.rs
+patched crates/nxhost/src/kernel.rs
+patched crates/nxhost/src/nvn/draw/shaders.rs
+patched crates/nxhost/src/nvn/draw/exec.rs
+patched crates/nxhost/src/nvn/draw/state.rs (device pipeline archive)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP)
+wrote tt-a16.sh
+patched make-ios.sh
+patched crates/nxhost/src/nvn/draw/copy.rs
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/mod.rs (low-memory texture trim)
+patched profiling, NX_FRAMESKIP, NX_HASH_EVERY
+patched crates/nxhost/src/nvn/draw/mod.rs (freeze watchdog)
+patched crates/nxhost/src/services/mii.rs (GetIndex not found)
+patched crates/nxhost/src/kernel.rs (SignalToAddress waiting-count semantics)
+patched crates/nxhost/src/loader.rs (NX_TRACE_QUIET, NX_TRACE_DELAY_US)
+patched crates/nxhost/src/gfx/ios.rs (on-screen fps)
+patched crates/nxhost/src/nvn/draw/mod.rs (frameskip keeps rarely rendered targets)
+patched crates/nxhost/src/nvn/draw/exec.rs (no stall on targets drawn every frame)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_DROP keeps full size)
+patched crates/nxhost/src/nvn/draw/state.rs (prewarm yields to the game)
+patched crates/nxhost/src/nvn/draw/textures.rs (async texture decode, texture disk cache)
+patched crates/nxhost/src/gfx/mod.rs (even pacing with frameskip)
+patched crates/nxhost/src/gfx/bc.rs crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_16BIT)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/mod.rs (NX_TEX_DROP_SHRINK)
+patched crates/nxhost/src/gfx/mod.rs crates/nxhost/src/nvn/draw/mod.rs (NX_AUTOSKIP)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/state.rs (earlier memory trim, free unused prewarmed pipelines)
+patched crates/nxhost/src/nvn/draw/textures.rs (trim keeps fresh textures)
+patched crates/nxhost/src/nvn/draw/state.rs (device pipeline archive v2)
+patched crates/nxhost/src/main.rs crates/nxhost/src/gfx/ios.rs ios/Launcher.swift (Show FPS / Music from other apps)
+patched crates/nxhost/build.rs (no unwind entries for the embedded game code)
+patched crates/nxhost/src/nvn/draw/state.rs (device archive waits for the game and the prewarm)
+patched crates/nxhost/src/nvn/draw/state.rs (prewarm progress)
+patched crates/nxhost/src/main.rs (build id in the log)
+patched crates/nxhost/src/nvn/draw/textures.rs (NX_TEX_SHRINK_MIN)
+patched crates/nxhost/src/main.rs make-ios.sh ios/Launcher.swift (built-in settings, launcher performance options, unlocked save)
+patched crates/nxhost/src/gfx/ios.rs crates/nxhost/src/gfx/mod.rs (fps + memory pills)
+patched crates/nxhost/src/nvn/draw/textures.rs (background textures: grey placeholder, bounded queue)
+patched crates/nxhost/src/main.rs ios/Launcher.swift (launcher: background textures, show memory, tools)
+patched crates/nxhost/src/nvn/draw/state.rs crates/nxhost/src/main.rs crates/nxhost/src/audio/output.rs ios/Launcher.swift (full prewarm, game volume)
+patched crates/nxhost/src/main.rs ios/Launcher.swift (first-launch full prewarm, quiet mode)
+patched tt-a16.sh make-ios.sh crates/nxhost/src/nvn/draw/state.rs crates/nxhost/src/main.rs ios/Launcher.swift (precompiled shaders for A15 and A16)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/gfx/mod.rs (upload staging limit, memory jump log)
+patched crates/nxhost/src/nvn/draw/state.rs (NX_SKIP_SHADERS)
+patched crates/nxhost/src/nvn/draw/state.rs crates/nxhost/src/main.rs ios/Launcher.swift (prewarm keeps only fresh pipelines, Ultra low textures)
+patched make-ios.sh ios/Launcher.swift (precompiled shader files removed)
+patched crates/nxhost/src/main.rs ios/Launcher.swift (defaults: Ultra low, full prewarm, trim 600)
+patched crates/nxhost/src/nvn/draw/state.rs (devarch cleared on iOS/GPU change, retry failed pipelines)
+patched crates/nxhost/src/nvn/draw/mod.rs crates/nxhost/src/main.rs ios/Launcher.swift (NX_ASYNC_GFX: graphics on a separate thread)
+patched crates/nxhost/src/services/fs.rs (NX_TRACE_ROMFS)
+patched crates/nxhost/src/movie/video.rs (video frames: never hold the core, never wait on a stalled decoder)
+patched crates/nxhost/src/nvn/draw/textures.rs (emergency trim while loading)
+patched ios/Launcher.swift (reset settings to default)
+patched crates/nxhost/src/nvn/draw/textures.rs (smaller upload window and earlier emergency trim when memory is low)
+patched crates/nxhost/src/nvn/draw/state.rs crates/nxhost/src/nvn/draw/textures.rs (keep prewarmed pipelines; emergency trim frees them)
+patched crates/nxhost/src/main.rs ios/Launcher.swift (separate graphics thread on by default)
+patched crates/nxhost/src/nvn/draw/textures.rs crates/nxhost/src/nvn/draw/state.rs (memory report)
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+warning: unused variable: `n`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:14
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |              ^ help: if this is intentional, prefix it with an underscore: `_n`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `total`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:17
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |                 ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+warning: function `seed_unlocked_save` is never used
+   --> crates/nxhost/src/main.rs:368:4
+    |
+368 | fn seed_unlocked_save(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `copy_dir` is never used
+   --> crates/nxhost/src/main.rs:394:4
+    |
+394 | fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^
+
+warning: variable `LIMIT` should have a snake case name
+   --> crates/nxhost/src/nvn/draw/textures.rs:873:9
+    |
+873 |     let LIMIT: usize = if left != 0 && left < 600 << 20 { 24 << 20 } else { 96 << 20 };
+    |         ^^^^^ help: convert the identifier to snake case: `limit`
+    |
+    = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 5 warnings (run `cargo fix --bin "nxhost" -p nxhost` to apply 2 suggestions)
+    Finished `release` profile [optimized + debuginfo] target(s) in 37.50s
