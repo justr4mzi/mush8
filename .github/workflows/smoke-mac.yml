@@ -32,6 +32,9 @@ on:
       probe:
         description: "buttons for tools/probe.py after the character screen (empty = off)"
         default: ""
+      sample_at:
+        description: "seconds (space separated) at which to take a 10 s CPU profile of the game with macOS 'sample'"
+        default: ""
       soft_bc:
         description: "1 = decode BC textures on the CPU like an iPhone (memory test)"
         default: "0"
@@ -169,6 +172,7 @@ jobs:
           MONKEY: ${{ inputs.monkey || '0' }}
           VS96: ${{ inputs.vs96 || '0' }}
           PROBE: ${{ inputs.probe }}
+          SAMPLE_AT: ${{ inputs.sample_at }}
           GH_TOKEN: ${{ github.token }}
           IPA_PASSWORD: ${{ secrets.IPA_PASSWORD }}
         run: |
@@ -247,6 +251,7 @@ jobs:
             for i in $(seq 1 "$SECS"); do
               sleep 1
               { [ $((i % 600)) = 0 ] || { [ $i -le 900 ] && [ $((i % 60)) = 0 ]; }; } && live
+              for at in $SAMPLE_AT; do [ "$i" = "$at" ] && { sample $pid 10 -mayDie -file "out/sample-$n-$i.txt" > /dev/null 2>&1 & }; done
               left=$(( SECS - i ))
               if ! kill -0 $pid 2>/dev/null; then
                 [ $left -lt 600 ] && break
