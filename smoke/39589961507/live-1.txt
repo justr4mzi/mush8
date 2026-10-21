@@ -1,0 +1,51 @@
+run 1, 11:18 UTC, 199 s
+tracks:
+7.3s /Course/Gu_Menu
+last game files read:
+29.3s /Kart/WingTex/Wing_Std_Mrb_Alb.szs
+29.3s /Kart/WingTex/Wing_Std_Mrb_Spm.szs
+30.3s /Driver/MetalMario.szs
+30.4s /Kart/Body/BodyB_Jet.szs
+30.4s /Kart/WingTex/Wing_Std_MroM_Alb.szs
+30.4s /Kart/WingTex/Wing_Std_MroM_Spm.szs
+31.2s /Driver/Yoshi.szs
+31.2s /DriverTex/Yoshi_Tex00.szs
+31.2s /Kart/Body/BodyB_Std.szs
+31.2s /Kart/BodyTex/BodyB_Std_Ysi00_Alb.szs
+31.2s /Kart/WingTex/Wing_Std_Ysi00_Alb.szs
+32.1s /Driver/BbPeach.szs
+32.1s /Kart/BodyTex/BodyK_Std_PchB_Alb.szs
+32.1s /Kart/WingTex/Wing_Std_PchB_Alb.szs
+33.1s /Driver/Larry.szs
+33.1s /Kart/Body/BodyK_Kpc.szs
+33.1s /Kart/BodyTex/BodyK_Kpc_B_Alb.szs
+33.1s /Kart/BodyTex/BodyK_Kpc_B_Spm.szs
+33.2s /Kart/WingTex/Wing_Std_Lry_Alb.szs
+37.5s /Driver/Nokonoko.szs
+37.5s /Kart/BodyTex/BodyK_Std_Nok_Alb.szs
+37.5s /Kart/WingTex/Wing_Std_Nok_Alb.szs
+38.3s /Driver/DrvChr02.szs
+38.3s /Kart/BodyTex/BodyB_Std_Dch02_Alb.szs
+38.3s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
+game fps (last minute): 30.6
+[mem] 164 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 175 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 190 render targets (75 MB), 0 pipelines kept ready
+[mem] 186 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 197 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+--- end of the log
+[mem] textures: 35 loaded (0 MB), 190 render targets (75 MB), 0 pipelines kept ready
+[gfx] screen at 120s dumped
+[mem] 131 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 190 render targets (75 MB), 0 pipelines kept ready
+[mem] 142 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 140s dumped
+[mem] 153 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 190 render targets (75 MB), 0 pipelines kept ready
+[mem] 164 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 160s dumped
+[mem] 175 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 190 render targets (75 MB), 0 pipelines kept ready
+[mem] 186 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 180s dumped
+[mem] 197 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
