@@ -1,0 +1,23 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+warning: nxhost@0.1.0: NX_MODULES_DIR is not set: the iOS build has no game code
+warning: function `drop_prewarmed` is never used
+   --> crates/nxhost/src/nvn/draw/state.rs:213:8
+    |
+213 | pub fn drop_prewarmed() {
+    |        ^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: variable `LIMIT` should have a snake case name
+   --> crates/nxhost/src/nvn/draw/textures.rs:858:9
+    |
+858 |     let LIMIT: usize = if left != 0 && left < 600 << 20 { 24 << 20 } else { 96 << 20 };
+    |         ^^^^^ help: convert the identifier to snake case: `limit`
+    |
+    = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 2 warnings
+    Finished `release` profile [optimized + debuginfo] target(s) in 51.72s
