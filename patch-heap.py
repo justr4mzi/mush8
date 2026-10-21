@@ -3426,7 +3426,7 @@ assert y.count(old) == 1
 y = y.replace(old, old + """        if self.frame % 600 == 0 {
             let (mut n, mut bytes, mut rn, mut rbytes) = (0usize, 0usize, 0usize, 0usize);
             for (k, (_, t)) in &self.storage {
-                let size = t.0.allocatedSize();
+                let size = objc2_metal::MTLResource::allocatedSize(&*t.0);
                 if self.uploaded.contains_key(&TexKey { format: k.format, ..*k }) || self.uploaded.keys().any(|u| u.addr == k.addr) {
                     n += 1;
                     bytes += size;
