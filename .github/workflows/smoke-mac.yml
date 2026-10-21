@@ -167,7 +167,7 @@ jobs:
         run: |
           mkdir -p out
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
-          DUMPS="$(python3 -c "print(','.join(str(t) for t in range(20, int('$SECS'), 20)))")"
+          DUMPS="$(python3 -c "print(','.join(str(t) for t in range(10, int('$SECS'), 10)))")"
           n=0
           for m in $MODES; do
             n=$((n+1)); L="out/run-$n-async$m.log"
@@ -203,6 +203,10 @@ jobs:
                   done
                   [ -n "$(ls "$D/shots")" ] && 7zz a -tzip -mem=AES256 -p"$IPA_PASSWORD" "$D/out/screens-$n.zip" "$D/shots/"* > /dev/null
                 fi
+                # the owner agreed to plain low-res screenshots: the last 3, 480x270, readable by Claude
+                i=0; for f in $(ls -t work/frame/t*.png 2>/dev/null | head -3); do i=$((i+1))
+                  python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((480,270)).save(sys.argv[2], quality=60)" "$f" "$D/out/shot-$i.jpg"
+                done
                 cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
             }
             T0=$(date +%s)
