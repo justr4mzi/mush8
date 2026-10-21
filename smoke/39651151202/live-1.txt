@@ -1,4 +1,4 @@
-run 1, 21:57 UTC, 12390 s, game attempt 4
+run 1, 21:58 UTC, 12463 s, game attempt 5
 tracks:
 7.7s /Course/Gu_Menu
 366.4s /Course/Gu_FirstCircuit
@@ -27,35 +27,34 @@ tracks:
 2177.7s /Course/Gu_MarioCircuit
 5.5s /Course/Gu_Menu
 489.1s /Course/Gu_FirstCircuit
+4.6s /Course/Gu_Menu
 last game files read:
-490.7s /Audio/Body/Body_B_Mgp.bars
-490.7s /Audio/Driver/Driver_Kinopico.bars
-490.7s /Audio/Driver/Driver_DrvChr06.bars
-490.7s /Audio/Body/Body_V_Atv.bars
-490.7s /Audio/Driver/Driver_Daisy.bars
-490.7s /Audio/Driver/Driver_DrvChr08.bars
-490.7s /Audio/Body/Body_B_Fro.bars
-490.7s /Audio/Driver/Driver_SplatoonBoy.bars
-490.7s /Audio/Body/Body_B_Std.bars
-490.7s /Audio/Driver/Driver_BbLuigi.bars
-490.7s /Audio/Body/Body_B_Kid.bars
-490.7s /Audio/Driver/Driver_DrvChr04.bars
-490.7s /Audio/Driver/Driver_Koopa.bars
-490.7s /Audio/Body/Body_K_Fml.bars
-490.7s /Audio/Driver/Driver_KingTeresa.bars
-490.7s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
-490.7s /UI/USen/race/tc_RT_Go_USen^h.bntx
-490.8s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
-490.8s /UI/USen/race/tc_RT_Finish_USen^h.bntx
-490.8s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
-490.8s /UI/cmn/race/ym_ModeIconBGVs_00^s.bntx
-490.8s /UI/cmn/race/ym_ModeIconVs_00^l.bntx
-505.2s /Audio/Resource/Stream/BGM_COURSE_IN.bfstm
-514.9s /Audio/Resource/Stream/BGM_START_GRID_VS.bfstm
-529.5s /Audio/Resource/Stream/pBGM_WU_FIRST_CIRCUIT_N.bfstm
-game fps (last minute): 39.3
-[hang] thread 0x1f20b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x17e93 'pipeline-archive': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x245d8c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x432b4 _RNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state10save_group+0x70 <- nxhost+0x10ff14 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5sta+0x1c4 <- nxhost+0x13b4f4 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state7h+0x94 <- nxhost+0x24ad88 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+18.2s /Driver/KoopaJr.szs
+18.2s /Kart/BodyTex/BodyV_Atv_KopJ_Alb.szs
+18.3s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
+19.4s /Driver/Wario.szs
+19.5s /Kart/Body/BodyK_Tri.szs
+19.5s /Kart/Wing/Wing_Wlo.szs
+19.5s /Kart/Arm/ArmK_Ofr.szs
+20.5s /Driver/DK.szs
+20.5s /Kart/BodyTex/BodyV_Atv_Dkg_Alb.szs
+20.5s /Kart/Wing/Wing_Zng.szs
+20.5s /Kart/Arm/ArmK_Zbi.szs
+21.5s /Driver/DrvChr05.szs
+21.6s /Kart/BodyTex/BodyK_Std_Dch05_Alb.szs
+21.6s /Kart/WingTex/Wing_Std_Dch05_Alb.szs
+22.6s /Driver/BbLuigi.szs
+22.6s /Kart/Body/BodyK_Skl.szs
+22.6s /Kart/BodyTex/BodyK_Skl_A_Alb.szs
+22.6s /Kart/Wing/Wing_Prf.szs
+23.5s /Driver/DrvChr03.szs
+23.5s /Kart/Body/BodyB_Amb.szs
+23.5s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
+27.9s /Driver/Karon.szs
+27.9s /Kart/Body/BodyB_Std.szs
+27.9s /Kart/BodyTex/BodyB_Std_Krn_Alb.szs
+27.9s /Kart/WingTex/Wing_Std_Krn_Alb.szs
+game fps (last minute): 30.8
 === the game stopped (attempt 3): starting it again
 === attempt 4 at 11266 s
 === script variant 1
@@ -66,25 +65,27 @@ game fps (last minute): 39.3
 [hang] thread 0x1610b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 === no new track for 10 min: menu script variant 2
 === stuck (attempt 4): restarting the game
-[mem] 1117 s: app uses 2219 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 5 at 12398 s
+=== script variant 2
+[mem] Metal besides the game RAM: 107 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 13 MB
+[mem] 66 s: app uses 1911 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3530 MB | resident 1865 MB, internal 1727 MB, external 94 MB, compressed 106 MB, purgeable 0 MB, reusable 43 MB, footprint 2219 MB
-[mem] Metal besides the game RAM: 430 MB = textures 391 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 22 MB
-[mem] textures: 32 loaded (0 MB), 1838 render targets (420 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
+[mem] detail: game RAM 3127 MB, Metal 3207 MB | resident 1845 MB, internal 1758 MB, external 60 MB, compressed 62 MB, purgeable 0 MB, reusable 26 MB, footprint 1911 MB
+[mem] Metal besides the game RAM: 107 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 13 MB
 --- end of the log
-[mem] detail: game RAM 3110 MB, Metal 3530 MB | resident 1864 MB, internal 1726 MB, external 94 MB, compressed 106 MB, purgeable 0 MB, reusable 43 MB, footprint 2223 MB
-[mem] Metal besides the game RAM: 430 MB = textures 391 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 22 MB
-[gfx] screen at 1090s dumped
-[mem] textures: 32 loaded (0 MB), 1838 render targets (420 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[mem] 1106 s: app uses 2221 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3127 MB, Metal 3204 MB | resident 1843 MB, internal 1757 MB, external 60 MB, compressed 62 MB, purgeable 0 MB, reusable 25 MB, footprint 1908 MB
+[mem] Metal besides the game RAM: 104 MB = textures 77 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 11 MB
+[mem] 44 s: app uses 1908 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3530 MB | resident 1865 MB, internal 1727 MB, external 94 MB, compressed 106 MB, purgeable 0 MB, reusable 43 MB, footprint 2221 MB
-[mem] Metal besides the game RAM: 430 MB = textures 391 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 22 MB
-[mem] 1117 s: app uses 2219 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3127 MB, Metal 3204 MB | resident 1843 MB, internal 1757 MB, external 60 MB, compressed 62 MB, purgeable 0 MB, reusable 25 MB, footprint 1908 MB
+[mem] Metal besides the game RAM: 104 MB = textures 77 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 11 MB
+[mem] textures: 35 loaded (0 MB), 145 render targets (101 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] 55 s: app uses 1911 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3530 MB | resident 1865 MB, internal 1727 MB, external 94 MB, compressed 106 MB, purgeable 0 MB, reusable 43 MB, footprint 2219 MB
-[mem] Metal besides the game RAM: 430 MB = textures 391 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 22 MB
-[mem] textures: 32 loaded (0 MB), 1838 render targets (420 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-=== no new track for 10 min: menu script variant 2
-=== stuck (attempt 4): restarting the game
+[mem] detail: game RAM 3127 MB, Metal 3207 MB | resident 1845 MB, internal 1758 MB, external 60 MB, compressed 62 MB, purgeable 0 MB, reusable 26 MB, footprint 1911 MB
+[mem] Metal besides the game RAM: 107 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 13 MB
+[mem] 66 s: app uses 1911 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3127 MB, Metal 3207 MB | resident 1845 MB, internal 1758 MB, external 60 MB, compressed 62 MB, purgeable 0 MB, reusable 26 MB, footprint 1911 MB
+[mem] Metal besides the game RAM: 107 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 13 MB
 new pipelines so far:     1040
