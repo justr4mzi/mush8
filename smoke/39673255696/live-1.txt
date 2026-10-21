@@ -1,4 +1,4 @@
-run 1, 21:08 UTC, 869 s, game attempt 1
+run 1, 21:09 UTC, 912 s, game attempt 1
 tracks:
 6.8s /Course/Gu_Menu
 last game files read:
@@ -27,26 +27,28 @@ last game files read:
 156.0s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
 156.0s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
 156.0s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-game fps (last minute): 32.1
+game fps (last minute): 32.2
 === attempt 1 at 0 s
-[mem] 860 s: app uses 1967 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3249 MB | resident 1574 MB, internal 1542 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 17 MB, footprint 1967 MB
-[mem] Metal besides the game RAM: 149 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 25 MB
+=== no new track for 10 min: menu script variant 1
+=== stuck (attempt 1): restarting the game
 [mem] textures: 35 loaded (2 MB), 489 render targets (130 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
---- end of the log
-[mem] textures: 35 loaded (2 MB), 489 render targets (130 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
-[mem] 849 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 903 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1559 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 17 MB, footprint 1952 MB
-[cpu] 21% of a core in all: guest-0x50 8%, gfx-submit 5%, thread-0xa403 2%, thread-0xf107 2%, guest-0x6c 2%, guest-0x55 1%, thread-0x2b03 1%, guest-0x56 1%
-[cpu] system calls: 0x1d 3113/s, 0x1b 1490/s, 0x1c 1315/s, 0x34 648/s, 0x35 648/s, 0x1a 176/s, 0x17 133/s, 0x21 101/s
+[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
 [mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
-[mem] 860 s: app uses 1967 MB, iOS still allows 0 MB (lowest so far 0 MB)
+--- end of the log
+[mem] 892 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3249 MB | resident 1574 MB, internal 1542 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 17 MB, footprint 1967 MB
-[cpu] 23% of a core in all: guest-0x50 8%, gfx-submit 6%, thread-0x3f03 2%, thread-0xf107 2%, guest-0x6c 2%, guest-0x55 1%, thread-0x2b03 1%, guest-0x56 1%
-[cpu] system calls: 0x1d 3000/s, 0x1b 1446/s, 0x1c 1266/s, 0x34 621/s, 0x35 621/s, 0x1a 180/s, 0x17 133/s, 0x21 102/s
-[mem] Metal besides the game RAM: 149 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 25 MB
-[gfx] screen at 850s dumped
+[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
+[cpu] 24% of a core in all: guest-0x50 9%, gfx-submit 5%, thread-0x2b03 2%, thread-0xf107 2%, guest-0x6c 2%, guest-0x55 2%, memlog 1%, thread-0x3f03 1%, guest-0x56 1%
+[cpu] system calls: 0x1d 3051/s, 0x1b 1466/s, 0x1c 1290/s, 0x34 633/s, 0x35 633/s, 0x1a 176/s, 0x17 134/s, 0x21 102/s
+[mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
 [mem] textures: 35 loaded (2 MB), 489 render targets (130 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
+[mem] 903 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
+[cpu] 19% of a core in all: guest-0x50 7%, gfx-submit 5%, thread-0xf107 2%, thread-0x3f03 2%, thread-0x2b03 1%, guest-0x6c 1%, guest-0x55 1%
+[cpu] system calls: 0x1d 2990/s, 0x1b 1448/s, 0x1c 1266/s, 0x35 622/s, 0x34 622/s, 0x1a 183/s, 0x17 133/s, 0x21 102/s
+[mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
+=== no new track for 10 min: menu script variant 1
+=== stuck (attempt 1): restarting the game
