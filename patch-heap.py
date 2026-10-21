@@ -3180,33 +3180,34 @@ f_ = fsr.read_text()
 old = """                let dst = unsafe { std::slice::from_raw_parts_mut(b.addr as *mut u8, size as usize) };
                 if let Err(e) = crate::kernel::blocking(|| self.s.read_at(off, dst)) {"""
 assert f_.count(old) == 1
-f_ = f_.replace(old, """                if self.name == "romfs" {
-                    trace_romfs(&self.s, off);
+f_ = f_.replace(old, """                if self.name == "romfs" || self.name == "add-on content" {
+                    trace_romfs(self.name, &self.s, off);
                 }
 """ + old)
 old = "struct Storage {\n"
 assert f_.count(old) == 1
-f_ = f_.replace(old, """fn trace_romfs(s: &DynStorage, off: u64) {
+f_ = f_.replace(old, """fn trace_romfs(name: &'static str, s: &DynStorage, off: u64) {
     static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_TRACE_ROMFS").is_some());
     if !*ON {
         return;
     }
     static T0: std::sync::LazyLock<std::time::Instant> = std::sync::LazyLock::new(std::time::Instant::now);
-    static FILES: std::sync::OnceLock<Vec<(u64, u64, String)>> = std::sync::OnceLock::new();
-    static SEEN: Mutex<Option<std::collections::HashSet<usize>>> = Mutex::new(None);
-    let files = FILES.get_or_init(|| {
+    type Index = (Vec<(u64, u64, String)>, std::collections::HashSet<usize>);
+    static FILES: Mutex<Option<std::collections::HashMap<(&'static str, u64), Index>>> = Mutex::new(None);
+    let mut all = FILES.lock().unwrap();
+    let (files, seen) = all.get_or_insert_with(Default::default).entry((name, s.size())).or_insert_with(|| {
         let mut v: Vec<(u64, u64, String)> = nxfs::romfs::RomFs::open(s.clone()).map(|r| r.files().into_iter().map(|f| (f.offset, f.size, f.path)).collect()).unwrap_or_default();
         v.sort();
-        eprintln!("[romfs] {} files", v.len());
-        v
+        eprintln!("[romfs] {name}: {} files", v.len());
+        (v, Default::default())
     });
     let i = files.partition_point(|f| f.0 <= off);
     if i == 0 || off >= files[i - 1].0 + files[i - 1].1.max(1) {
         return;
     }
-    let mut seen = SEEN.lock().unwrap();
-    if seen.get_or_insert_with(Default::default).insert(i - 1) {
-        eprintln!("[romfs] {:.1} s {}", T0.elapsed().as_secs_f32(), files[i - 1].2);
+    if seen.insert(i - 1) {
+        let tag = if name == "romfs" { "" } else { "dlc:" };
+        eprintln!("[romfs] {:.1} s {tag}{}", T0.elapsed().as_secs_f32(), files[i - 1].2);
     }
 }
 

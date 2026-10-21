@@ -67,6 +67,7 @@ jobs:
           BASE_URL: ${{ secrets.BASE_URL }}
           UPDATE_URL: ${{ secrets.UPDATE_URL }}
           FIRMWARE_URL: ${{ secrets.FIRMWARE_URL }}
+          DLC_URL: ${{ secrets.DLC_URL }}
         run: |
           mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
           python3 -m pip install --quiet --break-system-packages gdown pillow || python3 -m pip install --quiet --user gdown pillow
@@ -87,6 +88,8 @@ jobs:
           get "$KEYS_URL"   prod.keys
           get "$BASE_URL"   base.nsp
           get "$UPDATE_URL" upd4-0-1.nsp
+          # optional: Booster Course Pass (secret DLC_URL), loaded from ./dlc.nsp
+          if [ -n "$DLC_URL" ]; then get "$DLC_URL" dlc.nsp && ls -lh dlc.nsp; fi
           ls -lh prod.keys base.nsp upd4-0-1.nsp
           # The game needs the console's system files (Mii, fonts): secret
           # FIRMWARE_URL = link to a zip of your own Firmware folder (.nca files)
@@ -175,7 +178,7 @@ jobs:
 
       - name: Remove game files
         if: always()
-        run: rm -rf prod.keys base.nsp upd4-0-1.nsp Firmware fw-tmp work/frame smoke-save work/save
+        run: rm -rf prod.keys base.nsp upd4-0-1.nsp dlc.nsp Firmware fw-tmp work/frame smoke-save work/save
 
       - name: Publish logs
         if: always()
