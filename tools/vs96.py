@@ -12,11 +12,12 @@ SLOW, FAST = 30.0, 4.0
 seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"),                     # Single Player
         (15.0, "DOWN"), (6.0, "DOWN"), (SLOW, "A"),   # VS race (the mode menu needs time to appear)
-        (SLOW, "A"),                     # 150cc
-        (10.0, "A"),                     # character
+        (SLOW, "A"),                     # character (cc is chosen later, in the rules)
+        (10.0, "A"),                     # vehicle: body -> tires
         # vehicle screen (needs ~20 s to be ready on the Mac): + opens the panel,
         # L = smart steering, R = auto accelerate (seen toggling on the probe), + closes
-        (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"), (8.0, "A"),
+        (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"),
+        (8.0, "A"), (8.0, "A"),          # tires -> glider -> OK (seen on the Mac: 3 A on this screen)
         (SLOW, "RIGHT"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"),
         (FAST, "RIGHT"), (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
         (SLOW, "A"), (FAST, "A"), (FAST, "A")])
