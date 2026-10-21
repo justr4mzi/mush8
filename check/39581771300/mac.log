@@ -1,0 +1,43 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+error[E0034]: multiple applicable items in scope
+   --> crates/nxhost/src/nvn/draw/textures.rs:117:32
+    |
+117 |                 let size = t.0.allocatedSize();
+    |                                ^^^^^^^^^^^^^ multiple `allocatedSize` found
+    |
+    = note: candidate #1 is defined in an impl of the trait `objc2_metal::MTLAllocation` for the type `ProtocolObject<T>`
+    = note: candidate #2 is defined in an impl of the trait `objc2_metal::MTLResource` for the type `ProtocolObject<T>`
+help: disambiguate the method for candidate #1
+    |
+117 -                 let size = t.0.allocatedSize();
+117 +                 let size = objc2_metal::MTLAllocation::allocatedSize(&t.0);
+    |
+help: disambiguate the method for candidate #2
+    |
+117 -                 let size = t.0.allocatedSize();
+117 +                 let size = objc2_metal::MTLResource::allocatedSize(&t.0);
+    |
+
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+warning: unused variable: `n`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:14
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |              ^ help: if this is intentional, prefix it with an underscore: `_n`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `total`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:17
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |                 ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+For more information about this error, try `rustc --explain E0034`.
+warning: `nxhost` (bin "nxhost") generated 2 warnings
+error: could not compile `nxhost` (bin "nxhost") due to 1 previous error; 2 warnings emitted
+warning: build failed, waiting for other jobs to finish...
