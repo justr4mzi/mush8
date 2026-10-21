@@ -1,51 +1,51 @@
-run 1, 15:15 UTC, 290 s
+run 1, 15:17 UTC, 365 s
 tracks:
 7.6s /Course/Gu_Menu
 last game files read:
-39.5s /Kart/BodyTex/BodyK_Kpc_E_Spm.szs
-39.5s /Kart/WingTex/Wing_Std_Ldw_Alb.szs
-76.9s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
-156.5s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
-156.5s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
-156.5s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
-156.5s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
-156.5s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
-156.5s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-256.8s /Kart/Wing/Wing_Wlo.szs
-260.7s /Kart/Wing/Wing_Zng.szs
-264.8s /Kart/Wing/Wing_Umb.szs
-264.8s /Kart/WingTex/Wing_Umb_A_Alb.szs
-268.7s /Kart/Wing/Wing_Prc.szs
-276.6s /Kart/Wing/Wing_Prf.szs
-game fps (last minute): 29.6
-[mem] detail: game RAM 3109 MB, Metal 3298 MB | resident 1627 MB, internal 1551 MB, external 50 MB, compressed 332 MB, purgeable 0 MB, reusable 25 MB, footprint 2007 MB
-[mem] textures: 34 loaded (0 MB), 443 render targets (124 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[mem] 287 s: app uses 2007 MB, iOS still allows 0 MB (lowest so far 0 MB)
+326.9s /Kart/BodyTex/BodyK_Kpc_B_Alb.szs
+326.9s /Kart/BodyTex/BodyK_Kpc_B_Spm.szs
+326.9s /Kart/WingTex/Wing_Std_Lry_Alb.szs
+327.7s /Driver/PeachSuit.szs
+327.7s /Kart/Body/BodyB_Jet.szs
+327.8s /Kart/WingTex/Wing_Std_Pch_Alb.szs
+328.9s /Driver/BbMario.szs
+328.9s /Kart/Body/BodyK_Skl.szs
+328.9s /Kart/BodyTex/BodyK_Skl_MroB_Alb.szs
+330.0s /Driver/Wario.szs
+330.1s /Kart/Body/BodyV_Atv.szs
+330.1s /Kart/BodyTex/BodyV_Atv_G_Alb.szs
+330.1s /Kart/WingTex/Wing_Std_Wro_Alb.szs
+331.1s /Driver/Kinopico.szs
+331.2s /Kart/Body/BodyV_Bea.szs
+331.2s /Kart/Arm/ArmK_Btn.szs
+331.9s /Driver/Iggy.szs
+331.9s /Kart/Body/BodyK_Shp.szs
+331.9s /Kart/BodyTex/BodyK_Shp_Igy_Alb.szs
+331.9s /Kart/WingTex/Wing_Std_Igy_Alb.szs
+331.9s /Kart/Arm/ArmK_Wod.szs
+332.9s /Driver/Wendy.szs
+332.9s /Kart/Body/BodyB_Mix.szs
+334.0s /Driver/Roy.szs
+334.0s /Kart/BodyTex/BodyK_Shp_Roy_Alb.szs
+game fps (last minute): 32.3
+[mem] detail: game RAM 3109 MB, Metal 3306 MB | resident 1595 MB, internal 1548 MB, external 26 MB, compressed 339 MB, purgeable 0 MB, reusable 20 MB, footprint 2018 MB
+[mem] textures: 34 loaded (0 MB), 534 render targets (132 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 364 s: app uses 2018 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3109 MB, Metal 3299 MB | resident 1629 MB, internal 1552 MB, external 50 MB, compressed 332 MB, purgeable 0 MB, reusable 27 MB, footprint 2007 MB
+[mem] detail: game RAM 3109 MB, Metal 3306 MB | resident 1580 MB, internal 1545 MB, external 22 MB, compressed 342 MB, purgeable 0 MB, reusable 11 MB, footprint 2018 MB
 --- end of the log
-[romfs] 264.8 s /Kart/Wing/Wing_Umb.szs
-[romfs] 264.8 s /Kart/WingTex/Wing_Umb_A_Alb.szs
-[gfx] screen at 260s dumped
-[romfs] 268.7 s /Kart/Wing/Wing_Prc.szs
-[mem] 276 s: app uses 2007 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[romfs] 334.0 s /Driver/Roy.szs
+[romfs] 334.0 s /Kart/BodyTex/BodyK_Shp_Roy_Alb.szs
+[gfx] screen at 330s dumped
+[mem] 342 s: app uses 2017 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3109 MB, Metal 3298 MB | resident 1627 MB, internal 1551 MB, external 50 MB, compressed 332 MB, purgeable 0 MB, reusable 25 MB, footprint 2007 MB
-[mem] textures: 34 loaded (0 MB), 443 render targets (124 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[gfx] device pipeline archive: 126 pipelines saved this run (9 files, 0 left out)
-[gfx] screen at 270s dumped
-[romfs] 276.6 s /Kart/Wing/Wing_Prf.szs
-[mem] 287 s: app uses 2007 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3109 MB, Metal 3306 MB | resident 1587 MB, internal 1548 MB, external 26 MB, compressed 338 MB, purgeable 0 MB, reusable 13 MB, footprint 2017 MB
+[gfx] screen at 340s dumped
+[mem] 353 s: app uses 2018 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3109 MB, Metal 3299 MB | resident 1629 MB, internal 1552 MB, external 50 MB, compressed 332 MB, purgeable 0 MB, reusable 27 MB, footprint 2007 MB
-[gfx] device pipeline archive: 129 pipelines saved this run (10 files, 0 left out)
+[mem] detail: game RAM 3109 MB, Metal 3306 MB | resident 1595 MB, internal 1548 MB, external 26 MB, compressed 339 MB, purgeable 0 MB, reusable 20 MB, footprint 2018 MB
+[mem] textures: 34 loaded (0 MB), 534 render targets (132 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[gfx] screen at 350s dumped
+[mem] 364 s: app uses 2018 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3109 MB, Metal 3306 MB | resident 1580 MB, internal 1545 MB, external 22 MB, compressed 342 MB, purgeable 0 MB, reusable 11 MB, footprint 2018 MB
