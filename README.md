@@ -47,10 +47,10 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   race loads; below that, every texture not used right now is dropped. The prewarmed pipelines are kept
   (releasing them freed nothing measurable on the iPhone and left objects black for 2 laps while 96 of them
   were rebuilt); they're only released below 150 MB.
-- **Purgeable textures**: every texture decoded from the game's data and not drawn for ~2 s (120 frames) is
-  marked "volatile". iOS doesn't count that memory against the app and takes it back first when memory runs
-  out, instead of killing the app; the texture is decoded again if it's needed after that. Textures the game
-  renders into are never marked. `NX_PURGEABLE=0` turns it off.
+- **Purgeable textures**: textures the game can rewrite, unused for ~2 s (120 frames), are marked "volatile":
+  iOS takes that memory back first instead of killing the app, and they're decoded again if needed
+  (`NX_PURGEABLE=0` turns it off). `NX_PURGEABLE_ALL=1` does it for every decoded texture: tried on the
+  iPhone, iOS took back 1458 textures in one race and decoding them again cost FPS and memory, so it's off.
 - **Draw data buffers**: 4 MB pieces instead of 16 MB (less half-empty space per frame in flight), at most 4
   spare pieces kept, none when less than 600 MB is left (they used 96 MB on the iPhone).
 - **Upload limit**: at most 96 MB of texture upload buffers in flight while a race loads, 24 MB when
@@ -138,6 +138,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_TRIM_EMERGENCY_MB` | 400 | Below this, while loading: release prewarmed pipelines and every texture not used right now. `0` = off |
 | `NX_BC1_ASTC` | 1 | `0` = decode BC1 textures to RGBA like before (4x more memory) |
 | `NX_PURGEABLE` | 1 | `0` = don't let iOS reclaim unused textures |
+| `NX_PURGEABLE_ALL` | 0 | `1` = every decoded texture can be reclaimed by iOS (costs FPS) |
 | `NX_KEEP_PREWARMED` | 1 | `0` = drop prewarmed pipelines after the prewarm (less memory, black objects for a moment) |
 | `NX_TEX_DROP` | 3 (Ultra low) | Mip levels not decoded on big BC textures (0 to 3). Setting it here replaces the launcher's Textures setting |
 | `NX_TEX_DROP_SHRINK` | 1 | Store the texture smaller (with `NX_TEX_DROP`), instead of an enlarged copy |

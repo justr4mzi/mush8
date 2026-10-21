@@ -4001,9 +4001,12 @@ old = """        let _ = n;
     }
 """
 assert y.count(old) == 1
-y = y.replace(old, """        let sampled = SAMPLED.lock().unwrap();
+y = y.replace(old, """        // off by default: on the iPhone, iOS took back 1458 textures in one race and
+        // decoding them again cost CPU (lower FPS) and memory (old copies still held)
+        static ALL: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var_os("NX_PURGEABLE_ALL").is_some_and(|v| v != "0"));
+        let sampled = SAMPLED.lock().unwrap();
         let rt = RT_USED.lock().unwrap();
-        if let Some(sampled) = sampled.as_ref() {
+        if let Some(sampled) = sampled.as_ref().filter(|_| *ALL) {
             for k in sampled {
                 if vol.contains(k) || rt.as_ref().is_some_and(|r| r.contains(k)) || self.aliases.contains_key(k) {
                     continue;
