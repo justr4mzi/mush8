@@ -1,4 +1,4 @@
-run 1, 21:45 UTC, 73 s, game attempt 10
+run 1, 21:45 UTC, 79 s, game attempt 11
 tracks:
 last game files read:
 0.8s /Audio/Static/MenuDriver_Morton.barslist
@@ -20,15 +20,12 @@ last game files read:
 0.8s /Audio/Static/StaticSysMenu.barslist
 0.8s /Audio/Static/StaticSysRace.bars
 0.8s /Audio/Static/StaticSysRace.barslist
-0.9s /UI/cmn/filter.sarc
-0.9s /UI/cmn/common.sarc
-1.0s /UI/USen/font.sarc
-1.0s /UI/USen/message.sarc
-1.0s /UI/cmn/boot/bt_TitleLoading_00.szs
-1.1s /Data/contentskey.dat
-=== the game stopped (attempt 7): starting it again
-=== attempt 8 at 57 s
-=== script variant 0,        0 tracks done, cup keys: 
+0.8s /UI/cmn/filter.sarc
+0.8s /UI/cmn/common.sarc
+0.9s /UI/USen/font.sarc
+0.9s /UI/USen/message.sarc
+0.9s /UI/cmn/boot/bt_TitleLoading_00.szs
+0.9s /Data/contentskey.dat
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 8): starting it again
 === attempt 9 at 64 s
@@ -38,24 +35,27 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === script variant 0,        0 tracks done, cup keys: 
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 10): starting it again
+=== attempt 11 at 77 s
+=== script variant 0,        0 tracks done, cup keys: 
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
-[mem] game modules loaded: app uses 49 MB
+[mem] game modules loaded: app uses 47 MB
 [mem] phone: heat normal
-[mem] detail: game RAM 37 MB, Metal 0 MB | resident 86 MB, internal 49 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 31 MB, footprint 49 MB
+[mem] detail: game RAM 37 MB, Metal 0 MB | resident 80 MB, internal 47 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 26 MB, footprint 47 MB
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
 --- end of the log
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
-[romfs] 1.0 s /UI/USen/font.sarc
-[romfs] 1.0 s /UI/USen/message.sarc
-[romfs] 1.0 s /UI/cmn/boot/bt_TitleLoading_00.szs
-[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x100c14ff8, 0x7dc29672b8)
+[romfs] 0.9 s /UI/USen/font.sarc
+[romfs] 0.9 s /UI/USen/message.sarc
+[romfs] 0.9 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[romfs] 0.9 s /Data/contentskey.dat
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1022a8ff8, 0x7dc29672b8)
 [gfx] window crop Some([0, 0, 1280, 720])
 [nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
-[romfs] 1.1 s /Data/contentskey.dat
-[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x100c14ff8, 0x1)
-[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x100c14ff8, 0x7dc29672b8)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x1022a8ff8, 0x1)
+[romfs] add-on content: 2 files
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
-=== the game stopped (attempt 10): starting it again
+[nvn] #=== the game stopped (attempt 11): starting it again
