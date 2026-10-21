@@ -1,35 +1,31 @@
-run 1, 21:44 UTC, 41 s, game attempt 5
+run 1, 21:44 UTC, 47 s, game attempt 6
 tracks:
 last game files read:
-0.9s /Audio/Static/MenuDriver_Morton.barslist
-0.9s /Audio/Static/MenuDriver_Nokonoko.barslist
-0.9s /Audio/Static/MenuDriver_Peach.barslist
-0.9s /Audio/Static/MenuDriver_Rosetta.barslist
-0.9s /Audio/Static/MenuDriver_Roy.barslist
-0.9s /Audio/Static/MenuDriver_Shizue.barslist
-0.9s /Audio/Static/MenuDriver_SplatoonBoy.barslist
-0.9s /Audio/Static/MenuDriver_SplatoonGirl.barslist
-0.9s /Audio/Static/MenuDriver_TanukiMario.barslist
-0.9s /Audio/Static/MenuDriver_Waluigi.barslist
-0.9s /Audio/Static/MenuDriver_Wario.barslist
-0.9s /Audio/Static/MenuDriver_Wendy.barslist
-0.9s /Audio/Static/MenuDriver_Yoshi.barslist
-0.9s /Audio/Static/StaticKart.bars
-0.9s /Audio/Static/StaticKart.barslist
-0.9s /Audio/Static/StaticSysMenu.bars
-0.9s /Audio/Static/StaticSysMenu.barslist
-0.9s /Audio/Static/StaticSysRace.bars
-0.9s /Audio/Static/StaticSysRace.barslist
-1.0s /UI/cmn/filter.sarc
-1.0s /UI/cmn/common.sarc
-1.1s /UI/USen/font.sarc
-1.1s /UI/USen/message.sarc
-1.1s /UI/cmn/boot/bt_TitleLoading_00.szs
-1.1s /Data/contentskey.dat
-=== attempt 3 at 22 s
-=== script variant 0,        0 tracks done, cup keys: 
-fatal runtime error: Rust cannot catch foreign exceptions, aborting
-=== the game stopped (attempt 3): starting it again
+0.8s /Audio/Static/MenuDriver_Morton.barslist
+0.8s /Audio/Static/MenuDriver_Nokonoko.barslist
+0.8s /Audio/Static/MenuDriver_Peach.barslist
+0.8s /Audio/Static/MenuDriver_Rosetta.barslist
+0.8s /Audio/Static/MenuDriver_Roy.barslist
+0.8s /Audio/Static/MenuDriver_Shizue.barslist
+0.8s /Audio/Static/MenuDriver_SplatoonBoy.barslist
+0.8s /Audio/Static/MenuDriver_SplatoonGirl.barslist
+0.8s /Audio/Static/MenuDriver_TanukiMario.barslist
+0.8s /Audio/Static/MenuDriver_Waluigi.barslist
+0.8s /Audio/Static/MenuDriver_Wario.barslist
+0.8s /Audio/Static/MenuDriver_Wendy.barslist
+0.8s /Audio/Static/MenuDriver_Yoshi.barslist
+0.8s /Audio/Static/StaticKart.bars
+0.8s /Audio/Static/StaticKart.barslist
+0.8s /Audio/Static/StaticSysMenu.bars
+0.8s /Audio/Static/StaticSysMenu.barslist
+0.8s /Audio/Static/StaticSysRace.bars
+0.8s /Audio/Static/StaticSysRace.barslist
+0.9s /UI/cmn/filter.sarc
+0.9s /UI/cmn/common.sarc
+0.9s /UI/USen/font.sarc
+1.0s /UI/USen/message.sarc
+1.0s /UI/cmn/boot/bt_TitleLoading_00.szs
+1.0s /Data/contentskey.dat
 === attempt 4 at 30 s
 === script variant 0,        0 tracks done, cup keys: 
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
@@ -38,24 +34,28 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === script variant 0,        0 tracks done, cup keys: 
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 5): starting it again
+=== attempt 6 at 45 s
+=== script variant 0,        0 tracks done, cup keys: 
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+=== the game stopped (attempt 6): starting it again
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
-[mem] game modules loaded: app uses 49 MB
+[mem] game modules loaded: app uses 47 MB
 [mem] phone: heat normal
-[mem] detail: game RAM 37 MB, Metal 0 MB | resident 86 MB, internal 49 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 31 MB, footprint 49 MB
+[mem] detail: game RAM 37 MB, Metal 0 MB | resident 80 MB, internal 47 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 26 MB, footprint 47 MB
 [mem] Metal besides the game RAM: 0 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 0 MB, block copies 0 MB, uploads in flight 0 MB, other 0 MB
 --- end of the log
+[romfs] 0.9 s /UI/cmn/common.sarc
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
 [sm] GetServiceHandle pl:u
-[romfs] 1.1 s /UI/USen/font.sarc
-[romfs] 1.1 s /UI/USen/message.sarc
-[romfs] 1.1 s /UI/cmn/boot/bt_TitleLoading_00.szs
-[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x104864ff8, 0x7dc29672b8)
+[romfs] 0.9 s /UI/USen/font.sarc
+[romfs] 1.0 s /UI/USen/message.sarc
+[romfs] 1.0 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1045b8ff8, 0x7dc29672b8)
 [gfx] window crop Some([0, 0, 1280, 720])
 [nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
-[romfs] 1.1 s /Data/contentskey.dat
-[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x104864ff8, 0x1)
-[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x104864ff8, 0x7dc29672b8)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x1045b8ff8, 0x1)
+[romfs] 1.0 s /Data/contentskey.dat
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
-=== the game stopped (attempt 5): starting it again
+=== the game stopped (attempt 6): starting it again
