@@ -1,23 +1,7 @@
-run 1, 12:04 UTC, 138 s
+run 1, 12:05 UTC, 209 s
 tracks:
 7.4s /Course/Gu_Menu
 last game files read:
-31.7s /Kart/BodyTex/BodyK_Fml_B_Alb.szs
-31.7s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
-32.7s /Driver/DrvChr01.szs
-32.8s /DriverTex/DrvChr01_Tex00.szs
-32.8s /Kart/BodyTex/BodyB_Std_Dch0100_Alb.szs
-32.8s /Kart/WingTex/Wing_Std_Dch0100_Alb.szs
-33.6s /Driver/DrvChr04.szs
-33.6s /Kart/BodyTex/BodyB_Std_Dch04_Alb.szs
-33.7s /Kart/WingTex/Wing_Std_Dch04_Alb.szs
-34.5s /Driver/DrvChr07Suit.szs
-34.5s /Kart/Body/BodyB_Kid.szs
-34.5s /Kart/WingTex/Wing_Std_Dch07_Alb.szs
-35.4s /Driver/DrvChr08.szs
-35.4s /Kart/Body/BodyK_Pwc.szs
-35.4s /Kart/Wing/Wing_Prf.szs
-35.4s /Kart/Arm/ArmK_Zst.szs
 40.1s /Driver/Iggy.szs
 40.1s /Kart/Body/BodyK_Kpc.szs
 40.1s /Kart/BodyTex/BodyK_Kpc_F_Alb.szs
@@ -27,25 +11,41 @@ last game files read:
 41.1s /Kart/Body/BodyB_Amb.szs
 41.2s /Kart/Wing/Wing_Prc.szs
 76.7s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
-game fps (last minute): 30.8
-[mem] 109 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 218 render targets (74 MB), 0 pipelines kept ready
-[mem] 120 s: app uses 1986 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] textures: 36 loaded (2 MB), 331 render targets (83 MB), 0 pipelines kept ready
-[mem] 131 s: app uses 1998 MB, iOS still allows 0 MB (lowest so far 0 MB)
+143.1s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
+143.1s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
+143.1s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
+143.1s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
+143.1s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
+143.1s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
+game fps (last minute): 32.6
+[mem] 186 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
+[mem] 197 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
+[mem] 208 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
 --- end of the log
-[ipc] STUB friend::IFriendService cmd 10610 (in 36 bytes, bufs x1 a0 b0 c0)
-[ipc] STUB friend::IFriendService cmd 10601 (in 24 bytes, bufs x0 a0 b0 c0)
-[shader] 065f8de0692fef68: compiled while the render thread waited (new render target), 127 ms
-[gfx] pipeline 065f8de0692fef68/1ef1bc9eb646cb1f: built while the render thread waited (new render target), 11 ms
-[shader] f0a79175563e6d66: compiled while the render thread waited (new render target), 185 ms
-[shader] 9ed561837ced940c: compiled while the render thread waited (new render target), 53 ms
-[gfx] pipeline 9ed561837ced940c/f0a79175563e6d66: built while the render thread waited (new render target), 12 ms
-[shader] 655cb61fd11cb08a: compiled while the render thread waited (new render target), 103 ms
-[shader] 28bea45f294c57c0: compiled while the render thread waited (new render target), 36 ms
-[gfx] pipeline 28bea45f294c57c0/655cb61fd11cb08a: built while the render thread waited (new render target), 10 ms
-[gfx] screen at 110s dumped
-[mem] textures: 36 loaded (2 MB), 331 render targets (83 MB), 0 pipelines kept ready
-[mem] 131 s: app uses 1998 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[gfx] device pipeline archive: 107 pipelines saved this run (6 files, 0 left out)
-[gfx] screen at 120s dumped
+[mem] 164 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 150s dumped
+[mem] textures: 36 loaded (2 MB), 398 render targets (86 MB), 0 pipelines kept ready
+[mem] 175 s: app uses 2000 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 160s dumped
+[shader] ee32a5616477227d: compiling took 545 ms
+[gfx] device pipeline archive: 113 pipelines saved this run (7 files, 0 left out)
+[gfx] screen at 170s dumped
+[mem] 186 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
+[gfx] screen at 180s dumped
+[mem] 197 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 36 loaded (2 MB), 403 render targets (86 MB), 0 pipelines kept ready
+[gfx] screen at 190s dumped
+[mem] 208 s: app uses 2001 MB, iOS still allows 0 MB (lowest so far 0 MB)
