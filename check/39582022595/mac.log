@@ -1,0 +1,44 @@
+   Compiling nxfs v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxfs)
+   Compiling nxabi v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxabi)
+   Compiling nxshader v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxshader)
+   Compiling nxhost v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxhost)
+   Compiling nxscan v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxscan)
+   Compiling nxpatch v0.1.0 (/Users/runner/work/mush8/mush8/crates/nxpatch)
+warning: unused variable: `n`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:14
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |              ^ help: if this is intentional, prefix it with an underscore: `_n`
+    |
+    = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `total`
+   --> crates/nxhost/src/nvn/draw/state.rs:746:17
+    |
+746 |         let (n, total) = (PREWARM_BUILT.load(Relaxed), PREWARM_TOTAL.load(Relaxed).max(1));
+    |                 ^^^^^ help: if this is intentional, prefix it with an underscore: `_total`
+
+warning: function `seed_unlocked_save` is never used
+   --> crates/nxhost/src/main.rs:368:4
+    |
+368 | fn seed_unlocked_save(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^^^^^^^^^^^
+    |
+    = note: `#[warn(dead_code)]` (part of `#[warn(unused)]`) on by default
+
+warning: function `copy_dir` is never used
+   --> crates/nxhost/src/main.rs:394:4
+    |
+394 | fn copy_dir(src: &std::path::Path, dst: &std::path::Path) -> std::io::Result<()> {
+    |    ^^^^^^^^
+
+warning: variable `LIMIT` should have a snake case name
+   --> crates/nxhost/src/nvn/draw/textures.rs:873:9
+    |
+873 |     let LIMIT: usize = if left != 0 && left < 600 << 20 { 24 << 20 } else { 96 << 20 };
+    |         ^^^^^ help: convert the identifier to snake case: `limit`
+    |
+    = note: `#[warn(non_snake_case)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: `nxhost` (bin "nxhost") generated 5 warnings (run `cargo fix --bin "nxhost" -p nxhost` to apply 2 suggestions)
+    Finished `release` profile [optimized + debuginfo] target(s) in 23.52s
