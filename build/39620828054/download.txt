@@ -1,0 +1,6 @@
+ERROR: Unsupported Method : userdata.dat
+7zz could not unpack the save, trying unar
+[32m==>[0m [1mDownloading bottle manifests[0m
+✔︎ Bottle Manifest unar (1.10.8_7)
+[32m==>[0m [1mFetching downloads for: [32munar[39m[0m
+✔︎ Bottle unar (1.10.8_7)
