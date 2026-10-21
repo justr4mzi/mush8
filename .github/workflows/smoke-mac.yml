@@ -184,7 +184,7 @@ jobs:
           INPUT="${SCRIPT:-$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")}"
           # screenshots: every 10 s, but every 60 s on the long VS run (the GitHub Mac GPU driver crashed
           # right after a screenshot several times: fewer screenshots, fewer crashes)
-          STEP=10; [ "$VS96" = 1 ] && STEP=100000
+          STEP=10; DUMP_EVERY=60; [ "$VS96" = 1 ] && STEP=100000 && DUMP_EVERY=0   # VS run: no screenshots (the GitHub Mac GPU driver crashed after some)
           DUMPS="$(python3 -c "print(','.join(str(t) for t in range(10, int('$SECS'), $STEP)))")"
           n=0
           for m in $MODES; do
@@ -212,7 +212,7 @@ jobs:
                 CUPS="$(python3 tools/cupkeys.py $(( DONE + 4 * ${CUPS_RIGHT:-0} )))"
                 python3 tools/vs96.py "$SECS" "$VARIANT" "$CUPS" > work/autoinput.txt && echo "=== script variant $VARIANT, $DONE tracks done, cup keys: $CUPS" >> "$L"
               fi
-              NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY=60 NX_PIPELINE_LIST="$LIST" \
+              NX_ASYNC_GFX=$m ${{ inputs.soft_bc == '1' && 'NX_SOFT_BC=1' || '' }} NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_DUMP_EVERY="$DUMP_EVERY" NX_PIPELINE_LIST="$LIST" \
                 NX_AUTOINPUT="@$PWD/work/autoinput.txt" NX_DUMP_AT="$DUMPS" ./target/release/nxhost >> "$L" 2>&1 &
               pid=$!
             }
