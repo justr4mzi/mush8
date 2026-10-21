@@ -3815,7 +3815,9 @@ s_ = s_.replace(old, r"""pub fn astc_bc1() -> bool {
         let on = enabled()
             && std::env::var("NX_BC1_ASTC").map_or(true, |v| v.trim() != "0")
             && sixteen() == 0
-            && std::env::var("NX_TEX_DROP").map_or(true, |v| v.trim() == "0")
+            // the mip-drop mode that enlarges a smaller level works on RGBA pixels; the
+            // shrink mode (launcher default) just uploads fewer levels and is fine
+            && (std::env::var("NX_TEX_DROP").map_or(true, |v| v.trim() == "0") || std::env::var_os("NX_TEX_DROP_SHRINK").is_some())
             && super::gpu().device.0.supportsFamily(objc2_metal::MTLGPUFamily::Apple2);
         if on {
             eprintln!("[gfx] BC1 textures stored as ASTC 4x4 (4x less memory than decoded)");
@@ -3872,3 +3874,73 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, "            Some(px) => (px.as_ptr(), px.len() / d.max(1) / gfx::bc::soft(key.format).map_or(h, |k| gfx::bc::out_rows(k, h)), px.len() / d.max(1)),\n")
 dm.write_text(s_)
 print("patched", bcp, "(BC1 stored as ASTC 4x4)")
+
+# ---------------------------------------------------------------------------
+# Memory report, part 2: the textures the main list doesn't show (views,
+# aliases, textures dropped from the list but still held elsewhere), the
+# scratch buffers for draw data, the block-copy buffer and the texture upload
+# buffers in flight. Metal grew by ~430 MB when a race loaded on the iPhone
+# while the main list only showed ~110 MB: this says where the rest is.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+s_ = gm.read_text()
+old = "/// Where the memory goes (see start_memlog).\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """/// Bytes held by our own Metal objects: [draw scratch buffers, block-copy buffer,
+/// upload buffers in flight, every texture held, textures outside the main list].
+pub static OURS: [std::sync::atomic::AtomicU64; 5] = [const { std::sync::atomic::AtomicU64::new(0) }; 5];
+
+""" + old)
+old = """    } else {
+        eprintln!("[mem] detail: game RAM {} MB, Metal {} MB", mb(game), mb(metal));
+    }
+"""
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + """    let o = |i: usize| OURS[i].load(std::sync::atomic::Ordering::Relaxed) >> 20;
+    let heap = heap().map_or(0, |h| h.buffer.0.length() as u64);
+    eprintln!(
+        "[mem] Metal besides the game RAM: {} MB = textures {} MB (of which {} MB outside the main list), draw scratch {} MB, block copies {} MB, uploads in flight {} MB, other {} MB",
+        mb(metal.saturating_sub(heap)), o(3), o(4), o(0), o(1), o(2),
+        mb(metal.saturating_sub(heap)).saturating_sub(o(3) + o(0) + o(1) + o(2))
+    );
+""")
+gm.write_text(s_)
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = st.read_text()
+old = "                Shared(dev.newBufferWithLength_options(size.max(CHUNK), MTLResourceOptions::StorageModeShared).expect(\"scratch buffer\"))\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "                gfx::OURS[0].fetch_add(size.max(CHUNK) as u64, std::sync::atomic::Ordering::Relaxed);\n" + old)
+st.write_text(s_)
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "        *scratch = Some(Shared(b));\n"
+assert y.count(old) == 1
+y = y.replace(old, "        gfx::OURS[1].store(b.length() as u64, std::sync::atomic::Ordering::Relaxed);\n" + old)
+old = "    let mut total: usize = q.iter().map(|(_, b)| *b).sum();\n"
+assert y.count(old) == 1
+y = y.replace(old, old + "    gfx::OURS[2].store(total as u64, std::sync::atomic::Ordering::Relaxed);\n")
+old = "            eprintln!(\"[mem] textures: {n} loaded"
+assert y.count(old) == 1
+y = y.replace(old, """            {
+                // every texture still held anywhere, counted once (views count as their parent)
+                fn root(t: &Texture) -> objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn MTLTexture>> {
+                    let mut r: objc2::rc::Retained<objc2::runtime::ProtocolObject<dyn MTLTexture>> = unsafe { objc2::rc::Retained::retain(t as *const _ as *mut _) }.unwrap();
+                    while let Some(p) = r.parentTexture() {
+                        r = p;
+                    }
+                    r
+                }
+                let mut all = std::collections::HashMap::new();
+                let main: std::collections::HashSet<usize> = self.map.values().map(|t| objc2::rc::Retained::as_ptr(&root(&t.0)) as usize).collect();
+                let held = self.map.values().map(|t| &t.0).chain(self.storage.values().map(|(_, t)| &t.0)).chain(self.views.values().map(|t| &t.0)).chain(self.block_views.iter().map(|(_, t)| &t.0));
+                for t in held {
+                    let r = root(t);
+                    all.entry(objc2::rc::Retained::as_ptr(&r) as usize).or_insert_with(|| objc2_metal::MTLResource::allocatedSize(&*r));
+                }
+                let total: usize = all.values().sum();
+                let outside: usize = all.iter().filter(|(p, _)| !main.contains(p)).map(|(_, s)| *s).sum();
+                gfx::OURS[3].store(total as u64, std::sync::atomic::Ordering::Relaxed);
+                gfx::OURS[4].store(outside as u64, std::sync::atomic::Ordering::Relaxed);
+            }
+""" + old)
+tx.write_text(y)
+print("patched", gm, "(memory report: where Metal memory goes)")
