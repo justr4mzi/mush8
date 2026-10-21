@@ -3779,17 +3779,21 @@ y = y.replace(old, """                let size = objc2_metal::MTLResource::alloc
                     bc_n += 1;
                     bc_bytes += size;
                     // compressed size on the Switch: BC1/BC4 half a byte per pixel, the others one
-                    let (dec, comp) = match k.format { 65 | 66 | 69 | 70 => (8, 1), 73 | 74 => (2, 1), 75 | 76 => (2, 2), 79 | 80 => (8, 2), _ => (4, 1) };
+                    let (dec, comp) = match k.format { 65 | 66 | 69 | 70 => (8, 1), 73 | 74 => (2, 1), 75 | 76 => (2, 1), 79 | 80 => (8, 1), _ => (4, 1) };
                     bc_native += size * comp / dec;
+                    bc_by[(k.format - 65) as usize] += size;
                 }
                 if self.uploaded.contains_key(k) {""")
 old = "            let (mut n, mut bytes, mut rn, mut rbytes) = (0usize, 0usize, 0usize, 0usize);\n"
 assert y.count(old) == 1
-y = y.replace(old, old + "            let (mut bc_n, mut bc_bytes, mut bc_native) = (0usize, 0usize, 0usize);\n")
+y = y.replace(old, old + "            let (mut bc_n, mut bc_bytes, mut bc_native) = (0usize, 0usize, 0usize);\n            let mut bc_by = [0usize; 16];\n")
 old = "            eprintln!(\"[mem] textures: {n} loaded"
 assert y.count(old) == 1
 y = y.replace(old, """            if bc_n > 0 {
                 eprintln!("[mem] BC textures decoded on the CPU: {bc_n}, {} MB (would be {} MB compressed)", bc_bytes >> 20, bc_native >> 20);
+                let names = ["BC1", "BC1", "BC2", "BC3", "BC1 srgb", "BC1 srgb", "BC2 srgb", "BC3 srgb", "BC4", "BC4s", "BC5", "BC5s", "BC7", "BC7 srgb", "BC6s", "BC6"];
+                let parts: Vec<String> = (0..16).filter(|&i| bc_by[i] >> 20 > 0).map(|i| format!("{} {} MB", names[i], bc_by[i] >> 20)).collect();
+                eprintln!("[mem] BC by format (fmt 65+i): {}", parts.join(", "));
             }
 """ + old)
 tx.write_text(y)
