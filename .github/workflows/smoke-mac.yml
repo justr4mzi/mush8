@@ -1,0 +1,129 @@
+# Run the game for a few minutes on a GitHub Mac with scripted input (A pressed
+# every second: menus -> Grand Prix -> race), once per setting in `modes`, and
+# publish the text logs (fps, timings, errors) to the ci-logs branch.
+# Only text goes out: screenshots stay on the runner and are summarised as
+# numbers (how much of the screen is not black).
+name: Mac smoke test
+
+on:
+  workflow_dispatch:
+    inputs:
+      runner:
+        description: "macOS runner label"
+        default: "macos-15"
+      modes:
+        description: "space separated NX_ASYNC_GFX values to run (one run each)"
+        default: "0 1"
+      seconds:
+        description: "seconds per run"
+        default: "200"
+
+permissions:
+  contents: write
+
+jobs:
+  smoke:
+    runs-on: ${{ inputs.runner || 'macos-15' }}
+    timeout-minutes: 120
+    steps:
+      - name: Use the newest Xcode
+        run: |
+          X="$(ls -d /Applications/Xcode*.app | sort -V | tail -1)"
+          sudo xcode-select -s "$X/Contents/Developer"; xcodebuild -version; sysctl hw.memsize hw.ncpu
+
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        run: rustup toolchain install stable --profile minimal
+
+      - name: Cache Rust build
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: rust-${{ runner.os }}-${{ hashFiles('Cargo.lock') }}
+
+      - name: Cache game modules
+        uses: actions/cache@v4
+        with:
+          path: work/v-upd
+          key: modules-${{ hashFiles('crates/nxpatch/**', 'crates/nxfs/**') }}
+          restore-keys: modules-
+
+      - name: Download game files
+        env:
+          KEYS_URL: ${{ secrets.KEYS_URL }}
+          BASE_URL: ${{ secrets.BASE_URL }}
+          UPDATE_URL: ${{ secrets.UPDATE_URL }}
+        run: |
+          mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
+          python3 -m pip install --quiet --break-system-packages gdown pillow || python3 -m pip install --quiet --user gdown pillow
+          export PATH="$PATH:$(python3 -m site --user-base)/bin"
+          get() {
+            case "$1" in
+              *drive.google.com*)
+                for i in 1 2 3 4 5; do
+                  python3 -m gdown --continue --retries 3 --quiet "$1" -O "$2" && return 0
+                  echo "Drive download cut, retry $i"; sleep 10
+                done; return 1 ;;
+              *dropbox.com*)
+                u="${1/dl=0/dl=1}"; case "$u" in *dl=1*) ;; *\?*) u="$u&dl=1" ;; *) u="$u?dl=1" ;; esac
+                curl -fsSL --retry 5 --retry-all-errors -C - "$u" -o "$2" ;;
+              *) curl -fsSL --retry 3 "$1" -o "$2" ;;
+            esac
+          }
+          get "$KEYS_URL"   prod.keys
+          get "$BASE_URL"   base.nsp
+          get "$UPDATE_URL" upd4-0-1.nsp
+          ls -lh prod.keys base.nsp upd4-0-1.nsp
+
+      - name: Apply patches and build (macOS)
+        run: |
+          mkdir -p out; exec > >(tee -a out/build.txt) 2>&1
+          python3 patch-heap.py
+          cargo build --release
+          [ -f work/v-upd/exefs/main ] || ./target/release/nxfs extract --base base.nsp --update upd4-0-1.nsp --out work/v-upd
+          P=work/v-upd/patched
+          [ "$(cat "$P/nxpatch.stamp" 2>/dev/null)" = "$(./target/release/nxpatch stamp)" ] || ./target/release/nxpatch rewrite --out "$P" \
+            work/v-upd/exefs/main work/v-upd/exefs/subsdk0 work/v-upd/exefs/sdk
+
+      - name: Run
+        env:
+          MODES: ${{ inputs.modes || '0 1' }}
+          SECS: ${{ inputs.seconds || '200' }}
+        run: |
+          mkdir -p out
+          INPUT="$(python3 -c "print(','.join(f'{t}:A' for t in range(12, int('$SECS'))))")"
+          DUMPS="$(python3 -c "print(','.join(str(t) for t in range(30, int('$SECS'), 30)))")"
+          for m in $MODES; do
+            rm -rf work/frame work/save
+            echo "=== NX_ASYNC_GFX=$m ($SECS s)"
+            NX_ASYNC_GFX=$m NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 \
+              NX_AUTOINPUT="$INPUT" NX_DUMP_AT="$DUMPS" ./target/release/nxhost > "out/run-$m.log" 2>&1 &
+            pid=$!
+            for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; done
+            if kill -0 $pid 2>/dev/null; then echo "still running after $SECS s: stopping it"; kill $pid; sleep 3; kill -9 $pid 2>/dev/null || true; else wait $pid && echo "exited by itself" || echo "exited by itself with code $?"; fi
+            grep -c "^\[fps\]" "out/run-$m.log" || true
+            python3 - "$m" <<'EOF' | tee -a "out/run-$m.log"
+          import glob, sys
+          from PIL import Image
+          for f in sorted(glob.glob("work/frame/t*.png")):
+              im = Image.open(f).convert("L").resize((160, 90))
+              px = list(im.getdata())
+              lit = sum(p > 16 for p in px) / len(px)
+              print(f"[smoke] screen {f.split('/')[-1]}: {lit*100:.0f}% not black, mean {sum(px)/len(px):.0f}")
+          EOF
+            tail -5 "out/run-$m.log"
+          done
+
+      - name: Remove game files
+        if: always()
+        run: rm -rf prod.keys base.nsp upd4-0-1.nsp work/frame
+
+      - name: Publish logs
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash .github/publish-logs.sh smoke
