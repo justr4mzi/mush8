@@ -3429,9 +3429,13 @@ old = "    pub fn trim(&mut self) {\n"
 assert y.count(old) == 1
 y = y.replace(old, old + """        if self.frame % 600 == 0 {
             let (mut n, mut bytes, mut rn, mut rbytes) = (0usize, 0usize, 0usize, 0usize);
-            for (k, (_, t)) in &self.storage {
+            let mut seen = std::collections::HashSet::new();
+            for (k, t) in &self.map {
+                if !seen.insert(objc2::rc::Retained::as_ptr(&t.0) as usize) {
+                    continue;
+                }
                 let size = objc2_metal::MTLResource::allocatedSize(&*t.0);
-                if self.uploaded.contains_key(&TexKey { format: k.format, ..*k }) || self.uploaded.keys().any(|u| u.addr == k.addr) {
+                if self.uploaded.contains_key(k) {
                     n += 1;
                     bytes += size;
                 } else {
