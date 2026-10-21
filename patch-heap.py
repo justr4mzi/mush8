@@ -3415,3 +3415,34 @@ for a_, b_ in [("    @Published var asyncGfx = false\n", "    @Published var asy
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, sw, "(separate graphics thread on by default)")
+
+# ---------------------------------------------------------------------------
+# Memory report every ~10 s in the log, to see what fills the 3 GB:
+# "[mem] textures: N loaded (X MB), M render targets (Y MB), P pipelines kept"
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = "    pub fn trim(&mut self) {\n"
+assert y.count(old) == 1
+y = y.replace(old, old + """        if self.frame % 600 == 0 {
+            let (mut n, mut bytes, mut rn, mut rbytes) = (0usize, 0usize, 0usize, 0usize);
+            for (k, (_, t)) in &self.storage {
+                let size = t.0.allocatedSize();
+                if self.uploaded.contains_key(&TexKey { format: k.format, ..*k }) || self.uploaded.keys().any(|u| u.addr == k.addr) {
+                    n += 1;
+                    bytes += size;
+                } else {
+                    rn += 1;
+                    rbytes += size;
+                }
+            }
+            eprintln!("[mem] textures: {n} loaded ({} MB), {rn} render targets ({} MB), {} pipelines kept ready", bytes >> 20, rbytes >> 20, super::state::prewarmed_count());
+        }
+""")
+tx.write_text(y)
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = "pub fn drop_prewarmed() {\n"
+assert u.count(old) == 1
+u = u.replace(old, "pub fn prewarmed_count() -> usize {\n    PREWARMED.lock().unwrap().len()\n}\n\n" + old)
+st.write_text(u)
+print("patched", tx, st, "(memory report)")
