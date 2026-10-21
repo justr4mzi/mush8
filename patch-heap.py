@@ -2804,3 +2804,84 @@ for a_, b_ in [('    @Published var textureQuality = "verylow"\n', '    @Publish
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, sw, "(defaults: Ultra low, full prewarm, trim 600)")
+
+# ---------------------------------------------------------------------------
+# Device pipeline archive: forget it by itself when iOS or the GPU changes.
+# A pipeline archive only works on the iOS build and GPU it was made on; after
+# an iOS update (or a work/ folder copied from another iPhone) the old files
+# are never hit and fill the 400-file cap, so nothing new gets saved.
+# work/devarch/os.txt remembers "<iOS build> <GPU architecture>".
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = """fn device_archive_files() -> Vec<String> {
+"""
+assert u.count(old) == 1
+u = u.replace(old, """fn os_build() -> String {
+    let mut buf = [0u8; 64];
+    let mut len = buf.len();
+    let r = unsafe { libc::sysctlbyname(c"kern.osversion".as_ptr(), buf.as_mut_ptr().cast(), &mut len, std::ptr::null_mut(), 0) };
+    if r != 0 {
+        return String::new();
+    }
+    String::from_utf8_lossy(&buf[..len]).trim_end_matches('\\0').trim().to_string()
+}
+
+fn check_device_archive_os() {
+    let id = format!("{} {}", os_build(), gfx::gpu().device.0.architecture().name());
+    let stamp = format!("{DEVICE_ARCHIVE_DIR}/os.txt");
+    let old = std::fs::read_to_string(&stamp).map(|s| s.trim().to_string()).ok();
+    if old.as_deref().is_some_and(|o| o != id) {
+        let mut n = 0;
+        if let Ok(r) = std::fs::read_dir(DEVICE_ARCHIVE_DIR) {
+            for e in r.flatten() {
+                if e.file_name().to_string_lossy().contains(".metalar") && std::fs::remove_file(e.path()).is_ok() {
+                    n += 1;
+                }
+            }
+        }
+        eprintln!("[gfx] iOS or GPU changed ({} -> {id}): device pipeline archive cleared ({n} files)", old.unwrap_or_default());
+    }
+    if old.as_deref() != Some(id.as_str()) {
+        let _ = std::fs::create_dir_all(DEVICE_ARCHIVE_DIR);
+        let _ = std::fs::write(&stamp, &id);
+    }
+}
+
+fn device_archive_files() -> Vec<String> {
+    static CHECK: std::sync::Once = std::sync::Once::new();
+    CHECK.call_once(check_device_archive_os);
+""")
+
+# ---------------------------------------------------------------------------
+# Retry a pipeline whose build failed: the shader compiler service on iOS
+# sometimes dies mid-build ("XPC_ERROR_CONNECTION_INTERRUPTED") and the
+# pipeline then stayed black for the whole session. Two more tries, 1 s then 3 s
+# later (failures are rare, so the wait costs nothing normally).
+old = """        Err(e) => {
+            eprintln!("[gfx] pipeline {name} failed: {}", e.localizedDescription());
+            None
+        }
+    }
+}
+"""
+assert u.count(old) == 1
+u = u.replace(old, """        Err(e) => {
+            eprintln!("[gfx] pipeline {name} failed: {}", e.localizedDescription());
+            for (i, wait) in [1u64, 3].into_iter().enumerate() {
+                std::thread::sleep(std::time::Duration::from_secs(wait));
+                match dev.newRenderPipelineStateWithDescriptor_error(&d) {
+                    Ok(p) => {
+                        eprintln!("[gfx] pipeline {name}: retry {} worked", i + 1);
+                        harvest(d.clone());
+                        return Some(Shared(p));
+                    }
+                    Err(e) => eprintln!("[gfx] pipeline {name}: retry {} failed: {}", i + 1, e.localizedDescription()),
+                }
+            }
+            None
+        }
+    }
+}
+""")
+st.write_text(u)
+print("patched", st, "(devarch cleared on iOS/GPU change, retry failed pipelines)")
