@@ -210,7 +210,7 @@ jobs:
                 cd "$D" && bash "$GITHUB_WORKSPACE/.github/publish-logs.sh" smoke ) > /dev/null 2>&1 || true
             }
             T0=$(date +%s)
-            for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; { [ $((i % 600)) = 0 ] || [ $i = 180 ] || [ $i = 360 ]; } && live; done
+            for i in $(seq 1 "$SECS"); do sleep 1; kill -0 $pid 2>/dev/null || break; { [ $((i % 600)) = 0 ] || { [ $i -le 900 ] && [ $((i % 60)) = 0 ]; }; } && live; done
             live
             if kill -0 $pid 2>/dev/null; then echo "still running after $SECS s: stopping it"; kill $pid; sleep 3; kill -9 $pid 2>/dev/null || true; else wait $pid && echo "exited by itself" || echo "exited by itself with code $?"; fi
             grep -c "^\[fps\]" "$L" || true
