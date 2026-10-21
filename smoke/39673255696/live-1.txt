@@ -1,54 +1,57 @@
-run 1, 21:09 UTC, 912 s, game attempt 1
+run 1, 21:10 UTC, 951 s, game attempt 2
 tracks:
 6.8s /Course/Gu_Menu
+4.6s /Course/Gu_Menu
 last game files read:
-31.1s /Kart/Body/BodyK_Shp.szs
-31.1s /Kart/BodyTex/BodyK_Shp_Igy_Alb.szs
-31.1s /Kart/WingTex/Wing_Std_Igy_Alb.szs
-31.1s /Kart/Arm/ArmK_Wod.szs
-36.0s /Driver/DrvChr02.szs
-36.0s /Kart/BodyTex/BodyK_Shp_A_Alb.szs
-36.0s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
-36.9s /Kart/Body/BodyB_Fro.szs
-76.7s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
-156.0s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
-156.0s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
-156.0s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
-156.0s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
-156.0s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
-156.0s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-game fps (last minute): 32.2
+18.6s /Kart/Body/BodyK_Shp.szs
+18.6s /Kart/BodyTex/BodyK_Shp_A_Alb.szs
+18.6s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
+18.6s /Kart/Arm/ArmK_Wod.szs
+19.8s /Driver/Shizue.szs
+19.8s /Kart/Body/BodyK_Spo.szs
+19.9s /Kart/WingTex/Wing_Std_Shz_Alb.szs
+20.7s /Driver/KingTeresa.szs
+20.7s /Kart/BodyTex/BodyK_Std_Ktr_Alb.szs
+20.7s /Kart/WingTex/Wing_Std_Ktr_Alb.szs
+20.7s /Kart/Arm/ArmK_Big.szs
+21.8s /Driver/BbMario.szs
+21.8s /Kart/Body/BodyK_Skl.szs
+21.8s /Kart/BodyTex/BodyK_Skl_MroB_Alb.szs
+21.8s /Kart/Wing/Wing_Prf.szs
+22.8s /Driver/PeachSuit.szs
+22.8s /Kart/Body/BodyB_Jet.szs
+22.9s /Kart/WingTex/Wing_Std_Pch_Alb.szs
+24.0s /Driver/DrvChr03.szs
+24.0s /Kart/Body/BodyK_Wld.szs
+24.0s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
+24.0s /Kart/Arm/ArmK_Ofr.szs
+29.0s /Driver/Daisy.szs
+29.0s /Kart/Body/BodyK_Cat.szs
+29.0s /Kart/WingTex/Wing_Std_Dsy_Alb.szs
+game fps (last minute): 29.4
 === attempt 1 at 0 s
 === no new track for 10 min: menu script variant 1
 === stuck (attempt 1): restarting the game
-[mem] textures: 35 loaded (2 MB), 489 render targets (130 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
-[mem] 903 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 2 at 918 s
+=== script variant 1,        0 tracks done, cup keys: DOWN
+[mem] textures: 35 loaded (0 MB), 147 render targets (102 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] 32 s: app uses 1911 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
-[mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
+[mem] detail: game RAM 3119 MB, Metal 3206 MB | resident 1784 MB, internal 1720 MB, external 53 MB, compressed 99 MB, purgeable 0 MB, reusable 9 MB, footprint 1911 MB
+[mem] Metal besides the game RAM: 106 MB = textures 79 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 11 MB
 --- end of the log
-[mem] 892 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[romfs] 22.9 s /Kart/WingTex/Wing_Std_Pch_Alb.szs
+[romfs] 24.0 s /Driver/DrvChr03.szs
+[romfs] 24.0 s /Kart/Body/BodyK_Wld.szs
+[romfs] 24.0 s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
+[romfs] 24.0 s /Kart/Arm/ArmK_Ofr.szs
+[romfs] 29.0 s /Driver/Daisy.szs
+[romfs] 29.0 s /Kart/Body/BodyK_Cat.szs
+[romfs] 29.0 s /Kart/WingTex/Wing_Std_Dsy_Alb.szs
+[mem] textures: 35 loaded (0 MB), 147 render targets (102 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] 32 s: app uses 1911 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
-[cpu] 24% of a core in all: guest-0x50 9%, gfx-submit 5%, thread-0x2b03 2%, thread-0xf107 2%, guest-0x6c 2%, guest-0x55 2%, memlog 1%, thread-0x3f03 1%, guest-0x56 1%
-[cpu] system calls: 0x1d 3051/s, 0x1b 1466/s, 0x1c 1290/s, 0x34 633/s, 0x35 633/s, 0x1a 176/s, 0x17 134/s, 0x21 102/s
-[mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
-[mem] textures: 35 loaded (2 MB), 489 render targets (130 MB), 0 pipelines kept ready, 3 purgeable, 1 taken back by iOS
-[mem] 903 s: app uses 1952 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3108 MB, Metal 3242 MB | resident 1560 MB, internal 1527 MB, external 13 MB, compressed 307 MB, purgeable 0 MB, reusable 18 MB, footprint 1952 MB
-[cpu] 19% of a core in all: guest-0x50 7%, gfx-submit 5%, thread-0xf107 2%, thread-0x3f03 2%, thread-0x2b03 1%, guest-0x6c 1%, guest-0x55 1%
-[cpu] system calls: 0x1d 2990/s, 0x1b 1448/s, 0x1c 1266/s, 0x35 622/s, 0x34 622/s, 0x1a 183/s, 0x17 133/s, 0x21 102/s
-[mem] Metal besides the game RAM: 142 MB = textures 108 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 18 MB
-=== no new track for 10 min: menu script variant 1
-=== stuck (attempt 1): restarting the game
+[mem] detail: game RAM 3119 MB, Metal 3206 MB | resident 1784 MB, internal 1720 MB, external 53 MB, compressed 99 MB, purgeable 0 MB, reusable 9 MB, footprint 1911 MB
+[cpu] 18% of a core in all: guest-0x50 7%, gfx-submit 4%, guest-0x5a 2%, thread-0x2603 2%, guest-0x6c 1%, guest-0x55 1%, thread-0x6c03 1%
+[cpu] system calls: 0x1d 2799/s, 0x1b 1353/s, 0x1c 1177/s, 0x35 575/s, 0x34 575/s, 0x1a 176/s, 0x17 131/s, 0x21 106/s
+[mem] Metal besides the game RAM: 106 MB = textures 79 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 11 MB
