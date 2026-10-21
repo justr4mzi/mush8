@@ -1,0 +1,51 @@
+run 1, 14:42 UTC, 66 s
+tracks:
+7.6s /Course/Gu_Menu
+last game files read:
+31.9s /Kart/WingTex/Wing_Std_Mtn_Alb.szs
+31.9s /Kart/Arm/ArmK_Wod.szs
+32.8s /Driver/AnimalBoyA.szs
+32.8s /Kart/Body/BodyK_Btl.szs
+32.9s /Kart/Wing/Wing_Pap.szs
+32.9s /Kart/Arm/ArmK_Anm.szs
+33.6s /Driver/KingTeresa.szs
+33.6s /Kart/BodyTex/BodyK_Std_Ktr_Alb.szs
+33.6s /Kart/WingTex/Wing_Std_Ktr_Alb.szs
+33.6s /Kart/Arm/ArmK_Big.szs
+34.4s /Driver/BbRosetta.szs
+34.4s /Kart/Body/BodyK_Ten.szs
+34.4s /Kart/BodyTex/BodyK_Ten_C_Alb.szs
+34.4s /Kart/WingTex/Wing_Std_RstB_Alb.szs
+39.6s /Driver/SplatoonBoy.szs
+39.6s /DriverTex/SplatoonBoy_Tex00.szs
+39.6s /Kart/BodyTex/BodyB_Std_Spb00_Alb.szs
+39.6s /Kart/BodyTex/BodyB_Std_Spb00_Spm.szs
+39.6s /Kart/WingTex/Wing_Std_Spb00_Alb.szs
+39.6s /Kart/WingTex/Wing_Std_Spb00_Spm.szs
+40.5s /Driver/MetalMario.szs
+40.5s /Kart/BodyTex/BodyK_Std_MroM_Alb.szs
+40.5s /Kart/BodyTex/BodyK_Std_MroM_Spm.szs
+40.6s /Kart/WingTex/Wing_Std_MroM_Alb.szs
+40.6s /Kart/WingTex/Wing_Std_MroM_Spm.szs
+game fps (last minute): 25.4
+[mem] BC by format (fmt 65+i): BC1 srgb 1 MB, BC4 4 MB, BC7 srgb 7 MB
+[mem] textures: 35 loaded (0 MB), 142 render targets (108 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] 55 s: app uses 1997 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3296 MB | resident 1734 MB, internal 1672 MB, external 51 MB, compressed 216 MB, purgeable 0 MB, reusable 11 MB, footprint 1997 MB
+--- end of the log
+[romfs] 39.6 s /Kart/WingTex/Wing_Std_Spb00_Spm.szs
+[mem] BC textures decoded on the CPU: 24, 14 MB (would be 4 MB compressed)
+[mem] BC by format (fmt 65+i): BC1 srgb 1 MB, BC4 4 MB, BC7 srgb 7 MB
+[mem] textures: 35 loaded (0 MB), 142 render targets (108 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[romfs] 40.5 s /Driver/MetalMario.szs
+[romfs] 40.5 s /Kart/BodyTex/BodyK_Std_MroM_Alb.szs
+[romfs] 40.5 s /Kart/BodyTex/BodyK_Std_MroM_Spm.szs
+[romfs] 40.6 s /Kart/WingTex/Wing_Std_MroM_Alb.szs
+[romfs] 40.6 s /Kart/WingTex/Wing_Std_MroM_Spm.szs
+[gfx] screen at 40s dumped
+[mem] 55 s: app uses 1997 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3296 MB | resident 1734 MB, internal 1672 MB, external 51 MB, compressed 216 MB, purgeable 0 MB, reusable 11 MB, footprint 1997 MB
+[gfx] screen at 50s dumped
+[gfx] device pipeline archive: 84 pipelines saved this run (4 files, 0 left out)
