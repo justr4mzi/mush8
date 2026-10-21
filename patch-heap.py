@@ -2792,7 +2792,7 @@ assert m.count(old) == 1
 m = m.replace(old, 'if field("full_prewarm").as_deref() != Some("false") ||')
 old = '    def("NX_HASH_EVERY", "2");\n'
 assert m.count(old) == 1
-m = m.replace(old, old + '    def("NX_TRIM_MB", "600");\n')
+m = m.replace(old, old + '    def("NX_TRIM_MB", "900");\n')
 mn.write_text(m)
 sw = pathlib.Path("ios/Launcher.swift")
 w = sw.read_text()
