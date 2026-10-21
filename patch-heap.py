@@ -3779,7 +3779,7 @@ y = y.replace(old, """                let size = objc2_metal::MTLResource::alloc
                     bc_n += 1;
                     bc_bytes += size;
                     // compressed size on the Switch: BC1/BC4 half a byte per pixel, the others one
-                    let (dec, comp) = match k.format { 65 | 66 | 69 | 70 => (8, 1), 73 | 74 => (2, 1), 75 | 76 => (2, 1), 79 | 80 => (8, 1), _ => (4, 1) };
+                    let (dec, comp) = match k.format { 65 | 66 | 69 | 70 => if gfx::bc::astc_bc1() { (2, 1) } else { (8, 1) }, 73 | 74 => (2, 1), 75 | 76 => (2, 1), 79 | 80 => (8, 1), _ => (4, 1) };
                     bc_native += size * comp / dec;
                     bc_by[(k.format - 65) as usize] += size;
                 }
@@ -3944,3 +3944,23 @@ y = y.replace(old, """            {
 """ + old)
 tx.write_text(y)
 print("patched", gm, "(memory report: where Metal memory goes)")
+
+# ---------------------------------------------------------------------------
+# The emergency trim no longer throws away the prewarmed pipelines: on the
+# iPhone it freed nothing measurable ("app 2273 MB -> 2273 MB") but every
+# pipeline of the race then had to be rebuilt from the archive, 20 to 25 s
+# each under memory pressure: objects stayed black until the 3rd lap.
+# Only when iOS is about to kill the app (less than 150 MB left) are they freed.
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+y = tx.read_text()
+old = """        super::state::drop_prewarmed();
+        let frame = self.frame;
+"""
+assert y.count(old) == 1
+y = y.replace(old, """        if left < 150 << 20 {
+            super::state::drop_prewarmed();
+        }
+        let frame = self.frame;
+""")
+tx.write_text(y)
+print("patched", tx, "(emergency trim keeps the prewarmed pipelines)")
