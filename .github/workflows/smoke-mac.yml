@@ -57,6 +57,7 @@ jobs:
           KEYS_URL: ${{ secrets.KEYS_URL }}
           BASE_URL: ${{ secrets.BASE_URL }}
           UPDATE_URL: ${{ secrets.UPDATE_URL }}
+          FIRMWARE_URL: ${{ secrets.FIRMWARE_URL }}
         run: |
           mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
           python3 -m pip install --quiet --break-system-packages gdown pillow || python3 -m pip install --quiet --user gdown pillow
@@ -78,6 +79,15 @@ jobs:
           get "$BASE_URL"   base.nsp
           get "$UPDATE_URL" upd4-0-1.nsp
           ls -lh prod.keys base.nsp upd4-0-1.nsp
+          # The game needs the console's system files (Mii, fonts): secret
+          # FIRMWARE_URL = link to a zip of your own Firmware folder (.nca files)
+          [ -n "$FIRMWARE_URL" ] || { echo "::error::Secret FIRMWARE_URL is missing: the game stops at boot without the Firmware folder"; exit 1; }
+          get "$FIRMWARE_URL" firmware.archive
+          mkdir -p fw-tmp && tar -xf firmware.archive -C fw-tmp && rm -f firmware.archive
+          nca="$(find fw-tmp -name '*.nca' | head -1)"
+          [ -n "$nca" ] || { echo "::error::no .nca file in the firmware archive"; exit 1; }
+          rm -rf Firmware && mv "$(dirname "$nca")" Firmware && rm -rf fw-tmp
+          echo "Firmware: $(ls Firmware | wc -l) files"
 
       - name: Apply patches and build (macOS)
         run: |
@@ -120,7 +130,7 @@ jobs:
 
       - name: Remove game files
         if: always()
-        run: rm -rf prod.keys base.nsp upd4-0-1.nsp work/frame
+        run: rm -rf prod.keys base.nsp upd4-0-1.nsp Firmware fw-tmp work/frame
 
       - name: Publish logs
         if: always()

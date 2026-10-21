@@ -40,7 +40,10 @@ GitHub workflows.
   could freeze the "1 player" screen for minutes).
 - **Device pipeline archive** (`work/devarch/`): every pipeline compiled on the phone is saved, in small
   files, and found again on the next launch (a self-test in the log checks it). Before, nothing was ever
-  found again.
+  found again. It is cleared by itself when iOS or the GPU changes (iOS update, `work/` copied from
+  another iPhone).
+- **Failed pipelines are retried** (the iOS shader compiler sometimes dies mid-build), instead of
+  staying black until the next launch.
 - **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 2384 pipelines): their shaders are
   compiled ahead of time on the build Mac, so a phone that never ran the game (iPhone 14...) doesn't
   have to compile them for minutes.
@@ -74,6 +77,7 @@ GitHub workflows.
 | 30 fps lock (frameskip) | On | Draws 1 frame out of 2, evenly paced |
 | Textures | Ultra low | **Ultra low**: least memory (recommended). **Very low**: a bit sharper, a few hundred MB more. **Low**: only huge textures shrunk. **Full**: no reduction (runs out of memory) |
 | Background texture loading | Off | Experimental. Fewer small hitches, but it can run out of memory while a race loads |
+| Graphics on a separate thread | Off | Experimental. The game and the translation of its graphics to Metal run on two CPU cores at the same time instead of one after the other (more FPS when the CPU is the limit) |
 | Unlocked save | Off | Plays with a save packed in the IPA (everything unlocked) in `work/save-unlocked`; your own save in `work/save` is never touched. Uses ~200 MB more in races |
 | Show FPS / Show memory | On | Two small counters at the top of the screen |
 | Music from other apps | On | Keeps Spotify & co playing, the game sound is mixed in |
@@ -85,7 +89,7 @@ GitHub workflows.
 | Quiet mode (no log) | Off | No log, no watchdog: a bit less CPU. Turn it off to send a log |
 
 Tools: **Share the log** / **Share the previous log**, **Clean up unneeded files** (old texture cache,
-leftover `.metallib`, old archive), **Clear the shader cache** (after an iOS update).
+leftover `.metallib`, old archive), **Clear the shader cache**.
 
 ### Recommended
 Handheld, 30 fps lock, **Ultra low**, Background texture loading **off**, all prewarm options on except
@@ -124,7 +128,8 @@ code and the iOS shader cache are kept in the Actions cache, so later builds ski
 unless the pipeline list changes. Build logs go to the `ci-logs` branch.
 
 Other workflows: **Check patch** (compiles with the patches for macOS and iOS, no game files, ~10 min),
-**A16 lab** (Metal tool experiments).
+**Mac smoke test** (runs the game on a GitHub Mac with scripted input and publishes the text logs; needs
+the extra secret `FIRMWARE_URL`, a zip of your own `Firmware` folder), **A16 lab** (Metal tool experiments).
 
 Install the `.ipa` with SideStore / AltStore.
 
