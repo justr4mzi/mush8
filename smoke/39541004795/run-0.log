@@ -1,0 +1,1732 @@
+[host] RomFS: 12.13 GB
+[host] guest address space at 0x7d80000000..0x8000000000
+[phone] iPhones can join as controllers (_mush8-pad._udp)
+[loader] 13 imports resolved to logging stubs
+[loader] main     at 0x7d80004000 (text 0xb55af0, trampolines 0x23958)
+[loader] subsdk0  at 0x7d81398000 (text 0x30a028, trampolines 0x526e0)
+[loader] sdk      at 0x7d81adc000 (text 0x40e4a0, trampolines 0x45760)
+[host] main thread 0x10: prio 44 core 0 stack 0x100000; entering nn::init::Start
+[hle] UNIMPL nnosGetDefaultUserExceptionStackForApplication
+[sm] GetServiceHandle lm
+[sm] GetServiceHandle apm
+[sm] GetServiceHandle appletOE
+[ipc] STUB am::ISelfController cmd 13 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 16 (in 12 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle aoc:u
+[sm] GetServiceHandle pctl
+[sm] GetServiceHandle pctl:s
+[sm] GetServiceHandle pctl:a
+[sm] GetServiceHandle pctl:r
+[gfx] Apple Paravirtual device (air64_v27)
+[gfx] wrap_heap: request 0xc1c00000, maxBufferLength 0xe0000000, recommendedMaxWorkingSetSize 0x12aaac000, available memory 0x0
+[gfx] guest heap 0x7d90000000+0xc1c00000 mapped for the GPU at 0x1500068000
+[sm] GetServiceHandle fsp-srv
+[sm] GetServiceHandle nvdrv
+[ipc] STUB nvdrv cmd 3 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 8 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 13 (in 16 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle vi:m
+[sm] GetServiceHandle vi:s
+[sm] GetServiceHandle vi:u
+[nvn] window origin mode 1
+[nvn] #0 STUB nvnCommandBufferSetMemoryCallback(0x7da4e654c0, 0x7d80a886b8, 0x8, 0x130177ec8)
+[nvn] #1 STUB nvnCommandBufferSetMemoryCallbackData(0x7da4e654c0, 0x7da4e654c0, 0x10493c2a6, 0x1048dd980)
+[nvn] #2 STUB nvnCommandBufferAddCommandMemory(0x7da4e654c0, 0x7da4e65580, 0x0, 0x200000)
+[nvn] #3 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[sm] GetServiceHandle hid
+[ipc] STUB hid cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB hid cmd 103 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB hid cmd 102 (in 20 bytes, bufs x1 a0 b0 c0)
+[sm] GetServiceHandle time:u
+[sm] GetServiceHandle acc:u0
+[ipc] STUB hid cmd 128 (in 20 bytes, bufs x0 a0 b0 c0)
+[set] language en-US (device: en-US)
+[sm] GetServiceHandle set
+[ipc] STUB am::ISelfController cmd 1 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 2 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 12 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 14 (in 12 bytes, bufs x0 a0 b0 c0)
+[nvn] #4 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1046befcc, 0x1)
+[nvn] #5 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a010f8, 0x10493c2a6, 0x1048dd980)
+[nvn] #6 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #7 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1046befcc, 0x1)
+[nvn] #8 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a01258, 0x10493c2a6, 0x1048dd980)
+[nvn] #9 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #10 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1046befcc, 0x1)
+[nvn] #11 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a013b8, 0x10493c2a6, 0x1048dd980)
+[nvn] #12 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[sm] GetServiceHandle mii:e
+[sm] GetServiceHandle prepo:u
+[sm] GetServiceHandle friend:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[audio] renderer Config { sample_rate: 48000, sample_count: 240, mix_buffer_count: 30, sub_mix_count: 1, voice_count: 96, sink_count: 1, effect_count: 14, revision: 878069074 }
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1046efa78, 0x7dc29672b8)
+[ipc] STUB prepo:u cmd 10101 (in 32 bytes, bufs x1 a1 b0 c0)
+[gfx] window crop Some([0, 0, 1280, 720])
+[nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x1046efa78, 0x1)
+[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x1046efa78, 0x7dc29672b8)
+[gfx] 5 pipeline archive(s) loaded
+[gfx] pipeline ff58c483a97cf8ef/cc03897b25330f90: built while the render thread waited (new render target), 17 ms
+[fps] 26.0 fps, worst frame 124.7 ms
+[prof] per frame: game/other 32.0 ms, gfx cpu 5.0 ms (texture uploads 1.0), waiting for display 1.5 ms, gpu 71.2 ms, 3 draws | pipeline builds 23 ms/s, frames not shown 12
+[nvn] #8559 STUB nvnTextureGetZCullStorageSize(0x7debd72ac0, 0x130177f20, 0x10471bc88, 0x1)
+[nvn] #8561 STUB nvnCommandBufferSetLineWidth(0x7f900ff2b8, 0x1046ef988, 0x7f900fed70, 0x7f900feef0)
+[nvn] #8562 STUB nvnCommandBufferSetPointSize(0x7f900ff2b8, 0x1046ef980, 0x10493c2a6, 0x1048dd980)
+[nvn] #9377 STUB nvnCommandBufferSetDepthBounds(0x7f900ff2b8, 0x0, 0x1046ef920, 0x7dc8070a00)
+[nvn] #9378 STUB nvnCommandBufferBindMultisampleState(0x7f900ff2b8, 0x7dc7ebdac8, 0x1047db448, 0x1048dd980)
+[shader] 2aebeb9c29daab4e: compiled while the render thread waited (new render target), 15 ms
+[shader] af6d028f05fb355a: compiled while the render thread waited (new render target), 9 ms
+[fps] 3.7 fps, worst frame 872.7 ms
+[prof] per frame: game/other 192.9 ms, gfx cpu 74.5 ms (texture uploads 0.7), waiting for display 0.1 ms, gpu 1.5 ms, 107 draws | pipeline builds 22 ms/s, frames not shown 2
+[fps] 0.3 fps, worst frame 3042.3 ms
+[prof] per frame: game/other 3028.2 ms, gfx cpu 14.1 ms (texture uploads 2.1), waiting for display 0.0 ms, gpu 1379.6 ms, 52 draws | pipeline builds 2 ms/s, frames not shown 1
+[mem] 11 s: app uses 2004 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 5.3 fps, worst frame 1060.5 ms
+[prof] per frame: game/other 182.5 ms, gfx cpu 6.7 ms (texture uploads 3.5), waiting for display 0.2 ms, gpu 178.9 ms, 49 draws | pipeline builds 22 ms/s, frames not shown 4
+[fps] 36.5 fps, worst frame 168.8 ms
+[prof] per frame: game/other 26.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.2 ms, 49 draws | pipeline builds 2 ms/s, frames not shown 19
+[fps] 23.5 fps, worst frame 254.4 ms
+[prof] per frame: game/other 41.5 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 19.7 ms, 44 draws | pipeline builds 0 ms/s, frames not shown 13
+[fps] 30.3 fps, worst frame 163.9 ms
+[prof] per frame: game/other 31.9 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 43 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 28.8 fps, worst frame 155.6 ms
+[prof] per frame: game/other 33.5 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 42 draws | pipeline builds 0 ms/s, frames not shown 15
+[nvn] #27902 STUB nvnCommandBufferFenceSync(0x7f900ff2b8, 0x7dce5efaf0, 0x0, 0x1)
+[fps] 14.8 fps, worst frame 868.7 ms
+[prof] per frame: game/other 66.2 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 46.3 ms, 43 draws | pipeline builds 11 ms/s, frames not shown 13
+[fps] 1.9 fps, worst frame 1045.2 ms
+[prof] per frame: game/other 523.1 ms, gfx cpu 1.6 ms (texture uploads 0.3), waiting for display 0.0 ms, gpu 522.2 ms, 59 draws | pipeline builds 0 ms/s, frames not shown 1
+[fps] 13.9 fps, worst frame 1011.5 ms
+[prof] per frame: game/other 70.8 ms, gfx cpu 1.2 ms (texture uploads 0.1), waiting for display 0.0 ms, gpu 50.7 ms, 53 draws | pipeline builds 10 ms/s, frames not shown 11
+[mem] 22 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 23.5 fps, worst frame 283.1 ms
+[prof] per frame: game/other 41.5 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 16.1 ms, 55 draws | pipeline builds 0 ms/s, frames not shown 13
+[fps] 28.0 fps, worst frame 174.6 ms
+[prof] per frame: game/other 34.5 ms, gfx cpu 1.2 ms (texture uploads 0.1), waiting for display 0.0 ms, gpu 11.2 ms, 65 draws | pipeline builds 10 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.8 fps, worst frame 121.8 ms
+[prof] per frame: game/other 30.5 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.1 ms, 89 draws | pipeline builds 4 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.2 fps, worst frame 138.6 ms
+[prof] per frame: game/other 33.6 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.0 fps, worst frame 97.5 ms
+[prof] per frame: game/other 36.5 ms, gfx cpu 0.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 3.1 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 13
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.8 fps, worst frame 95.9 ms
+[prof] per frame: game/other 34.1 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 3.8 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.3 fps, worst frame 156.1 ms
+[prof] per frame: game/other 33.0 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.7 fps, worst frame 163.0 ms
+[prof] per frame: game/other 34.9 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.8 fps, worst frame 170.0 ms
+[prof] per frame: game/other 36.2 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 25.4 fps, worst frame 162.8 ms
+[prof] per frame: game/other 38.7 ms, gfx cpu 0.7 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 13
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 32 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 27.6 fps, worst frame 172.7 ms
+[prof] per frame: game/other 35.6 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 3.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.9 fps, worst frame 145.6 ms
+[prof] per frame: game/other 34.0 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 3.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.6 fps, worst frame 123.5 ms
+[prof] per frame: game/other 34.3 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 3.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.2 fps, worst frame 154.0 ms
+[prof] per frame: game/other 33.4 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[gfx] screen at 30s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.0 fps, worst frame 222.1 ms
+[prof] per frame: game/other 33.6 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.7 fps, worst frame 93.3 ms
+[prof] per frame: game/other 31.8 ms, gfx cpu 0.7 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.4 fps, worst frame 103.9 ms
+[prof] per frame: game/other 24.5 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.6 fps, worst frame 164.1 ms
+[prof] per frame: game/other 36.6 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.1 fps, worst frame 133.4 ms
+[prof] per frame: game/other 30.1 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.8 fps, worst frame 108.4 ms
+[prof] per frame: game/other 27.9 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.2 fps, worst frame 181.1 ms
+[prof] per frame: game/other 34.6 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 43 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 35.6 fps, worst frame 132.6 ms
+[prof] per frame: game/other 27.2 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.9 fps, worst frame 162.6 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.3 fps, worst frame 132.9 ms
+[prof] per frame: game/other 26.3 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.8 fps, worst frame 164.2 ms
+[prof] per frame: game/other 30.4 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.9 fps, worst frame 166.0 ms
+[prof] per frame: game/other 25.9 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.6 fps, worst frame 168.1 ms
+[prof] per frame: game/other 36.4 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 91 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.9 fps, worst frame 127.5 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.6 fps, worst frame 133.5 ms
+[prof] per frame: game/other 26.9 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 37.7 fps, worst frame 92.6 ms
+[prof] per frame: game/other 25.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.9 fps, worst frame 159.9 ms
+[prof] per frame: game/other 28.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.2 fps, worst frame 141.3 ms
+[prof] per frame: game/other 28.9 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[mem] 54 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.5 fps, worst frame 159.7 ms
+[prof] per frame: game/other 24.3 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.7 fps, worst frame 108.8 ms
+[prof] per frame: game/other 24.2 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 43.7 fps, worst frame 105.7 ms
+[prof] per frame: game/other 21.7 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 7.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 23
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 48.0 fps, worst frame 62.0 ms
+[prof] per frame: game/other 19.6 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 15.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 24
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.9 fps, worst frame 119.0 ms
+[prof] per frame: game/other 25.9 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 19.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.7 fps, worst frame 94.2 ms
+[prof] per frame: game/other 30.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 19.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.5 fps, worst frame 140.2 ms
+[prof] per frame: game/other 24.9 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.6 fps, worst frame 127.1 ms
+[prof] per frame: game/other 26.1 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.8 fps, worst frame 134.0 ms
+[prof] per frame: game/other 33.6 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 42.9 fps, worst frame 99.0 ms
+[prof] per frame: game/other 22.1 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 7.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 22
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 65 s: app uses 1971 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 39.3 fps, worst frame 126.6 ms
+[prof] per frame: game/other 24.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 20
+[gfx] screen at 60s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.6 fps, worst frame 280.4 ms
+[prof] per frame: game/other 28.5 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 43.0 fps, worst frame 72.6 ms
+[prof] per frame: game/other 21.8 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 10.8 ms, 86 draws | pipeline builds 0 ms/s, frames not shown 21
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 43.6 fps, worst frame 120.7 ms
+[prof] per frame: game/other 21.6 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 22
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.0 fps, worst frame 95.4 ms
+[prof] per frame: game/other 26.6 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 7.5 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.8 fps, worst frame 114.2 ms
+[prof] per frame: game/other 26.8 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 12.5 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.7 fps, worst frame 95.2 ms
+[prof] per frame: game/other 26.6 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 12.9 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.3 fps, worst frame 115.8 ms
+[prof] per frame: game/other 24.3 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 21
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.1 fps, worst frame 148.1 ms
+[prof] per frame: game/other 29.3 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.6 fps, worst frame 124.0 ms
+[prof] per frame: game/other 29.8 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 41.0 fps, worst frame 94.5 ms
+[prof] per frame: game/other 23.5 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 77 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 29.9 fps, worst frame 149.0 ms
+[prof] per frame: game/other 32.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.6 fps, worst frame 123.0 ms
+[prof] per frame: game/other 29.7 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.1 fps, worst frame 140.2 ms
+[prof] per frame: game/other 27.0 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.7 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.6 fps, worst frame 139.0 ms
+[prof] per frame: game/other 27.6 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.5 fps, worst frame 158.5 ms
+[prof] per frame: game/other 35.3 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.0 fps, worst frame 170.9 ms
+[prof] per frame: game/other 30.5 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.8 fps, worst frame 152.3 ms
+[prof] per frame: game/other 29.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.9 fps, worst frame 143.8 ms
+[prof] per frame: game/other 30.2 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.3 fps, worst frame 137.1 ms
+[prof] per frame: game/other 27.8 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.8 fps, worst frame 143.7 ms
+[prof] per frame: game/other 25.8 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.0 fps, worst frame 165.0 ms
+[prof] per frame: game/other 32.0 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[mem] 87 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.8 fps, worst frame 94.5 ms
+[prof] per frame: game/other 24.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.4 fps, worst frame 140.9 ms
+[prof] per frame: game/other 32.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.7 fps, worst frame 188.7 ms
+[prof] per frame: game/other 31.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.9 fps, worst frame 169.8 ms
+[prof] per frame: game/other 25.8 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 25.6 fps, worst frame 174.9 ms
+[prof] per frame: game/other 37.9 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 91 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 23.5 fps, worst frame 158.4 ms
+[prof] per frame: game/other 41.2 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 12
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.9 fps, worst frame 174.6 ms
+[prof] per frame: game/other 32.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.6 fps, worst frame 129.1 ms
+[prof] per frame: game/other 25.9 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[gfx] screen at 90s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.7 fps, worst frame 185.3 ms
+[prof] per frame: game/other 34.6 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.5 fps, worst frame 170.1 ms
+[prof] per frame: game/other 31.2 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 98 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 31.9 fps, worst frame 132.2 ms
+[prof] per frame: game/other 29.6 ms, gfx cpu 1.8 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.5 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[fps] 22.2 fps, worst frame 172.7 ms
+[prof] per frame: game/other 43.7 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 13
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.1 fps, worst frame 176.2 ms
+[prof] per frame: game/other 30.6 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.3 fps, worst frame 137.2 ms
+[prof] per frame: game/other 28.4 ms, gfx cpu 1.6 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.7 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.6 fps, worst frame 156.6 ms
+[prof] per frame: game/other 30.5 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.6 fps, worst frame 178.0 ms
+[prof] per frame: game/other 31.5 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.7 fps, worst frame 174.1 ms
+[prof] per frame: game/other 32.4 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 24.8 fps, worst frame 171.3 ms
+[prof] per frame: game/other 38.9 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 12
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.4 fps, worst frame 160.5 ms
+[prof] per frame: game/other 32.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.5 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.9 fps, worst frame 166.6 ms
+[prof] per frame: game/other 30.8 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.8 fps, worst frame 133.1 ms
+[prof] per frame: game/other 29.8 ms, gfx cpu 1.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[mem] 109 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.5 fps, worst frame 141.5 ms
+[prof] per frame: game/other 31.2 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.0 fps, worst frame 153.2 ms
+[prof] per frame: game/other 29.7 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.1 fps, worst frame 168.5 ms
+[prof] per frame: game/other 31.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.5 fps, worst frame 172.1 ms
+[prof] per frame: game/other 32.6 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.9 fps, worst frame 144.2 ms
+[prof] per frame: game/other 31.2 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.2 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.7 fps, worst frame 178.7 ms
+[prof] per frame: game/other 29.9 ms, gfx cpu 1.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 33.7 fps, worst frame 141.8 ms
+[prof] per frame: game/other 28.2 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.1 fps, worst frame 157.9 ms
+[prof] per frame: game/other 29.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.5 fps, worst frame 170.1 ms
+[prof] per frame: game/other 28.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.9 fps, worst frame 145.3 ms
+[prof] per frame: game/other 35.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[mem] 120 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.8 fps, worst frame 168.9 ms
+[prof] per frame: game/other 26.0 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.6 fps, worst frame 165.8 ms
+[prof] per frame: game/other 34.7 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 23.8 fps, worst frame 181.8 ms
+[prof] per frame: game/other 40.4 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 12
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.2 fps, worst frame 167.8 ms
+[prof] per frame: game/other 31.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.7 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.8 fps, worst frame 128.6 ms
+[prof] per frame: game/other 31.6 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.8 fps, worst frame 162.6 ms
+[prof] per frame: game/other 32.3 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[gfx] screen at 120s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.9 fps, worst frame 219.0 ms
+[prof] per frame: game/other 29.5 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 9.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.5 fps, worst frame 150.1 ms
+[prof] per frame: game/other 28.9 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.9 fps, worst frame 160.4 ms
+[prof] per frame: game/other 29.2 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.8 fps, worst frame 163.8 ms
+[prof] per frame: game/other 28.4 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.5 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.5 fps, worst frame 104.1 ms
+[prof] per frame: game/other 24.8 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 21
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 131 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.0 fps, worst frame 166.4 ms
+[prof] per frame: game/other 26.6 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.7 fps, worst frame 150.1 ms
+[prof] per frame: game/other 31.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.9 fps, worst frame 141.8 ms
+[prof] per frame: game/other 26.6 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.8 fps, worst frame 160.7 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.9 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.5 fps, worst frame 169.4 ms
+[prof] per frame: game/other 26.9 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.8 fps, worst frame 149.1 ms
+[prof] per frame: game/other 29.0 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.2 fps, worst frame 160.2 ms
+[prof] per frame: game/other 28.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.5 fps, worst frame 168.6 ms
+[prof] per frame: game/other 24.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.7 fps, worst frame 155.3 ms
+[prof] per frame: game/other 30.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.8 fps, worst frame 177.1 ms
+[prof] per frame: game/other 35.9 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 91 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 142 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 35.2 fps, worst frame 133.3 ms
+[prof] per frame: game/other 27.1 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.8 fps, worst frame 166.5 ms
+[prof] per frame: game/other 29.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.6 fps, worst frame 173.5 ms
+[prof] per frame: game/other 31.2 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.4 fps, worst frame 169.4 ms
+[prof] per frame: game/other 31.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.7 fps, worst frame 174.6 ms
+[prof] per frame: game/other 34.9 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 24.9 fps, worst frame 168.9 ms
+[prof] per frame: game/other 38.6 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.5 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 12
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.4 fps, worst frame 164.5 ms
+[prof] per frame: game/other 30.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.4 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.3 fps, worst frame 172.4 ms
+[prof] per frame: game/other 30.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.5 fps, worst frame 175.6 ms
+[prof] per frame: game/other 32.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.6 fps, worst frame 142.5 ms
+[prof] per frame: game/other 30.3 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 25.7 fps, worst frame 163.7 ms
+[prof] per frame: game/other 37.3 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[mem] 153 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.5 fps, worst frame 154.6 ms
+[prof] per frame: game/other 26.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.7 fps, worst frame 160.7 ms
+[prof] per frame: game/other 29.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.9 fps, worst frame 143.4 ms
+[prof] per frame: game/other 34.3 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[gfx] screen at 150s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.9 fps, worst frame 184.1 ms
+[prof] per frame: game/other 36.6 ms, gfx cpu 0.6 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.7 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 13
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.6 fps, worst frame 171.5 ms
+[prof] per frame: game/other 34.8 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[fps] 31.7 fps, worst frame 154.2 ms
+[prof] per frame: game/other 30.2 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.8 fps, worst frame 157.9 ms
+[prof] per frame: game/other 31.5 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.0 fps, worst frame 161.9 ms
+[prof] per frame: game/other 34.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.2 fps, worst frame 140.6 ms
+[prof] per frame: game/other 27.0 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.5 fps, worst frame 171.7 ms
+[prof] per frame: game/other 31.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.2 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 164 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 29.5 fps, worst frame 156.9 ms
+[prof] per frame: game/other 32.4 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.8 fps, worst frame 122.1 ms
+[prof] per frame: game/other 31.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.0 fps, worst frame 159.6 ms
+[prof] per frame: game/other 30.9 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.2 fps, worst frame 124.3 ms
+[prof] per frame: game/other 28.2 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 37.9 fps, worst frame 119.5 ms
+[prof] per frame: game/other 25.0 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.9 fps, worst frame 154.8 ms
+[prof] per frame: game/other 32.2 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.0 fps, worst frame 147.0 ms
+[prof] per frame: game/other 24.9 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.8 fps, worst frame 99.7 ms
+[prof] per frame: game/other 26.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 28.7 fps, worst frame 159.2 ms
+[prof] per frame: game/other 33.6 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.7 fps, worst frame 145.6 ms
+[prof] per frame: game/other 27.4 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.6 fps, worst frame 159.0 ms
+[prof] per frame: game/other 32.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[mem] 175 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 37.5 fps, worst frame 148.2 ms
+[prof] per frame: game/other 25.4 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 37.8 fps, worst frame 102.7 ms
+[prof] per frame: game/other 25.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[fps] 31.1 fps, worst frame 170.9 ms
+[prof] per frame: game/other 30.9 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.9 fps, worst frame 112.6 ms
+[prof] per frame: game/other 29.3 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.9 fps, worst frame 152.5 ms
+[prof] per frame: game/other 34.4 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.6 fps, worst frame 168.1 ms
+[prof] per frame: game/other 32.3 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[fps] 41.8 fps, worst frame 153.9 ms
+[prof] per frame: game/other 22.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 21
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 41.7 fps, worst frame 103.7 ms
+[prof] per frame: game/other 22.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 21
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.1 fps, worst frame 118.6 ms
+[prof] per frame: game/other 29.6 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.5 fps, worst frame 153.1 ms
+[prof] per frame: game/other 30.2 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.7 fps, worst frame 171.6 ms
+[prof] per frame: game/other 34.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[mem] 186 s: app uses 1978 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[gfx] screen at 180s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.0 fps, worst frame 196.2 ms
+[prof] per frame: game/other 37.2 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.6 fps, worst frame 107.7 ms
+[prof] per frame: game/other 25.8 ms, gfx cpu 1.5 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.2 fps, worst frame 160.8 ms
+[prof] per frame: game/other 31.1 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.5 fps, worst frame 174.0 ms
+[prof] per frame: game/other 31.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.0 fps, worst frame 177.2 ms
+[prof] per frame: game/other 30.9 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.6 fps, worst frame 148.4 ms
+[prof] per frame: game/other 23.8 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 20
+[fps] 36.6 fps, worst frame 149.5 ms
+[prof] per frame: game/other 25.9 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.5 fps, worst frame 166.4 ms
+[prof] per frame: game/other 27.7 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.9 fps, worst frame 149.2 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.8 fps, worst frame 122.4 ms
+[prof] per frame: game/other 28.4 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 197 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 34.7 fps, worst frame 171.6 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.3 fps, worst frame 94.6 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.2 fps, worst frame 152.8 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 0.7 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.6 fps, worst frame 157.1 ms
+[prof] per frame: game/other 28.7 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.1 fps, worst frame 161.0 ms
+[prof] per frame: game/other 33.1 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.3 fps, worst frame 170.0 ms
+[prof] per frame: game/other 30.7 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 40.5 fps, worst frame 140.7 ms
+[prof] per frame: game/other 23.5 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.3 fps, worst frame 151.2 ms
+[prof] per frame: game/other 30.7 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.6 fps, worst frame 165.4 ms
+[prof] per frame: game/other 31.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 7.1 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.8 fps, worst frame 170.7 ms
+[prof] per frame: game/other 31.1 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.3 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.8 fps, worst frame 166.9 ms
+[prof] per frame: game/other 28.3 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[mem] 207 s: app uses 1970 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.4 fps, worst frame 166.2 ms
+[prof] per frame: game/other 27.0 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.2 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.6 fps, worst frame 143.3 ms
+[prof] per frame: game/other 28.6 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 38.2 fps, worst frame 85.2 ms
+[prof] per frame: game/other 25.2 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.6 fps, worst frame 129.5 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 39.2 fps, worst frame 99.2 ms
+[prof] per frame: game/other 24.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 20
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.5 fps, worst frame 171.2 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.9 fps, worst frame 146.2 ms
+[prof] per frame: game/other 29.2 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.9 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.4 fps, worst frame 159.8 ms
+[prof] per frame: game/other 35.0 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.2 ms, gpu 6.0 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 15
+[gfx] screen at 210s dumped
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 26.2 fps, worst frame 208.5 ms
+[prof] per frame: game/other 37.0 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.7 fps, worst frame 135.8 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 218 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 38.0 fps, worst frame 120.5 ms
+[prof] per frame: game/other 25.1 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.8 fps, worst frame 139.9 ms
+[prof] per frame: game/other 32.2 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.5 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.6 fps, worst frame 116.7 ms
+[prof] per frame: game/other 28.7 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.9 fps, worst frame 141.0 ms
+[prof] per frame: game/other 28.2 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 27.1 fps, worst frame 167.6 ms
+[prof] per frame: game/other 35.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.4 fps, worst frame 146.0 ms
+[prof] per frame: game/other 30.5 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.2 fps, worst frame 129.1 ms
+[prof] per frame: game/other 26.3 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 36.6 fps, worst frame 106.3 ms
+[prof] per frame: game/other 26.0 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 29.9 fps, worst frame 170.0 ms
+[prof] per frame: game/other 32.0 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.7 fps, worst frame 172.4 ms
+[prof] per frame: game/other 29.1 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.1 fps, worst frame 145.9 ms
+[prof] per frame: game/other 28.8 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[mem] 229 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 30.9 fps, worst frame 169.1 ms
+[prof] per frame: game/other 31.3 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 31.0 fps, worst frame 174.7 ms
+[prof] per frame: game/other 31.2 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.2 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.3 fps, worst frame 149.0 ms
+[prof] per frame: game/other 29.0 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.5 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.8 fps, worst frame 122.6 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 7.2 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 32.0 fps, worst frame 170.8 ms
+[prof] per frame: game/other 30.2 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.4 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 16
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 25.0 fps, worst frame 171.3 ms
+[prof] per frame: game/other 38.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.7 ms, 91 draws | pipeline builds 0 ms/s, frames not shown 14
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 24.8 fps, worst frame 173.7 ms
+[prof] per frame: game/other 39.0 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 10.4 ms, 84 draws | pipeline builds 0 ms/s, frames not shown 12
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 37.9 fps, worst frame 147.5 ms
+[prof] per frame: game/other 25.1 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 34.4 fps, worst frame 176.7 ms
+[prof] per frame: game/other 28.1 ms, gfx cpu 0.9 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.5 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 33.3 fps, worst frame 171.8 ms
+[prof] per frame: game/other 28.8 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.5 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[mem] 240 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 35.0 fps, worst frame 159.5 ms
+[prof] per frame: game/other 27.4 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[am] library applet 0x12 (mode 0)
+[am] Mii editor applet: answering canceled
+[fps] 21.8 fps, worst frame 178.1 ms
+[prof] per frame: game/other 44.8 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.0 ms, 91 draws | pipeline builds 0 ms/s, frames not shown 12
+[fps] 29.8 fps, worst frame 166.9 ms
+[prof] per frame: game/other 32.7 ms, gfx cpu 0.8 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 15
+[fps] 35.4 fps, worst frame 154.9 ms
+[prof] per frame: game/other 27.0 ms, gfx cpu 1.1 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.0 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[fps] 31.4 fps, worst frame 152.6 ms
+[prof] per frame: game/other 30.1 ms, gfx cpu 1.7 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.4 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[fps] 35.5 fps, worst frame 142.4 ms
+[prof] per frame: game/other 26.9 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[fps] 35.6 fps, worst frame 157.9 ms
+[prof] per frame: game/other 26.7 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 18
+[fps] 34.8 fps, worst frame 163.6 ms
+[prof] per frame: game/other 27.5 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 26.9 fps, worst frame 171.6 ms
+[prof] per frame: game/other 35.8 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 15
+[fps] 34.8 fps, worst frame 158.9 ms
+[prof] per frame: game/other 27.7 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.7 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 34.8 fps, worst frame 173.4 ms
+[prof] per frame: game/other 27.3 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.9 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[mem] 251 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 28.9 fps, worst frame 169.3 ms
+[prof] per frame: game/other 33.3 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.3 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 14
+[fps] 31.4 fps, worst frame 133.9 ms
+[prof] per frame: game/other 30.8 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 4.8 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 32.0 fps, worst frame 133.7 ms
+[prof] per frame: game/other 29.6 ms, gfx cpu 1.6 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[fps] 33.6 fps, worst frame 166.3 ms
+[prof] per frame: game/other 28.5 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 37.1 fps, worst frame 114.4 ms
+[prof] per frame: game/other 25.6 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.2 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 19
+[fps] 27.9 fps, worst frame 147.5 ms
+[prof] per frame: game/other 34.4 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 7.0 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 14
+[fps] 30.9 fps, worst frame 162.8 ms
+[prof] per frame: game/other 30.9 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 6.1 ms, 85 draws | pipeline builds 0 ms/s, frames not shown 15
+[fps] 34.1 fps, worst frame 105.0 ms
+[prof] per frame: game/other 27.7 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.1 ms, gpu 5.7 ms, 90 draws | pipeline builds 0 ms/s, frames not shown 18
+[fps] 32.5 fps, worst frame 162.7 ms
+[prof] per frame: game/other 29.4 ms, gfx cpu 1.4 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.6 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 18
+[fps] 32.0 fps, worst frame 134.3 ms
+[prof] per frame: game/other 30.0 ms, gfx cpu 1.2 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 6.1 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 16
+[mem] 261 s: app uses 1968 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[fps] 33.2 fps, worst frame 158.8 ms
+[prof] per frame: game/other 28.8 ms, gfx cpu 1.3 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 87 draws | pipeline builds 0 ms/s, frames not shown 17
+[fps] 27.8 fps, worst frame 170.0 ms
+[prof] per frame: game/other 34.9 ms, gfx cpu 1.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 5.8 ms, 88 draws | pipeline builds 0 ms/s, frames not shown 14
+[smoke] screen t030.0.png: 44% not black, mean 51
+[smoke] screen t060.0.png: 44% not black, mean 51
+[smoke] screen t090.0.png: 44% not black, mean 51
+[smoke] screen t120.0.png: 44% not black, mean 51
+[smoke] screen t150.0.png: 44% not black, mean 51
+[smoke] screen t180.0.png: 44% not black, mean 51
+[smoke] screen t210.0.png: 44% not black, mean 51
