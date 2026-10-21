@@ -9,7 +9,7 @@ import sys
 secs = int(sys.argv[1])
 SLOW, FAST = 30.0, 4.0
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
-seq = ([(25, "A"),                       # title
+seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"),                     # Single Player
         (FAST, "DOWN"), (FAST, "DOWN"), (SLOW, "A"),   # VS race
         (SLOW, "A"),                     # 150cc
