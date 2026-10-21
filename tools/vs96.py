@@ -11,6 +11,9 @@ import sys
 
 secs = int(sys.argv[1])
 variant = int(sys.argv[2]) if len(sys.argv) > 2 else 0
+# third argument: RIGHT presses on the cup screen before choosing, to start further in the list
+# (a second session starts where the first one stopped; "in order" goes on from the chosen cup)
+cups_right = int(sys.argv[3]) if len(sys.argv) > 3 else 0
 SLOW, FAST = 30.0 * (1 + 0.5 * variant), 4.0 + 3.0 * variant
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
 seq = ([(45, "A"),                       # title (accepted later on the Mac)
@@ -24,7 +27,8 @@ seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (8.0, "A"), (8.0, "A"),          # tires -> glider -> OK (seen on the Mac: 3 A on this screen)
         (SLOW, "RIGHT"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"), (FAST, "DOWN"),
         (FAST, "RIGHT"), (FAST, "DOWN"), (FAST, "LEFT"), (FAST, "A"),           # rules
-        (SLOW, "A"), (FAST, "A"), (FAST, "A")])
+        *([(SLOW, "RIGHT")] + [(FAST, "RIGHT")] * (cups_right - 1) + [(FAST, "A")] if cups_right else [(SLOW, "A")]),
+        (FAST, "A"), (FAST, "A")])
 ev, t = [], 0.0
 def press(t, b):
     # A/B/L/R/PLUS: held 0.6 s so a press during a menu animation isn't lost.
