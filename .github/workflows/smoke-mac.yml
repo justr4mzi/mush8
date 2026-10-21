@@ -95,6 +95,29 @@ jobs:
           rm -rf Firmware && mv "$(dirname "$nca")" Firmware && rm -rf fw-tmp
           echo "Firmware: $(ls Firmware | wc -l) files"
 
+      - name: Save (secret SAVE_URL; a fresh save stops at the Mii editor)
+        env:
+          SAVE_URL: ${{ secrets.SAVE_URL }}
+        run: |
+          rm -rf smoke-save
+          [ -n "$SAVE_URL" ] || { echo "::warning::no SAVE_URL: a fresh save stops at the Mii editor"; exit 0; }
+          mkdir -p out; exec > >(python3 -u .github/mask.py | tee -a out/download.txt) 2>&1
+          export PATH="$PATH:$(python3 -m site --user-base)/bin"
+          case "$SAVE_URL" in
+            *drive.google.com*) python3 -m gdown --quiet "$SAVE_URL" -O save.archive ;;
+            *dropbox.com*) u="${SAVE_URL/dl=0/dl=1}"; curl -fsSL "$u" -o save.archive ;;
+            *) curl -fsSL "$SAVE_URL" -o save.archive ;;
+          esac
+          mkdir -p save-tmp
+          if ! tar -xf save.archive -C save-tmp 2>/dev/null || [ -z "$(find save-tmp -type f -size +0)" ]; then
+            rm -rf save-tmp; mkdir -p save-tmp
+            brew install unar > /dev/null && unar -q -f -o save-tmp save.archive
+          fi
+          rm -f save.archive
+          d=save-tmp; while [ "$(ls -A "$d" | wc -l)" -eq 1 ] && [ -d "$d/$(ls -A "$d")" ]; do d="$d/$(ls -A "$d")"; done
+          mv "$d" smoke-save; rm -rf save-tmp
+          find smoke-save -type f | wc -l
+
       - name: Apply patches and build (macOS)
         run: |
           mkdir -p out; exec > >(tee -a out/build.txt) 2>&1
@@ -119,6 +142,10 @@ jobs:
           for m in $MODES; do
             n=$((n+1)); L="out/run-$n-async$m.log"
             rm -rf work/frame work/save work/pipelines.tsv
+            mkdir -p work/save
+            if [ -d smoke-save ]; then
+              if ls -d smoke-save/type* >/dev/null 2>&1; then cp -R smoke-save/. work/save/; else mkdir -p work/save/type1-index0 && cp -R smoke-save/. work/save/type1-index0/; fi
+            fi
             LIST=data/pipelines.tsv; [ "$RECORD" = 1 ] && LIST=/nonexistent
             echo "=== run $n: NX_ASYNC_GFX=$m ($SECS s)"
             NX_ASYNC_GFX=$m NX_FPS=1 NX_FRAMESKIP=1 NX_HASH_EVERY=2 NX_HANDHELD=1 NX_TRACE_ROMFS=1 NX_PIPELINE_LIST="$LIST" \
@@ -142,7 +169,7 @@ jobs:
 
       - name: Remove game files
         if: always()
-        run: rm -rf prod.keys base.nsp upd4-0-1.nsp Firmware fw-tmp work/frame
+        run: rm -rf prod.keys base.nsp upd4-0-1.nsp Firmware fw-tmp work/frame smoke-save work/save
 
       - name: Publish logs
         if: always()
