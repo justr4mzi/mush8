@@ -1,0 +1,357 @@
+[host] RomFS: 12.13 GB
+[host] add-on content 0100152000023001 (dlc.nsp)
+[host] guest address space at 0x7d80000000..0x8000000000
+[phone] iPhones can join as controllers (_mush8-pad._udp)
+[loader] 13 imports resolved to logging stubs
+[loader] main     at 0x7d80004000 (text 0xb55af0, trampolines 0x23958)
+[loader] subsdk0  at 0x7d81398000 (text 0x30a028, trampolines 0x526e0)
+[loader] sdk      at 0x7d81adc000 (text 0x40e4a0, trampolines 0x45760)
+[mem] game modules loaded: app uses 49 MB
+[mem] phone: heat normal
+[mem] detail: game RAM 37 MB, Metal 0 MB | resident 86 MB, internal 49 MB, external 6 MB, compressed 0 MB, purgeable 0 MB, reusable 31 MB, footprint 49 MB
+[host] main thread 0x10: prio 44 core 0 stack 0x100000; entering nn::init::Start
+[hle] UNIMPL nnosGetDefaultUserExceptionStackForApplication
+[sm] GetServiceHandle lm
+[sm] GetServiceHandle apm
+[sm] GetServiceHandle appletOE
+[ipc] STUB am::ISelfController cmd 13 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 16 (in 12 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle aoc:u
+[sm] GetServiceHandle pctl
+[sm] GetServiceHandle pctl:s
+[sm] GetServiceHandle pctl:a
+[sm] GetServiceHandle pctl:r
+[gfx] Apple Paravirtual device (air64_v26)
+[gfx] wrap_heap: request 0xc1c00000, maxBufferLength 0xe0000000, recommendedMaxWorkingSetSize 0x12aaac000, available memory 0x0
+[gfx] guest heap 0x7d90000000+0xc1c00000 mapped for the GPU at 0x214000
+[sm] GetServiceHandle fsp-srv
+[romfs] romfs: 6597 files
+[sm] GetServiceHandle nvdrv
+[ipc] STUB nvdrv cmd 3 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 8 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB nvdrv cmd 13 (in 16 bytes, bufs x0 a0 b0 c0)
+[sm] GetServiceHandle vi:m
+[sm] GetServiceHandle vi:s
+[sm] GetServiceHandle vi:u
+[nvn] window origin mode 1
+[nvn] #0 STUB nvnCommandBufferSetMemoryCallback(0x7da4e654c0, 0x7d80a886b8, 0x8, 0x0)
+[nvn] #1 STUB nvnCommandBufferSetMemoryCallbackData(0x7da4e654c0, 0x7da4e654c0, 0x1027cc0e0, 0x102763380)
+[nvn] #2 STUB nvnCommandBufferAddCommandMemory(0x7da4e654c0, 0x7da4e65580, 0x0, 0x200000)
+[nvn] #3 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[sm] GetServiceHandle hid
+[ipc] STUB hid cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[gfx] graphics on a separate thread (NX_ASYNC_GFX)
+[ipc] STUB hid cmd 103 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB hid cmd 102 (in 20 bytes, bufs x1 a0 b0 c0)
+[sm] GetServiceHandle time:u
+[sm] GetServiceHandle acc:u0
+[ipc] STUB hid cmd 128 (in 20 bytes, bufs x0 a0 b0 c0)
+[romfs] 0.0 s /Common/Controller/NXDouble.gctr
+[romfs] 0.0 s /Common/Controller/NXSingle.gctr
+[romfs] 0.1 s /Common/Mush/AIBattle.bin
+[romfs] 0.1 s /Common/Mush/AIRace.bin
+[romfs] 0.1 s /Common/Mush/Audio.bin
+[romfs] 0.1 s /Common/Mush/Controller.bin
+[romfs] 0.1 s /Common/Mush/Course.bin
+[romfs] 0.2 s /Common/Mush/DLC.bin
+[romfs] 0.2 s /Common/Mush/Highlight.bin
+[romfs] 0.2 s /Common/Mush/Item.bin
+[romfs] 0.2 s /Common/Mush/MiiVoice.bin
+[romfs] 0.2 s /Common/Mush/Obj.bin
+[romfs] 0.2 s /Common/Mush/OpenFlag.bin
+[romfs] 0.2 s /Common/Mush/Parts.bin
+[romfs] 0.2 s /Common/Mush/Performance.bin
+[romfs] 0.2 s /Common/Mush/UI.bin
+[set] language en-US (device: en-US)
+[sm] GetServiceHandle set
+[ipc] STUB am::ISelfController cmd 1 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 2 (in 8 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 11 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 12 (in 12 bytes, bufs x0 a0 b0 c0)
+[ipc] STUB am::ISelfController cmd 14 (in 12 bytes, bufs x0 a0 b0 c0)
+[romfs] 0.2 s /Common/Controller/Vibration/KillerBoostPart1.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/KillerBoostPart2.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/LandHipDropMetal_amfm_2xl3xh.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/OjHugeMetalBallRotateLv_amfm_2xl.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PfRollingSandLv.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PfRollingSandTrig.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetBofuhn.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetBuBuBuLv.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetByeen.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDoDoDoLv.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDohoon.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDoka.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDon.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDoon.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDooon.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDoooon.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetDott.bnvib
+[romfs] 0.2 s /Common/Controller/Vibration/PresetGoGoGoFastLv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/PresetGoGoGoLv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/PresetGohWithAttackLv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/PresetJiriJiriLv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/WaveBigBallRotateLv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/WaveRect180_360Lv.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/WaveSquareUpShort.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/out.bnvib
+[romfs] 0.3 s /Common/Controller/Vibration/tmp.bnvib
+[nvn] #4 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1025915d8, 0x1)
+[nvn] #5 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a010f8, 0x1027cc0e0, 0x102763380)
+[nvn] #6 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #7 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1025915d8, 0x1)
+[nvn] #8 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a01258, 0x1027cc0e0, 0x102763380)
+[nvn] #9 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[nvn] #10 STUB nvnCommandBufferSetMemoryCallback(0x7f900feac8, 0x7d80631df4, 0x1025915d8, 0x1)
+[nvn] #11 STUB nvnCommandBufferSetMemoryCallbackData(0x7f900feac8, 0x7dc2a013b8, 0x1027cc0e0, 0x102763380)
+[nvn] #12 STUB nvnCommandBufferAddCommandMemory(0x7f900feac8, 0x7dc2955100, 0x100, 0x800)
+[romfs] 0.8 s /Common/Gfx/agl_resource.Nin_NX_NVN.release.sarc
+[romfs] 0.8 s /Common/Gfx/gsys_resource.Nin_NX_NVN.release.sarc
+[romfs] 0.8 s /Common/Gfx/TurboAppPackage.Nin_NX_NVN.release.sarc
+[romfs] 0.8 s /Common/GEnv/Turbo_cmn.bgenv
+[romfs] 0.8 s /Common/Effect/common.ptcl
+[romfs] 0.9 s /Common/Effect/elink2.bin
+[sm] GetServiceHandle mii:e
+[romfs] 1.1 s /Common/Mii/TextureShader.bnsh
+[romfs] 1.1 s /Common/Gfx/MiiIcon.sharcb
+[romfs] 1.1 s /Common/Mii/IconBody.dat
+[romfs] 1.1 s /Common/Mii/MiiBody.bfres.bin
+[romfs] 1.1 s /Common/Mii/Mii.bfres.bin
+[romfs] 1.1 s /Common/Mii/MiiFaceOnly.bfres.bin
+[romfs] 1.1 s /Common/Mii/Mii.bfsha
+[sm] GetServiceHandle prepo:u
+[sm] GetServiceHandle friend:u
+[romfs] 1.6 s /Audio/Group/GroupSetting.bagst
+[romfs] 1.6 s /Audio/Attenuation/TurboS.baatarc
+[romfs] 1.6 s /Audio/LoopAssetList/LoopAssetList.blal
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[audio] renderer Config { sample_rate: 48000, sample_count: 240, mix_buffer_count: 30, sub_mix_count: 1, voice_count: 96, sink_count: 1, effect_count: 14, revision: 878069074 }
+[romfs] 2.2 s /Audio/DummySound.bfsar
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[sm] GetServiceHandle audren:u
+[romfs] 2.4 s /Audio/Bin/slink2.bslnk
+[romfs] 2.4 s /Audio/Static/BGM.bars
+[romfs] 2.6 s /Audio/Static/BGM.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Amb.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Big.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Bow.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Fro.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Jet.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Kid.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Mgp.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Mix.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Sct.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Std.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Ysi.barslist
+[romfs] 2.6 s /Audio/Static/Body_B_Zlb.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Bds.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Bfl.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Btl.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Cat.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Fml.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Gla.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Gld.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Kpc.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Pch.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Pwc.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Rst.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Sbm.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Shp.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Skl.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Slv.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Snk.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Spo.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Std.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Ten.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Tnk.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Tri.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Ufo.barslist
+[romfs] 2.6 s /Audio/Static/Body_K_Wld.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Atv.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Bea.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Drb.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Hnc.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Spl.barslist
+[romfs] 2.6 s /Audio/Static/Body_V_Tnd.barslist
+[romfs] 2.6 s /Audio/Static/Btn.bars
+[romfs] 2.6 s /Audio/Static/Btn.barslist
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_BackBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_BackBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_CmnBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_CmnBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_OkBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_OkBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_TeamWinBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_WinBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_cm_L_WinBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CharaSlctBtn_Sg.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CharaSlctBtn_Sg.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CmnBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_ContentsBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CourseSlctBtnRandom_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CourseSlctBtnRandom_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CourseSlctBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CourseSlctBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CupSlctBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_CupSlctBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_DemoStartBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_RaceStartBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_RaceStartBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_Scroll_List_Lobby_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_Scroll_List_Lobby_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_SubBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TitleBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TitleBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TopMenuBtnNX_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TopMenuBtn_00.bars
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TopMenuBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_TopMenuBtn_01.barslist
+[romfs] 2.6 s /Audio/Static/Btn_mn_L_WifiCmnBtn_00.barslist
+[romfs] 2.6 s /Audio/Static/Driver_AnimalBoyA.barslist
+[romfs] 2.6 s /Audio/Static/Driver_AnimalGirlA.barslist
+[romfs] 2.6 s /Audio/Static/Driver_BbDaisy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_BbLuigi.barslist
+[romfs] 2.6 s /Audio/Static/Driver_BbMario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_BbPeach.barslist
+[romfs] 2.6 s /Audio/Static/Driver_BbRosetta.barslist
+[romfs] 2.6 s /Audio/Static/Driver_CatPeach.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DK.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Daisy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr01.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr02.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr03.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr04.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr05.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr06.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr07.barslist
+[romfs] 2.6 s /Audio/Static/Driver_DrvChr08.barslist
+[romfs] 2.6 s /Audio/Static/Driver_GoldMario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Heyho.barslist
+[romfs] 2.6 s /Audio/Static/Driver_HoneKoopa.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Iggy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Jugem.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Karon.barslist
+[romfs] 2.6 s /Audio/Static/Driver_KingTeresa.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Kinopico.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Kinopio.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Koopa.barslist
+[romfs] 2.6 s /Audio/Static/Driver_KoopaJr.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Larry.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Lemmy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Link.barslist
+[romfs] 2.6 s /Audio/Static/Driver_LinkBotw.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Ludwig.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Luigi.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_MetalMario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_MetalPeach.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_F01.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_F02.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_F03.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_F04.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_M01.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_M02.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_M03.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Mii_M04.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Morton.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Nokonoko.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Peach.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Rosetta.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Roy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Shizue.barslist
+[romfs] 2.6 s /Audio/Static/Driver_SplatoonBoy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_SplatoonGirl.barslist
+[romfs] 2.6 s /Audio/Static/Driver_TanukiMario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Waluigi.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Wario.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Wendy.barslist
+[romfs] 2.6 s /Audio/Static/Driver_Yoshi.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_AnimalBoyA.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_AnimalGirlA.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_BbDaisy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_BbLuigi.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_BbMario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_BbPeach.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_BbRosetta.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_CatPeach.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DK.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Daisy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr01.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr02.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr03.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr04.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr05.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr06.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr07.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_DrvChr08.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_GoldMario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Heyho.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_HoneKoopa.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Iggy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Jugem.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Karon.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_KingTeresa.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Kinopico.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Kinopio.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Koopa.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_KoopaJr.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Larry.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Lemmy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Link.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_LinkBotw.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Ludwig.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Luigi.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_MetalMario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_MetalPeach.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_F01.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_F02.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_F03.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_F04.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_M01.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_M02.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_M03.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Mii_M04.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Morton.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Nokonoko.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Peach.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Rosetta.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Roy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Shizue.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_SplatoonBoy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_SplatoonGirl.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_TanukiMario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Waluigi.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Wario.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Wendy.barslist
+[romfs] 2.6 s /Audio/Static/MenuDriver_Yoshi.barslist
+[romfs] 2.6 s /Audio/Static/StaticKart.bars
+[romfs] 2.6 s /Audio/Static/StaticKart.barslist
+[romfs] 2.6 s /Audio/Static/StaticSysMenu.bars
+[romfs] 2.6 s /Audio/Static/StaticSysMenu.barslist
+[romfs] 2.6 s /Audio/Static/StaticSysRace.bars
+[romfs] 2.6 s /Audio/Static/StaticSysRace.barslist
+[romfs] 2.9 s /UI/cmn/filter.sarc
+[romfs] 2.9 s /UI/cmn/common.sarc
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[sm] GetServiceHandle pl:u
+[romfs] 3.0 s /UI/USen/font.sarc
+[romfs] 3.0 s /UI/USen/message.sarc
+[romfs] 3.0 s /UI/cmn/boot/bt_TitleLoading_00.szs
+[nvn] #367 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x10252ed78, 0x7dc29672b8)
+[gfx] window crop Some([0, 0, 1280, 720])
+[nvn] #369 STUB nvnCommandBufferSetShaderScratchMemory(0x7da4e654c0, 0x7da50e7040, 0x0, 0x0)
+[nvn] #379 STUB nvnCommandBufferBarrier(0x7da4e654c0, 0x12, 0x10252ed78, 0x1)
+[romfs] 3.1 s /Data/contentskey.dat
+[nvn] #395 STUB nvnCommandBufferBarrier(0x7f900ff2b8, 0xff, 0x10252ed78, 0x7dc29672b8)
+[romfs] add-on content: 2 files
+[romfs] 3.1 s dlc:/version.txt
+[romfs] 3.1 s dlc:/contents.dat
+[ipc] STUB prepo:u cmd 10101 (in 32 bytes, bufs x1 a1 b0 c0)
+-[_MTLCommandEncoder dealloc]:131: failed assertion `Command encoder released without endEncoding'
