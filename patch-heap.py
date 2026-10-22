@@ -4654,3 +4654,49 @@ s_ = s_.replace(old, '''    let prev = last.get(&h).copied();
 assert "SMART" not in s_, [l for l in s_.splitlines() if "SMART" in l]
 sm.write_text(s_)
 print("patched", sm, "(speed first: dynamic frameskip)")
+
+# ---- GPU profile: render passes per frame and the attachment memory each pass loads from and
+# stores back to RAM (an A16 is a tile GPU: every Load/Store moves the whole attachment through
+# memory, so many small passes or needless loads/stores cost GPU time). One more [prof] line.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "    pub static DRAWS: AtomicU64 = AtomicU64::new(0);\n"
+assert g.count(old) == 1
+g = g.replace(old, old + "    pub static PASSES: AtomicU64 = AtomicU64::new(0);\n    pub static LOADS: AtomicU64 = AtomicU64::new(0);\n    pub static LOAD_BYTES: AtomicU64 = AtomicU64::new(0);\n    pub static STORE_BYTES: AtomicU64 = AtomicU64::new(0);\n")
+old = "    cb.renderCommandEncoderWithDescriptor(&desc)\n}\n"
+assert g.count(old) == 1
+g = g.replace(old, """    {
+        use std::sync::atomic::Ordering::Relaxed;
+        let bytes = |t: &Texture| (t.width() * t.height()) as u64 * if matches!(t.pixelFormat(), MTLPixelFormat::RGBA16Float | MTLPixelFormat::Depth32Float_Stencil8 | MTLPixelFormat::RG32Float) { 8 } else { 4 };
+        prof::PASSES.fetch_add(1, Relaxed);
+        for c in a.colors.iter().flatten() {
+            prof::STORE_BYTES.fetch_add(bytes(&c.0 .0), Relaxed);
+            if !matches!(c.1, Load::ClearColor(_)) {
+                prof::LOADS.fetch_add(1, Relaxed);
+                prof::LOAD_BYTES.fetch_add(bytes(&c.0 .0), Relaxed);
+            }
+        }
+        if let Some((t, load, _)) = &a.depth {
+            prof::STORE_BYTES.fetch_add(bytes(&t.0), Relaxed);
+            if !matches!(load, Load::ClearDepthStencil(..)) {
+                prof::LOADS.fetch_add(1, Relaxed);
+                prof::LOAD_BYTES.fetch_add(bytes(&t.0), Relaxed);
+            }
+        }
+    }
+    cb.renderCommandEncoderWithDescriptor(&desc)
+}
+""")
+gm.write_text(g)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = '        if async_gfx::on() {\n            eprintln!("[prof] graphics thread: busy'
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''        {
+            let shown = (frames - skipped as f64).max(1.0);
+            let (p, l, lb, sb) = (gfx::prof::PASSES.swap(0, Relaxed), gfx::prof::LOADS.swap(0, Relaxed), gfx::prof::LOAD_BYTES.swap(0, Relaxed), gfx::prof::STORE_BYTES.swap(0, Relaxed));
+            eprintln!("[prof] gpu passes per drawn frame: {:.0}, attachments loaded {:.0} ({:.0} MB), stored {:.0} MB", p as f64 / shown, l as f64 / shown, lb as f64 / shown / 1048576.0, sb as f64 / shown / 1048576.0);
+        }
+''' + old)
+dm.write_text(s_)
+print("patched", gm, dm, "(render pass profile)")
