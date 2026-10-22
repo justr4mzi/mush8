@@ -71,7 +71,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   copied from another iPhone), since an archive made for another iOS/GPU is useless.
 - **Failed pipelines are retried** after 1 s and 3 s (the iOS shader compiler sometimes dies mid-build)
   instead of staying black until the next launch.
-- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 9463 pipelines (Oct 22: +5838 from the overnight VS sessions on 89 of the 96 tracks), from iPhone runs
+- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10091 pipelines (Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
   and the Mac smoke runs): their shaders are compiled ahead of time on the build Mac, so a phone that never
   ran the game doesn't have to compile them for minutes.
 - **Full prewarm before playing**: holds the game until every known pipeline is ready, with a progress
