@@ -1,4 +1,4 @@
-run 1, 04:50 UTC, 13531 s, game attempt 15
+run 1, 04:51 UTC, 13562 s, game attempt 16
 tracks:
 6.6s /Course/Gu_Menu
 336.3s /Course/Gds_TickTockClock
@@ -42,35 +42,34 @@ tracks:
 335.8s /Course/Cnsw_12
 738.2s /Course/Dsfc_RainbowRoad
 1098.9s /Course/Du_Hyrule
+5.7s /Course/Gu_Menu
 last game files read:
-1100.2s /MapObj/DL_Dekubaba/DL_Dekubaba.bars
-1100.2s /MapObj/DL_Dekubaba/DL_Dekubaba.barslist
-1100.2s /MapObj/DL_Dekubaba/DL_Dekubaba.bfres
-1100.3s /MapObj/DL_Dekubaba/MapObjKart_Col_Leaf.bars
-1100.3s /MapObj/DL_Dekubaba/MapObjKart_DL_Dekubaba.bars
-1100.3s /MapObj/DL_Dekubaba/MapObjKart_DL_Dekubaba.barslist
-1100.3s /MapObj/DL_Dekubaba/StarHit_own.bars
-1100.3s /MapObj/DL_HyFlagSquare/DL_HyFlagSquare.bfres
-1100.3s /MapObj/DL_VRHyrule/DL_VRHyrule.bfres
-1100.3s /MapObj/DL_MasterSwordBase/DL_MasterSwordBase.bfres
-1100.3s /MapObj/DL_HySalute/DL_HySalute.bars
-1100.3s /MapObj/DL_HySalute/DL_HySalute.barslist
-1100.3s /MapObj/TS_PaperH/TS_PaperH.bfres
-1100.7s /Audio/Ground/Ground_Stone.bars
-1100.7s /Audio/Ground/Ground_Stone.barslist
-1100.7s /Audio/Ground/Ground_Carpet.bars
-1100.7s /Audio/Ground/Ground_Carpet.barslist
-1100.7s /Audio/Ground/Ground_DirtSmall.bars
-1100.7s /Audio/Ground/Ground_DirtSmall.barslist
-1100.7s /Audio/Ground/Ground_Wboard.bars
-1100.7s /Audio/Ground/Ground_Wboard.barslist
-1100.7s /Audio/Ground/Wall_Wood.bars
-1100.7s /Audio/Ground/Wall_Wood.barslist
-1120.5s /Audio/Resource/Stream/pBGM_WU_HYRULE_N.bfstm
-1400.5s /Audio/Resource/Stream/pBGM_WU_HYRULE_F.bfstm
-game fps (last minute): 42.8
-[hang] thread 0xcb07 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x66cbc _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x616a4 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x3fd10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x4e1a0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x40364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x1610b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+6.3s /Kart/Body/BodyK_Std.szs
+6.4s /Kart/BodyTex/BodyK_Std_Mro_Alb.szs
+6.4s /Kart/BodyTex/BodyK_Std_A_Spm.szs
+6.4s /Kart/Wing/Wing_Std.szs
+6.4s /Kart/WingTex/Wing_Std_Mro_Alb.szs
+6.4s /Kart/WingTex/Wing_Std_A_Spm.szs
+6.4s /Kart/Arm/ArmK_Std.szs
+6.4s /Audio/DriverMenu/MenuDriver_Mario.bars
+6.4s /UI3D/MiiBodyMiddle/MiiBodyMiddle.bfres
+6.4s /UI3D/VRNetwork/VRNetwork.bfres
+6.4s /UI3D/Earth/Earth.szs
+6.5s /UI3D/Sun/Sun.bfres
+6.5s /UI3D/BaseTable/BaseTable.bfres
+6.5s /UI3D/SpaceToad/SpaceToad.bfres
+6.5s /UI3D/LocalRoom/LocalRoom.szs
+6.8s /UI/cmn/menu_title/MnSingle_Mario^l.szs
+6.8s /UI/cmn/menu_title/MnSingle_Peach^l.szs
+6.8s /UI/cmn/menu_title/MnSingle_Kuppa^l.szs
+6.8s /UI/cmn/menu_title/TitleBGSingle_00^u.szs
+6.8s /UI/cmn/menu_title/MnOpen_Sizue^l.szs
+6.8s /UI/cmn/menu_title/MnOpen_SizueSub^l.szs
+6.8s /UI/cmn/menu_title/MnOpen_Murabito^l.szs
+6.9s /UI/cmn/menu_title/MnOpen_MurabitoSub_00^l.szs
+6.9s /UI/cmn/menu_title/MnOpen_MurabitoSub_01^l.szs
+6.9s /UI/cmn/menu_title/TitleBGMultiOpen_04^u.szs
+game fps (last minute): 40.3
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 14): starting it again
 === attempt 15 at 12008 s
@@ -81,25 +80,27 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 [hang] thread 0xd107 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x66cbc _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x616a4 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x3fd10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x4e1a0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x40364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [hang] thread 0x15f0b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 === the game stopped (attempt 15): starting it again
-[mem] 1513 s: app uses 2268 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 16 at 13544 s
+=== script variant 0,       24 tracks done, cup keys: 
+[mem] 11 s: app uses 1651 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3541 MB | resident 1926 MB, internal 1777 MB, external 118 MB, compressed 102 MB, purgeable 0 MB, reusable 30 MB, footprint 2268 MB
-[mem] Metal besides the game RAM: 441 MB = textures 386 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 38 MB
-[mem] textures: 30 loaded (0 MB), 2004 render targets (417 MB), 0 pipelines kept ready, 1 purgeable, 2 taken back by iOS
+[mem] detail: game RAM 3157 MB, Metal 3151 MB | resident 1680 MB, internal 1582 MB, external 54 MB, compressed 14 MB, purgeable 0 MB, reusable 43 MB, footprint 1651 MB
+[mem] Metal besides the game RAM: 51 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 4 MB, block copies 0 MB, uploads in flight 0 MB, other 47 MB
+[mem] 12 s: jump to 1936 MB (was 1651 MB), iOS still allows 0 MB
 --- end of the log
-[mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3540 MB | resident 1926 MB, internal 1777 MB, external 118 MB, compressed 102 MB, purgeable 0 MB, reusable 30 MB, footprint 2257 MB
-[cpu] 74% of a core in all: guest-0x50 35%, gfx-submit 14%, guest-0x55 6%, guest-0x56 3%, thread-0x7a03 3%, thread-0x18c03 2%, thread-0x3f03 2%, thread-0x17217 2%, guest-0x6c 2%, guest-0x7e 1%
-[cpu] system calls: 0x1d 4104/s, 0x1b 1966/s, 0x1c 1770/s, 0x34 931/s, 0x35 931/s, 0x21 221/s, 0x1a 195/s, 0x17 138/s
-[mem] Metal besides the game RAM: 440 MB = textures 386 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 37 MB
-[mem] textures: 30 loaded (0 MB), 1995 render targets (416 MB), 0 pipelines kept ready, 1 purgeable, 2 taken back by iOS
-[mem] 1513 s: app uses 2268 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3541 MB | resident 1926 MB, internal 1777 MB, external 118 MB, compressed 102 MB, purgeable 0 MB, reusable 30 MB, footprint 2268 MB
-[cpu] 60% of a core in all: guest-0x50 28%, gfx-submit 13%, guest-0x55 5%, thread-0x18c03 3%, guest-0x56 2%, thread-0x7a03 2%, thread-0x17217 2%, guest-0x6c 2%, guest-0x7e 2%, thread-0x3f03 1%
-[cpu] system calls: 0x1d 3929/s, 0x1b 1888/s, 0x1c 1691/s, 0x35 884/s, 0x34 884/s, 0x21 218/s, 0x1a 198/s, 0x17 139/s
-[mem] Metal besides the game RAM: 441 MB = textures 386 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 38 MB
-[mem] textures: 30 loaded (0 MB), 2004 render targets (417 MB), 0 pipelines kept ready, 1 purgeable, 2 taken back by iOS
-Assertion failed: (_commandCurrentStorage.currentOffset), function -[AppleParavirtCommandBuffer endCurrentChunk], file AppleParavirtCommandBuffer.mm, line 266.
-=== the game stopped (attempt 15): starting it again
+[romfs] 6.8 s /UI/cmn/menu_title/MnSingle_Mario^l.szs
+[romfs] 6.8 s /UI/cmn/menu_title/MnSingle_Peach^l.szs
+[romfs] 6.8 s /UI/cmn/menu_title/MnSingle_Kuppa^l.szs
+[romfs] 6.8 s /UI/cmn/menu_title/TitleBGSingle_00^u.szs
+[romfs] 6.8 s /UI/cmn/menu_title/MnOpen_Sizue^l.szs
+[romfs] 6.8 s /UI/cmn/menu_title/MnOpen_SizueSub^l.szs
+[romfs] 6.8 s /UI/cmn/menu_title/MnOpen_Murabito^l.szs
+[romfs] 6.9 s /UI/cmn/menu_title/MnOpen_MurabitoSub_00^l.szs
+[romfs] 6.9 s /UI/cmn/menu_title/MnOpen_MurabitoSub_01^l.szs
+[romfs] 6.9 s /UI/cmn/menu_title/TitleBGMultiOpen_04^u.szs
+[nvn] #9955 STUB nvnCommandBufferSetLineWidth(0x7f900ff2b8, 0x102bafb88, 0x7f900fed70, 0x7f900feef0)
+[nvn] #9956 STUB nvnCommandBufferSetPointSize(0x7f900ff2b8, 0x102bafb80, 0x102d7a3af, 0x102d0e180)
+[shader] af6d028f05fb355a: compiled while the render thread waited (new render target), 6 ms
+[mem] 12 s: jump to 1936 MB (was 1651 MB), iOS still allows 0 MB
+[gfx] screen at 10s dumped
 new pipelines so far:     1675
