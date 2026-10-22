@@ -1,23 +1,7 @@
-run 1, 00:36 UTC, 143 s, game attempt 1
+run 1, 00:37 UTC, 214 s, game attempt 1
 tracks:
 6.5s /Course/Gu_Menu
 last game files read:
-26.1s /Driver/BbMario.szs
-26.1s /Kart/Body/BodyK_Skl.szs
-26.1s /Kart/BodyTex/BodyK_Skl_MroB_Alb.szs
-26.1s /Kart/Wing/Wing_Prf.szs
-27.0s /Driver/Yoshi.szs
-27.0s /DriverTex/Yoshi_Tex00.szs
-27.0s /Kart/BodyTex/BodyK_Std_Ysi00_Alb.szs
-27.0s /Kart/WingTex/Wing_Std_Ysi00_Alb.szs
-28.0s /Driver/TanukiMario.szs
-28.1s /Kart/BodyTex/BodyK_Std_MroT_Alb.szs
-28.1s /Kart/WingTex/Wing_Std_MroT_Alb.szs
-28.9s /Driver/Nokonoko.szs
-28.9s /Kart/Body/BodyB_Mgp.szs
-28.9s /Kart/BodyTex/BodyB_Mgp_B_Alb.szs
-28.9s /Kart/WingTex/Wing_Std_Nok_Alb.szs
-28.9s /Kart/BodyTex/ArmB_Mgp_B_Alb.szs
 30.0s /Driver/Luigi.szs
 30.0s /Kart/Body/BodyB_Std.szs
 30.0s /Kart/BodyTex/BodyB_Std_Lig_Alb.szs
@@ -27,26 +11,42 @@ last game files read:
 34.9s /Kart/WingTex/Wing_Std_Wlg_Alb.szs
 34.9s /Kart/Arm/ArmK_Big.szs
 76.5s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
-game fps (last minute): 32.0
+156.0s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
+156.0s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
+156.0s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
+156.0s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
+156.0s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
+156.0s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
+game fps (last minute): 34.2
 === attempt 1 at 0 s
-[mem] textures: 35 loaded (2 MB), 307 render targets (111 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[mem] 143 s: app uses 1932 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (2 MB), 414 render targets (117 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 208 s: app uses 1936 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3117 MB, Metal 3224 MB | resident 1768 MB, internal 1710 MB, external 53 MB, compressed 120 MB, purgeable 0 MB, reusable 4 MB, footprint 1932 MB
-[mem] Metal besides the game RAM: 124 MB = textures 89 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 19 MB
+[mem] detail: game RAM 3117 MB, Metal 3228 MB | resident 1764 MB, internal 1706 MB, external 53 MB, compressed 126 MB, purgeable 0 MB, reusable 5 MB, footprint 1936 MB
+[mem] Metal besides the game RAM: 128 MB = textures 96 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
 --- end of the log
-[shader] 065f8de0692fef68: compiled while the render thread waited (new render target), 90 ms
-[gfx] pipeline 065f8de0692fef68/1ef1bc9eb646cb1f: built while the render thread waited (new render target), 14 ms
-[shader] f0a79175563e6d66: compiled while the render thread waited (new render target), 94 ms
-[shader] 9ed561837ced940c: compiled while the render thread waited (new render target), 26 ms
-[gfx] pipeline 9ed561837ced940c/f0a79175563e6d66: built while the render thread waited (new render target), 8 ms
-[shader] 655cb61fd11cb08a: compiled while the render thread waited (new render target), 103 ms
-[shader] 28bea45f294c57c0: compiled while the render thread waited (new render target), 37 ms
-[gfx] pipeline 28bea45f294c57c0/655cb61fd11cb08a: built while the render thread waited (new render target), 7 ms
-[mem] textures: 35 loaded (2 MB), 307 render targets (111 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[mem] 143 s: app uses 1932 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (2 MB), 387 render targets (116 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 197 s: app uses 1935 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3117 MB, Metal 3224 MB | resident 1768 MB, internal 1710 MB, external 53 MB, compressed 120 MB, purgeable 0 MB, reusable 4 MB, footprint 1932 MB
-[cpu] 17% of a core in all: guest-0x50 6%, gfx-submit 4%, thread-0x8303 2%, thread-0x19237 2%, guest-0x6c 1%, thread-0x3f03 1%, guest-0x55 1%
-[cpu] system calls: 0x1d 2493/s, 0x1b 1227/s, 0x1c 1023/s, 0x34 489/s, 0x35 488/s, 0x1a 204/s, 0x17 121/s, 0x18 103/s
-[mem] Metal besides the game RAM: 124 MB = textures 89 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 19 MB
+[mem] detail: game RAM 3117 MB, Metal 3227 MB | resident 1764 MB, internal 1706 MB, external 53 MB, compressed 126 MB, purgeable 0 MB, reusable 4 MB, footprint 1935 MB
+[cpu] 21% of a core in all: guest-0x50 8%, gfx-submit 4%, thread-0x2603 2%, guest-0x6c 2%, guest-0x55 1%, thread-0x8303 1%, thread-0x3f03 1%, thread-0x19237 1%
+[cpu] system calls: 0x1d 3090/s, 0x1b 1487/s, 0x1c 1302/s, 0x35 641/s, 0x34 641/s, 0x1a 185/s, 0x17 134/s, 0x21 102/s
+[mem] Metal besides the game RAM: 127 MB = textures 95 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[gfx] device pipeline archive: 108 pipelines saved this run (7 files, 0 left out)
+[mem] textures: 35 loaded (2 MB), 414 render targets (117 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 208 s: app uses 1936 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3228 MB | resident 1764 MB, internal 1706 MB, external 53 MB, compressed 126 MB, purgeable 0 MB, reusable 5 MB, footprint 1936 MB
+[cpu] 19% of a core in all: guest-0x50 8%, gfx-submit 5%, thread-0x19237 2%, thread-0x8303 2%, guest-0x55 1%, guest-0x6c 1%
+[cpu] system calls: 0x1d 3179/s, 0x1b 1530/s, 0x1c 1343/s, 0x34 660/s, 0x35 660/s, 0x1a 187/s, 0x17 134/s, 0x21 101/s
+[mem] Metal besides the game RAM: 128 MB = textures 96 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
