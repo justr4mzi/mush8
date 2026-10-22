@@ -83,10 +83,15 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   ~45 game fps instead of ~36 on heavy scenes.
 - **30 fps lock (frameskip)**: one frame out of two is drawn, evenly paced, while the game still updates
   at 60 Hz (multiplayer timing unchanged). Render targets drawn rarely are never skipped.
-- **Smart 30 fps lock** (on with the 30 fps lock, `NX_SMART30=0` for the plain one): when a hot phone slows
-  the game below ~50 updates per second, the plain lock showed only half of them (20-22 fps on screen for
-  a game at 40-45). Then every frame is drawn, so the screen shows what the game makes (40-45); back to 1
-  frame out of 2 once the game is at full speed. `[smart30]` lines in the log show the switches.
+- **Speed first** (on with the 30 fps lock, `NX_SPEED_FIRST=0` for the plain lock): the game's own speed
+  comes before the frame rate. MK8 moves the race one step per update, so a game making 30 updates per
+  second instead of 60 runs in slow motion (50 %). On a hot phone the game thread waited ~20 ms per update
+  for the GPU (Oct 22 log: 20-35 updates/s, race at 35-60 % speed). Now, while the game is under ~55
+  updates/s, fewer frames are drawn: 1 out of 3 (20 fps), then 1 out of 4 (15 fps, `NX_SKIP_MAX`, 1-4,
+  default 3), which takes the GPU and graphics-thread work out of the game's way; back to 1 out of 2 (30 fps)
+  when it is fast again (it waits longer each time it had to go back down, so it doesn't flicker). `[speed]`
+  lines in the log show the switches. It replaces the "smart 30 fps lock" of Oct 21, which drew every frame
+  when the game was slow and so slowed it down further.
 - Texture change checks every 2 frames instead of every frame.
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
   nobody waiting; after those, the second scheduling check (global lock + walk over all threads) is skipped.
@@ -172,7 +177,8 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 |---|---|---|
 | `NX_ASYNC_GFX` | 1 | Graphics on a separate thread (`0` = off) |
 | `NX_FRAMESKIP` | 1 | Frames skipped between two drawn ones (0 = none, max 4) |
-| `NX_SMART30` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
+| `NX_SPEED_FIRST` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
+| `NX_SKIP_MAX` | 3 | Speed first: at most 1 frame out of N+1 drawn when the game is slow (1 = never under 30 fps) |
 | `NX_AUTOSKIP` | off | `1` = skip frames only when late |
 | `NX_HASH_EVERY` | 2 | Check textures for changes every N frames (1 to 30) |
 | `NX_HANDHELD` | 1 | Handheld (720p) / docked — *launcher wins* |

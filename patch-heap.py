@@ -4542,3 +4542,115 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, '                                if let Some(p) = hit.or_else(|| { d.setBinaryArchives(None); dev.newRenderPipelineStateWithDescriptor_error(&d).ok() }) {\n')
 sp.write_text(s_)
 print("patched", sp, "(archives detached before compiling a miss)")
+
+# ---- Speed first (replaces the smart 30 fps lock). The smart lock drew EVERY frame when the game
+# fell under ~50 updates/s, which made it worse: on the phone (Oct 22, New York Minute, heat
+# "serious") the game thread waited ~20 ms per update for GPU fences (GPU 15-28 ms per drawn frame,
+# 900 draws) and ran at 20-35 updates/s, i.e. the race at 35-60 % speed. Now the opposite: the game
+# speed comes first. 1 frame out of 2 is drawn (30 fps) and, while the game is still under ~55
+# updates/s, fewer frames are drawn (1 out of 3 = 20 fps, then 1 out of 4 = 15 fps, NX_SKIP_MAX)
+# so the GPU and the graphics thread get out of the way of the game; back to 30 fps when it is fast
+# again. The skip pattern changes only from a frame 2 frames ahead, and the graphics thread (a few
+# frames behind) reads the pattern that was in force for the frame it records, so a shown frame is
+# never half skipped. NX_SPEED_FIRST=0: plain 30 fps lock.
+sm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = sm.read_text()
+a = s_.index("/// NX_FRAMESKIP=N: draw and show 1 frame out of N+1; the game itself still runs every frame.\nstatic SMART:")
+b = s_.index("fn skip_frame() -> bool {")
+s_ = s_[:a] + '''/// Speed first: dynamic frameskip (see patch-heap.py). Two plans (start frame, N): the current
+/// one and the previous one, for frames the graphics thread records late.
+static SPEED: LazyLock<bool> = LazyLock::new(|| !*AUTO && skip_n() == 1 && std::env::var("NX_SPEED_FIRST").map_or(true, |v| v.trim() != "0"));
+static PLAN: Mutex<[(u64, u64); 2]> = Mutex::new([(0, 1), (0, 1)]);
+
+fn plan_n(f: u64) -> (u64, u64) {
+    let p = PLAN.lock().unwrap();
+    if f >= p[0].0 { p[0] } else { p[1] }
+}
+
+/// Called at each present (game thread): follows the time per game update and picks N.
+fn speed_decide() {
+    struct S { last: Option<std::time::Instant>, ema: f32, since: u32, need: u32, down_at: Option<std::time::Instant> }
+    static ST: Mutex<S> = Mutex::new(S { last: None, ema: 16.7, since: 0, need: 300, down_at: None });
+    static MAX: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_SKIP_MAX").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(3u64).clamp(1, 4));
+    let now = std::time::Instant::now();
+    let mut st = ST.lock().unwrap();
+    if let Some(l) = st.last {
+        let dt = now.duration_since(l).as_secs_f32() * 1000.0;
+        if dt < 250.0 {
+            st.ema = st.ema * 0.97 + dt * 0.03;
+        }
+    }
+    st.last = Some(now);
+    st.since += 1;
+    let f = FRAME.load(Relaxed);
+    let n = plan_n(f).1;
+    let new_n = if st.ema > 18.0 && st.since > 90 && n < *MAX {
+        Some(n + 1)
+    } else if n > 1 && st.ema < 16.9 && st.since > st.need {
+        Some(n - 1)
+    } else {
+        None
+    };
+    if let Some(m) = new_n {
+        if m < n {
+            st.down_at = Some(now);
+        } else if st.down_at.is_some_and(|d| now.duration_since(d).as_secs() < 10) {
+            st.need = (st.need * 2).min(3600);
+        } else if m > n {
+            st.need = 300;
+        }
+        let start = f + 2;
+        {
+            let mut p = PLAN.lock().unwrap();
+            p[1] = p[0];
+            p[0] = (start, m);
+        }
+        gfx::AUTO_INTERVAL.store((m + 1) as u32, Relaxed);
+        eprintln!("[speed] game at {:.0} updates/s: now 1 frame out of {} drawn ({:.0} fps)", 1000.0 / st.ema, m + 1, 60.0 / (m + 1) as f32);
+        st.since = 0;
+    }
+}
+
+''' + s_[b:]
+old = '''    if *SMART && SMART_ALL.load(Relaxed) {
+        return false;
+    }
+    static N: LazyLock<u64> = LazyLock::new(skip_n);
+    *N > 0 && cur_frame() % (*N + 1) != 0
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    if *SPEED {
+        let f = cur_frame();
+        let (start, n) = plan_n(f);
+        return f.saturating_sub(start) % (n + 1) != 0;
+    }
+    static N: LazyLock<u64> = LazyLock::new(skip_n);
+    *N > 0 && cur_frame() % (*N + 1) != 0
+''')
+old = '''    if *SMART {
+        if gfx::AUTO_INTERVAL.load(Relaxed) == 0 {
+            gfx::AUTO_INTERVAL.store(2, Relaxed);
+        }
+        smart_decide();
+    }
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    if *SPEED {
+        if gfx::AUTO_INTERVAL.load(Relaxed) == 0 {
+            gfx::AUTO_INTERVAL.store(2, Relaxed);
+        }
+        speed_decide();
+    }
+''')
+# render-target reuse window follows the N of the frame being recorded
+old = '''    let prev = last.get(&h).copied();
+    RT_REPEAT.store(prev.is_some_and(|f| frame > f && frame - f <= (*N).max(1) + 1), Relaxed);
+    let recent = prev.is_some_and(|f| frame > f && frame - f <= *N);'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let prev = last.get(&h).copied();
+    let nn = if *SPEED { plan_n(frame).1 } else { *N };
+    RT_REPEAT.store(prev.is_some_and(|f| frame > f && frame - f <= nn.max(1) + 1), Relaxed);
+    let recent = prev.is_some_and(|f| frame > f && frame - f <= nn);''')
+assert "SMART" not in s_, [l for l in s_.splitlines() if "SMART" in l]
+sm.write_text(s_)
+print("patched", sm, "(speed first: dynamic frameskip)")
