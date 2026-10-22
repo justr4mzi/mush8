@@ -84,6 +84,8 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **30 fps lock (frameskip)**: one frame out of two is drawn, evenly paced, while the game still updates
   at 60 Hz (multiplayer timing unchanged). Render targets drawn rarely are never skipped.
 - Texture change checks every 2 frames instead of every frame.
+- **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
+  nobody waiting; after those, the second scheduling check (global lock + walk over all threads) is skipped.
 - **Game thread priorities**: the game's main thread (game logic) and the thread that presents frames get
   "interactive" priority (like our graphics thread), so iOS keeps them on the 2 fast cores of the A15/A16
   when the phone is hot (`NX_STOCK_QOS=1` for the old priorities). The phone logs showed the FPS drops come

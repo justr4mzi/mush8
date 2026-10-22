@@ -4404,3 +4404,33 @@ pub fn install_handlers() {
 """)
 dg.write_text(s_)
 print("patched", dg, "(Objective-C exceptions logged)")
+
+# ---------------------------------------------------------------------------
+# Fewer scheduler passes on the game's most frequent system calls: after an
+# unlock (0x1B), a condition signal (0x1D) or an address signal (0x35) that
+# woke nobody, nothing changed for the scheduler, so the second scheduling
+# check (a global lock and a walk over all threads) is skipped. The game makes
+# several thousand of these calls per second, most with nobody waiting.
+kr = pathlib.Path("crates/nxhost/src/kernel.rs")
+s_ = kr.read_text()
+old = "    fn wake(&self, w: &Waiter) {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "        WAKES.fetch_add(1, Relaxed);\n")
+old = "const SAFETY_NET: Duration = Duration::from_millis(50);\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "\n/// Threads woken by a release or a signal (see svc::dispatch).\npub static WAKES: AtomicU64 = AtomicU64::new(0);\n")
+kr.write_text(s_)
+sv = pathlib.Path("crates/nxhost/src/svc.rs")
+s_ = sv.read_text()
+old = "    kernel::sched_point();\n    dispatch_inner(f);\n    kernel::sched_point();\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """    kernel::sched_point();
+    let n = f.x[16] as u32;
+    let wakes = kernel::WAKES.load(std::sync::atomic::Ordering::Relaxed);
+    dispatch_inner(f);
+    if !(matches!(n, 0x1B | 0x1D | 0x35) && kernel::WAKES.load(std::sync::atomic::Ordering::Relaxed) == wakes) {
+        kernel::sched_point();
+    }
+""")
+sv.write_text(s_)
+print("patched", kr, sv, "(fewer scheduler passes)")
