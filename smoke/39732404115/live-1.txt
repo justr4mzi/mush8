@@ -1,4 +1,4 @@
-run 1, 10:23 UTC, 14722 s, game attempt 14
+run 1, 10:28 UTC, 15045 s, game attempt 15
 tracks:
 7.2s /Course/Gu_Menu
 336.5s /Course/Du_Animal_Summer
@@ -44,35 +44,34 @@ tracks:
 2468.5s /Course/Du_MuteCity
 4.9s /Course/Gu_Menu
 336.0s /Course/Ggc_SherbetLand
+4.2s /Course/Gu_Menu
 last game files read:
-337.1s /Audio/Body/Body_K_Shp.bars
-337.1s /Audio/Driver/Driver_SplatoonBoy.bars
-337.1s /Audio/Body/Body_B_Std.bars
-337.1s /Audio/Driver/Driver_Daisy.bars
-337.1s /Audio/Body/Body_K_Cat.bars
-337.1s /Audio/Driver/Driver_CatPeach.bars
-337.1s /Audio/Driver/Driver_LinkBotw.bars
-337.1s /Audio/Body/Body_B_Bow.bars
-337.1s /Audio/Driver/Driver_Roy.bars
-337.1s /Audio/Body/Body_B_Big.bars
-337.1s /Audio/Driver/Driver_AnimalGirlA.bars
-337.1s /Audio/Body/Body_B_Sct.bars
-337.1s /Audio/Driver/Driver_BbDaisy.bars
-337.1s /Audio/Body/Body_K_Ten.bars
-337.1s /Audio/Driver/Driver_Waluigi.bars
-337.1s /Audio/Body/Body_V_Atv.bars
-337.1s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
-337.1s /UI/USen/race/tc_RT_Go_USen^h.bntx
-337.1s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
-337.1s /UI/USen/race/tc_RT_Finish_USen^h.bntx
-337.1s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
-337.1s /UI/cmn/race/ym_ModeIconBGVs_00^s.bntx
-337.2s /UI/cmn/race/ym_ModeIconVs_00^l.bntx
-356.6s /Audio/Resource/Stream/BGM_COURSE_IN.bfstm
-366.5s /Audio/Resource/Stream/BGM_START_GRID_VS.bfstm
-game fps (last minute): 40.3
-[hang] thread 0xd903 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x25014c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x12a3a4 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x125858 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x82404 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x95bbc _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x82b10 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x255148 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x1f20b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+18.0s /Kart/WingTex/Wing_Std_MroB_Alb.szs
+18.9s /Driver/HoneKoopa.szs
+18.9s /Kart/Body/BodyB_Std.szs
+18.9s /Kart/BodyTex/BodyB_Std_KopB_Alb.szs
+18.9s /Kart/WingTex/Wing_Std_KopB_Alb.szs
+21.9s /Driver/Waluigi.szs
+21.9s /Kart/Body/BodyB_Amb.szs
+21.9s /Kart/Wing/Wing_Wlo.szs
+76.0s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
+156.2s /UI/cmn/menu/tc_KP_K_Std_Mro^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Skl_Mro^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Fml_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Ten_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Shp_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Snk_02^l.bntx
+156.2s /UI/cmn/menu/tc_KP_B_Std_Mro^l.bntx
+156.2s /UI/cmn/menu/tc_KP_B_Mgp_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_V_Atv_Mro^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Gla_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_B_Sct_02^l.bntx
+156.2s /UI/cmn/menu/tc_KP_K_Kpc_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_V_Spl_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
+156.2s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
+156.2s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
+game fps (last minute): 47.0
 === the game stopped (attempt 13): starting it again
 === attempt 14 at 14341 s
 === script variant 0,       25 tracks done, cup keys: 
@@ -83,25 +82,27 @@ game fps (last minute): 40.3
 [hang] thread 0x1660f 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [fatal] signal 11 at pc=0x19e01d820 lr=0x1a984a3d0 fault_addr=0x64010
 === the game stopped (attempt 14): starting it again
-[mem] 372 s: app uses 2110 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 15 at 14728 s
+=== script variant 0,       26 tracks done, cup keys: 
+[mem] 307 s: app uses 1947 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3120 MB, Metal 3459 MB | resident 1823 MB, internal 1726 MB, external 84 MB, compressed 68 MB, purgeable 0 MB, reusable 11 MB, footprint 2110 MB
-[mem] Metal besides the game RAM: 359 MB = textures 104 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 238 MB
-[mem] textures: 31 loaded (0 MB), 1323 render targets (352 MB), 0 pipelines kept ready, 1 purgeable, 2 taken back by iOS
+[mem] detail: game RAM 3119 MB, Metal 3233 MB | resident 1811 MB, internal 1736 MB, external 64 MB, compressed 97 MB, purgeable 0 MB, reusable 11 MB, footprint 1947 MB
+[mem] Metal besides the game RAM: 133 MB = textures 101 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[mem] textures: 35 loaded (0 MB), 476 render targets (127 MB), 0 pipelines kept ready, 3 purgeable, 0 taken back by iOS
 --- end of the log
-[nvn]   473416  host  nvnCommandBufferUpdateUniformBuffer
-[nvn]    81577  host  nvnCommandBufferReportCounter
-[nvn]     2017  STUB  nvnCommandBufferResetCounter
-[nvn]    18426  host  nvnCommandBufferSetRenderEnable
-[nvn]    18426  host  nvnCommandBufferSetRenderEnableConditional
-[nvn]   1141706  host  nvnCommandBufferSetRenderTargets
-[nvn]   889339  STUB  nvnCommandBufferBarrier
-[nvn]       39  STUB  nvnCommandBufferFenceSync
-[nvn]    15912  host  nvnCommandBufferSetTexturePool
-[nvn]    15912  host  nvnCommandBufferSetSamplerPool
-[nvn]    15912  STUB  nvnCommandBufferSetShaderScratchMemory
-[nvn]       41  host  nvnSyncInitialize
-[nvn]    15912  host  nvnQueueFenceSync
-[nvn]    31857  host  nvnSyncWait
-=== the game stopped (attempt 14): starting it again
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (34): every frame drawn
+[smart30] the game is at full speed again: 30 fps lock
+[mem] 307 s: app uses 1947 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3119 MB, Metal 3233 MB | resident 1811 MB, internal 1736 MB, external 64 MB, compressed 97 MB, purgeable 0 MB, reusable 11 MB, footprint 1947 MB
+[cpu] 28% of a core in all: gfx-submit 9%, guest-0x50 9%, thread-0x1c513 2%, thread-0x742b 2%, thread-0x3f03 2%, guest-0x55 2%, thread-0x3c03 1%, guest-0x6c 1%, guest-0x56 1%
+[cpu] system calls: 0x1d 4114/s, 0x1b 1978/s, 0x1c 1761/s, 0x34 887/s, 0x35 887/s, 0x1a 217/s, 0x17 147/s, 0x21 103/s
+[mem] Metal besides the game RAM: 133 MB = textures 101 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[mem] textures: 35 loaded (0 MB), 476 render targets (127 MB), 0 pipelines kept ready, 3 purgeable, 0 taken back by iOS
+[smart30] the game is slower than 50 updates/s (31): every frame drawn
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (40): every frame drawn
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (32): every frame drawn
 new pipelines so far:     1659
