@@ -1,4 +1,4 @@
-run 1, 12:40 UTC, 11414 s, game attempt 4
+run 1, 12:43 UTC, 11618 s, game attempt 5
 tracks:
 6.4s /Course/Gu_Menu
 301.7s /Course/Bu_BattleStadium
@@ -17,35 +17,34 @@ tracks:
 1359.3s /Course/Bu_Sweets
 1769.4s /Course/Bu_Moon
 2090.2s /Course/Bu_Dojo
+5.0s /Course/Gu_Menu
 last game files read:
-3080.3s /Kart/BodyTex/BodyV_Atv_F_Alb.szs
-3080.4s /Kart/WingTex/Wing_Std_Wlg_Alb.szs
-3100.2s /Driver/BbLuigi.szs
-3100.2s /Kart/Emblem/Emblem_LigB.szs
-3100.2s /Kart/BodyTex/BodyK_Std_LigB_Alb.szs
-3100.2s /Kart/WingTex/Wing_Std_LigB_Alb.szs
-3100.2s /Kart/Tire/TireB_Mtl.szs
-3100.2s /Kart/Emblem/Emblem_KopJ.szs
-3100.2s /Kart/Emblem/Emblem_MroB.szs
-3100.2s /Kart/Tire/TireB_Big.szs
-3100.2s /Kart/Emblem/Emblem_Dch05.szs
-3100.2s /Kart/Emblem/Emblem_Wlg.szs
-3100.3s /Kart/Tire/TireT_Ofr.szs
-3100.3s /Kart/Body/BodyK_Tri.szs
-3100.5s /Audio/Driver/Driver_Luigi.bars
-3100.5s /Audio/Driver/Driver_BbLuigi.bars
-3100.5s /Audio/Body/Body_B_Jet.bars
-3100.5s /Audio/Driver/Driver_KoopaJr.bars
-3100.5s /Audio/Driver/Driver_BbMario.bars
-3100.5s /Audio/Driver/Driver_DrvChr05.bars
-3100.6s /Audio/Driver/Driver_Waluigi.bars
-3100.6s /Audio/Body/Body_B_Fro.bars
-3100.6s /Audio/Body/Body_K_Tri.bars
-3100.6s /UI/cmn/race/ym_BattleIconCI_00^s.bntx
-3380.7s /Audio/DriverMenu/MenuDriver_BbLuigi.bars
-game fps (last minute): 47.4
-=== the game stopped (attempt 1): starting it again
-=== attempt 2 at 2550 s
+17.7s /Driver/Nokonoko.szs
+17.7s /Kart/Body/BodyB_Mgp.szs
+17.7s /Kart/BodyTex/BodyB_Mgp_B_Alb.szs
+17.7s /Kart/WingTex/Wing_Std_Nok_Alb.szs
+17.7s /Kart/BodyTex/ArmB_Mgp_B_Alb.szs
+18.2s /Driver/DrvChr02.szs
+18.2s /Kart/BodyTex/BodyV_Atv_Dch02_Alb.szs
+18.2s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
+19.1s /Driver/Wario.szs
+19.1s /Kart/BodyTex/BodyV_Atv_G_Alb.szs
+19.1s /Kart/WingTex/Wing_Std_Wro_Alb.szs
+20.2s /Driver/MetalMario.szs
+20.3s /Kart/Body/BodyB_Jet.szs
+20.3s /Kart/WingTex/Wing_Std_MroM_Alb.szs
+20.3s /Kart/WingTex/Wing_Std_MroM_Spm.szs
+23.2s /Driver/BbPeach.szs
+23.2s /Kart/Body/BodyV_Bea.szs
+23.3s /Kart/Wing/Wing_Prf.szs
+23.3s /Kart/Arm/ArmK_Wod.szs
+106.3s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
+193.3s /Driver/Luigi.szs
+193.4s /Kart/Emblem/Emblem_Lig.szs
+193.4s /Kart/BodyTex/BodyK_Std_Lig_Alb.szs
+193.4s /Kart/WingTex/Wing_Std_Lig_Alb.szs
+193.4s /Audio/DriverMenu/MenuDriver_Luigi.bars
+game fps (last minute): 46.0
 === script variant 0,        4 tracks done, cup keys: 
 === no new track for 10 min: menu script variant 1
 === stuck (attempt 2): restarting the game
@@ -56,25 +55,27 @@ game fps (last minute): 47.4
 === script variant 1,        4 tracks done, cup keys: 
 === no new track for 10 min: menu script variant 2
 === stuck (attempt 4): restarting the game
-[mem] Metal besides the game RAM: 481 MB = textures 430 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 34 MB
-[mem] 3904 s: app uses 2362 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 5 at 11422 s
+=== script variant 2,        4 tracks done, cup keys: 
+[mem] 187 s: app uses 1919 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3113 MB, Metal 3581 MB | resident 1816 MB, internal 1789 MB, external 15 MB, compressed 172 MB, purgeable 0 MB, reusable 11 MB, footprint 2362 MB
-[mem] Metal besides the game RAM: 481 MB = textures 430 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 34 MB
+[mem] detail: game RAM 3126 MB, Metal 3212 MB | resident 1849 MB, internal 1766 MB, external 58 MB, compressed 59 MB, purgeable 0 MB, reusable 23 MB, footprint 1919 MB
+[mem] Metal besides the game RAM: 112 MB = textures 84 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 12 MB
+[mem] textures: 35 loaded (0 MB), 233 render targets (107 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
 --- end of the log
-[mem] detail: game RAM 3113 MB, Metal 3581 MB | resident 1816 MB, internal 1789 MB, external 15 MB, compressed 172 MB, purgeable 0 MB, reusable 11 MB, footprint 2366 MB
-[cpu] 52% of a core in all: guest-0x50 19%, gfx-submit 17%, guest-0x55 2%, thread-0x7b03 2%, thread-0x2303 2%, thread-0x2a03 2%, guest-0x51 1%, guest-0x56 1%, memlog 1%, guest-0x6c 1%
-[cpu] system calls: 0x1d 4325/s, 0x1b 2076/s, 0x1c 1872/s, 0x34 965/s, 0x35 965/s, 0x21 226/s, 0x1a 205/s, 0x17 145/s
-[mem] Metal besides the game RAM: 481 MB = textures 430 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 34 MB
+[mem] detail: game RAM 3126 MB, Metal 3212 MB | resident 1849 MB, internal 1766 MB, external 58 MB, compressed 59 MB, purgeable 0 MB, reusable 23 MB, footprint 1919 MB
+[cpu] 30% of a core in all: guest-0x50 8%, gfx-submit 8%, thread-0x4b03 2%, thread-0x8403 2%, thread-0x7a0f 2%, guest-0x55 2%, guest-0x56 1%, thread-0x3e03 1%, guest-0x6c 1%, guest-0x77 1%
+[cpu] system calls: 0x1d 4314/s, 0x1b 2078/s, 0x1c 1772/s, 0x34 868/s, 0x35 868/s, 0x1a 307/s, 0x17 146/s, 0x18 145/s
+[mem] Metal besides the game RAM: 112 MB = textures 84 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 12 MB
+[smart30] the game is slower than 50 updates/s (27): every frame drawn
 [smart30] the game is at full speed again: 30 fps lock
-[smart30] the game is slower than 50 updates/s (34): every frame drawn
-[mem] 3904 s: app uses 2362 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3113 MB, Metal 3581 MB | resident 1816 MB, internal 1789 MB, external 15 MB, compressed 172 MB, purgeable 0 MB, reusable 11 MB, footprint 2362 MB
-[cpu] 56% of a core in all: gfx-submit 22%, guest-0x50 20%, thread-0x2a03 3%, guest-0x55 2%, thread-0x1c23b 2%, thread-0x2303 2%, guest-0x51 2%, thread-0x7b03 1%, guest-0x56 1%, guest-0x6c 1%
-[cpu] system calls: 0x1d 4273/s, 0x1b 2045/s, 0x1c 1850/s, 0x34 948/s, 0x35 948/s, 0x21 225/s, 0x1a 195/s, 0x17 144/s
-[mem] Metal besides the game RAM: 481 MB = textures 430 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 34 MB
+[smart30] the game is slower than 50 updates/s (32): every frame drawn
 [smart30] the game is at full speed again: 30 fps lock
-=== no new track for 10 min: menu script variant 2
-=== stuck (attempt 4): restarting the game
+[mem] textures: 35 loaded (0 MB), 233 render targets (107 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[smart30] the game is slower than 50 updates/s (32): every frame drawn
+[romfs] 193.3 s /Driver/Luigi.szs
+[romfs] 193.4 s /Kart/Emblem/Emblem_Lig.szs
+[romfs] 193.4 s /Kart/BodyTex/BodyK_Std_Lig_Alb.szs
+[romfs] 193.4 s /Kart/WingTex/Wing_Std_Lig_Alb.szs
+[romfs] 193.4 s /Audio/DriverMenu/MenuDriver_Luigi.bars
 new pipelines so far:      227
