@@ -1,4 +1,4 @@
-run 1, 04:17 UTC, 11494 s, game attempt 13
+run 1, 04:17 UTC, 11532 s, game attempt 14
 tracks:
 6.6s /Course/Gu_Menu
 336.3s /Course/Gds_TickTockClock
@@ -36,35 +36,34 @@ tracks:
 336.2s /Course/Cnsw_58
 5.5s /Course/Gu_Menu
 335.6s /Course/Dagb_RibbonRoad
+4.7s /Course/Gu_Menu
 last game files read:
-338.3s /Audio/Driver/Driver_Rosetta.bars
-338.3s /Audio/Body/Body_V_Atv.bars
-338.3s /Audio/Driver/Driver_DrvChr05.bars
-338.3s /Audio/Body/Body_K_Snk.bars
-338.3s /Audio/Driver/Driver_Wendy.bars
-338.3s /Audio/Driver/Driver_BbMario.bars
-338.3s /Audio/Driver/Driver_Ludwig.bars
-338.3s /Audio/Body/Body_K_Shp.bars
-338.3s /Audio/Driver/Driver_Jugem.bars
-338.3s /Audio/Driver/Driver_DrvChr07.bars
-338.3s /Audio/Body/Body_B_Kid.bars
-338.3s /Audio/Driver/Driver_Peach.bars
-338.3s /Audio/Body/Body_B_Jet.bars
-338.3s /Audio/Driver/Driver_Morton.bars
-338.3s /Audio/Body/Body_K_Tri.bars
-338.4s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
-338.4s /UI/USen/race/tc_RT_Go_USen^h.bntx
-338.4s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
-338.4s /UI/USen/race/tc_RT_Finish_USen^h.bntx
-338.4s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
-338.4s /UI/cmn/race/ym_ModeIconBGVs_00^s.bntx
-338.4s /UI/cmn/race/ym_ModeIconVs_00^l.bntx
-358.8s /Audio/Resource/Stream/BGM_COURSE_IN.bfstm
-365.9s /Audio/Resource/Stream/BGM_START_GRID_VS.bfstm
-381.3s /Audio/Resource/Stream/pBGM_GBA_RIBBONROAD_N.bfstm
-game fps (last minute): 30.1
-[hang] thread 0x1880b 'pipeline-archive': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x11544c _RNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state10save_group+0x88 <- nxhost+0x62d88 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5sta+0x1c4 <- nxhost+0x40e24 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state7h+0x94 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-fatal runtime error: Rust cannot catch foreign exceptions, aborting
+15.7s /UI/cmn/menu/ym_CoursePict_Random_00^u.bntx
+15.7s /UI/cmn/bgm_player.sarc
+15.7s /UI/cmn/menu_title/mnt_L_MenuTitle_00.szs
+20.1s /Driver/Jugem.szs
+20.2s /Kart/Body/BodyV_Atv.szs
+20.2s /Kart/BodyTex/BodyV_Atv_Jgm_Alb.szs
+20.2s /Kart/Wing/Wing_Jgm.szs
+21.4s /Driver/DrvChr07Suit.szs
+21.5s /Kart/Body/BodyB_Kid.szs
+21.5s /Kart/WingTex/Wing_Std_Dch07_Alb.szs
+22.3s /Driver/DrvChr01.szs
+22.4s /DriverTex/DrvChr01_Tex00.szs
+22.4s /Kart/BodyTex/BodyK_Std_Dch0100_Alb.szs
+22.4s /Kart/WingTex/Wing_Std_Dch0100_Alb.szs
+23.3s /Driver/Iggy.szs
+23.3s /Kart/Body/BodyK_Kpc.szs
+23.4s /Kart/BodyTex/BodyK_Kpc_F_Alb.szs
+23.4s /Kart/BodyTex/BodyK_Kpc_F_Spm.szs
+23.4s /Kart/WingTex/Wing_Std_Igy_Alb.szs
+24.2s /Driver/BbLuigi.szs
+24.2s /Kart/WingTex/Wing_Std_LigB_Alb.szs
+24.9s /Driver/DrvChr03.szs
+24.9s /Kart/Body/BodyK_Fml.szs
+24.9s /Kart/BodyTex/BodyK_Fml_B_Alb.szs
+24.9s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
+game fps (last minute): 28.9
 === the game stopped (attempt 12): starting it again
 === attempt 13 at 11071 s
 === script variant 0,       19 tracks done, cup keys: 
@@ -75,25 +74,27 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 [hang] thread 0x1f00b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 fatal runtime error: Rust cannot catch foreign exceptions, aborting
 === the game stopped (attempt 13): starting it again
-[mem] textures: 31 loaded (0 MB), 1319 render targets (399 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
-[mem] 417 s: app uses 2205 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 14 at 11501 s
+=== script variant 0,       20 tracks done, cup keys: 
+[mem] 22 s: app uses 1901 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3121 MB, Metal 3507 MB | resident 1857 MB, internal 1762 MB, external 82 MB, compressed 72 MB, purgeable 0 MB, reusable 13 MB, footprint 2205 MB
-[mem] Metal besides the game RAM: 407 MB = textures 370 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 20 MB
+[mem] detail: game RAM 3127 MB, Metal 3203 MB | resident 1848 MB, internal 1755 MB, external 58 MB, compressed 58 MB, purgeable 0 MB, reusable 34 MB, footprint 1901 MB
+[mem] Metal besides the game RAM: 103 MB = textures 0 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 87 MB
+[mem] textures: 35 loaded (0 MB), 142 render targets (99 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
 --- end of the log
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/panicking.rs:544:19
-  32: std::panic::catch_unwind::<core::panic::unwind_safe::AssertUnwindSafe<std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closur
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/panic.rs:359:14
-  33: std::thread::lifecycle::spawn_unchecked::<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/thread/lifecycle.rs:68:26
-  34: <std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1} as core::ops::function::FnOnce<()>>::call_once::{shim:vtable#0}
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/core/src/ops/function.rs:250:5
-  35: <alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/alloc/src/boxed.rs:2320:9
-  36: <std::sys::thread::unix::Thread>::new::thread_start
-             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/sys/thread/unix.rs:123:17
-  37: __pthread_cond_wait
-
-fatal runtime error: Rust cannot catch foreign exceptions, aborting
-=== the game stopped (attempt 13): starting it again
+[romfs] 23.3 s /Driver/Iggy.szs
+[romfs] 23.3 s /Kart/Body/BodyK_Kpc.szs
+[romfs] 23.4 s /Kart/BodyTex/BodyK_Kpc_F_Alb.szs
+[romfs] 23.4 s /Kart/BodyTex/BodyK_Kpc_F_Spm.szs
+[romfs] 23.4 s /Kart/WingTex/Wing_Std_Igy_Alb.szs
+[romfs] 24.2 s /Driver/BbLuigi.szs
+[romfs] 24.2 s /Kart/WingTex/Wing_Std_LigB_Alb.szs
+[romfs] 24.9 s /Driver/DrvChr03.szs
+[romfs] 24.9 s /Kart/Body/BodyK_Fml.szs
+[romfs] 24.9 s /Kart/BodyTex/BodyK_Fml_B_Alb.szs
+[romfs] 24.9 s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
+[mem] textures: 35 loaded (0 MB), 142 render targets (99 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[romfs] 29.1 s /Driver/KingTeresa.szs
+[romfs] 29.2 s /Kart/BodyTex/BodyK_Fml_D_Alb.szs
+[romfs] 29.2 s /Kart/WingTex/Wing_Std_Ktr_Alb.szs
 new pipelines so far:     1480
