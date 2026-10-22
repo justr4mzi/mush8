@@ -83,6 +83,10 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   ~45 game fps instead of ~36 on heavy scenes.
 - **30 fps lock (frameskip)**: one frame out of two is drawn, evenly paced, while the game still updates
   at 60 Hz (multiplayer timing unchanged). Render targets drawn rarely are never skipped.
+- **Smart 30 fps lock** (on with the 30 fps lock, `NX_SMART30=0` for the plain one): when a hot phone slows
+  the game below ~50 updates per second, the plain lock showed only half of them (20-22 fps on screen for
+  a game at 40-45). Then every frame is drawn, so the screen shows what the game makes (40-45); back to 1
+  frame out of 2 once the game is at full speed. `[smart30]` lines in the log show the switches.
 - Texture change checks every 2 frames instead of every frame.
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
   nobody waiting; after those, the second scheduling check (global lock + walk over all threads) is skipped.
@@ -168,6 +172,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 |---|---|---|
 | `NX_ASYNC_GFX` | 1 | Graphics on a separate thread (`0` = off) |
 | `NX_FRAMESKIP` | 1 | Frames skipped between two drawn ones (0 = none, max 4) |
+| `NX_SMART30` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
 | `NX_AUTOSKIP` | off | `1` = skip frames only when late |
 | `NX_HASH_EVERY` | 2 | Check textures for changes every N frames (1 to 30) |
 | `NX_HANDHELD` | 1 | Handheld (720p) / docked — *launcher wins* |

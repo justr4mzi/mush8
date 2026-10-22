@@ -4463,3 +4463,66 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, "    let r = { let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner()); gfx::gpu().device.0.newRenderPipelineStateWithDescriptor_options_reflection_error(&copy, MTLPipelineOption::FailOnBinaryArchiveMiss, None) };\n")
 st.write_text(s_)
 print("patched", st, "(binary archive lock: crash fix)")
+
+# ---------------------------------------------------------------------------
+# Smart 30 fps lock (on by default with the 30 fps lock, NX_SMART30=0 for the
+# plain one): when the game itself runs at 60 updates per second, one frame out
+# of two is drawn (steady 30 on screen). When a hot phone slows the game below
+# ~50 updates per second, the plain lock showed only half of them (20-22 fps
+# on screen for a game at 40-45); now every frame is drawn then, so the screen
+# shows what the game makes (40-45). Back to 1 out of 2 once the game is at
+# full speed again. The phone logs showed the GPU and our graphics thread have
+# room for it (8-10 ms per drawn frame).
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = "fn skip_frame() -> bool {\n    if *AUTO {\n        return AUTO_SKIP.load(Relaxed);\n    }\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """static SMART: LazyLock<bool> = LazyLock::new(|| !*AUTO && skip_n() == 1 && std::env::var("NX_SMART30").map_or(true, |v| v.trim() != "0"));
+/// Smart lock: true while every frame is drawn (the game is slower than ~50 updates per second).
+static SMART_ALL: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);
+
+/// Called at each present with the smart lock: follows how long the game takes per update.
+fn smart_decide() {
+    static LAST: Mutex<Option<(std::time::Instant, f32, u32)>> = Mutex::new(None);
+    let now = std::time::Instant::now();
+    let mut l = LAST.lock().unwrap();
+    let (prev, mut ema, mut since) = l.unwrap_or((now, 16.7, 0));
+    let dt = now.duration_since(prev).as_secs_f32() * 1000.0;
+    if dt < 500.0 {
+        ema = ema * 0.95 + dt * 0.05;
+    }
+    since += 1;
+    let all = SMART_ALL.load(Relaxed);
+    if !all && ema > 20.0 && since > 60 {
+        SMART_ALL.store(true, Relaxed);
+        gfx::AUTO_INTERVAL.store(1, Relaxed);
+        eprintln!("[smart30] the game is slower than 50 updates/s ({:.0}): every frame drawn", 1000.0 / ema);
+        since = 0;
+    } else if all && ema < 17.5 && since > 120 {
+        SMART_ALL.store(false, Relaxed);
+        gfx::AUTO_INTERVAL.store(2, Relaxed);
+        eprintln!("[smart30] the game is at full speed again: 30 fps lock");
+        since = 0;
+    }
+    *l = Some((now, ema, since));
+}
+
+fn skip_frame() -> bool {
+    if *AUTO {
+        return AUTO_SKIP.load(Relaxed);
+    }
+    if *SMART && SMART_ALL.load(Relaxed) {
+        return false;
+    }
+""")
+old = "    let skip = skip_frame();\n    FRAME.fetch_add(1, Relaxed);\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """    if *SMART {
+        if gfx::AUTO_INTERVAL.load(Relaxed) == 0 {
+            gfx::AUTO_INTERVAL.store(2, Relaxed);
+        }
+        smart_decide();
+    }
+""" + old)
+dm.write_text(s_)
+print("patched", dm, "(smart 30 fps lock)")
