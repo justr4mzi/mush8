@@ -1,0 +1,80 @@
+[gfx] pipeline 31f366e7c1c19bb6/e8c6595db2c522a9: not in the archive, compiling (198 archive hits, 21 misses)
+[gfx] pipeline 31f366e7c1c19bb6/e8c6595db2c522a9: built while the render thread waited (new render target), 10 ms
+[gfx] pipeline 30b6219d686bfead/b382de56dda82a41: built while the render thread waited (new render target), 8 ms
+[gfx] pipeline 11767000dfe215fe/6a93e7e057924607: not in the archive, compiling (201 archive hits, 22 misses)
+[gfx] pipeline 11767000dfe215fe/6a93e7e057924607: built while the render thread waited (new render target), 8 ms
+[shader] c275c59151283bc9: compiled while the render thread waited (new render target), 27 ms
+[gfx] pipeline c275c59151283bc9/4469ce1345475811: not in the archive, compiling (201 archive hits, 23 misses)
+[gfx] pipeline c275c59151283bc9/4469ce1345475811: built while the render thread waited (new render target), 11 ms
+[gfx] pipeline 02643afe6f0b75cd/48489eb9f93d82f7: not in the archive, compiling (201 archive hits, 24 misses)
+[gfx] pipeline 02643afe6f0b75cd/48489eb9f93d82f7: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline beab9b730df36a33/9584584cb255c177: not in the archive, compiling (201 archive hits, 25 misses)
+[gfx] pipeline 6a3432563a74d84a/56b23ebc643ce49b: not in the archive, compiling (201 archive hits, 26 misses)
+[gfx] pipeline 6a3432563a74d84a/56b23ebc643ce49b: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 6a3432563a74d84a/0ff16c7025460581: not in the archive, compiling (201 archive hits, 27 misses)
+[gfx] pipeline 6a3432563a74d84a/0ff16c7025460581: built while the render thread waited (new render target), 7 ms
+[gfx] pipeline 7430edd7df73cee7/153e5da58505c637: not in the archive, compiling (201 archive hits, 28 misses)
+[gfx] pipeline 7430edd7df73cee7/153e5da58505c637: built while the render thread waited (new render target), 13 ms
+[gfx] pipeline 1ede658b8a2564ab/860a2eacae076efd: not in the archive, compiling (201 archive hits, 29 misses)
+[gfx] pipeline 1ede658b8a2564ab/860a2eacae076efd: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 6a3432563a74d84a/00b657c8d81dfae5: not in the archive, compiling (201 archive hits, 30 misses)
+[gfx] pipeline 6a3432563a74d84a/00b657c8d81dfae5: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 6a3432563a74d84a/eed04b124c188009: not in the archive, compiling (201 archive hits, 31 misses)
+[gfx] pipeline 6a3432563a74d84a/eed04b124c188009: built while the render thread waited (new render target), 7 ms
+[gfx] pipeline f965b3d5faa7f41e/0124ef2fa76d0f72: not in the archive, compiling (201 archive hits, 32 misses)
+[gfx] pipeline f965b3d5faa7f41e/0124ef2fa76d0f72: built while the render thread waited (new render target), 8 ms
+[gfx] pipeline c275c59151283bc9/f625e59708e5c68b: not in the archive, compiling (201 archive hits, 33 misses)
+[gfx] pipeline c275c59151283bc9/f625e59708e5c68b: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 6a3432563a74d84a/e9bab021a85a69af: not in the archive, compiling (201 archive hits, 34 misses)
+[gfx] pipeline 6a3432563a74d84a/e9bab021a85a69af: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 66aafa894e344eaf/2f0c8b3ddbfe4d15: not in the archive, compiling (201 archive hits, 35 misses)
+[gfx] pipeline 66aafa894e344eaf/2f0c8b3ddbfe4d15: built while the render thread waited (new render target), 10 ms
+[gfx] pipeline fd2a46441fc2007f/fb3afcabbb46d4d2: not in the archive, compiling (201 archive hits, 36 misses)
+[gfx] pipeline fd2a46441fc2007f/fb3afcabbb46d4d2: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline cfa070c3a534af61/6a01a1e4122b7ada: not in the archive, compiling (201 archive hits, 37 misses)
+[gfx] pipeline 2f4250e478a2cb19/cb12091562c8a4ef: not in the archive, compiling (202 archive hits, 38 misses)
+[gfx] pipeline 2f4250e478a2cb19/cb9b8fa652465392: not in the archive, compiling (202 archive hits, 39 misses)
+[gfx] pipeline 2f4250e478a2cb19/d76c27d691892eda: not in the archive, compiling (202 archive hits, 40 misses)
+[gfx] pipeline 2f4250e478a2cb19/d76c27d691892eda: built while the render thread waited (new render target), 9 ms
+[gfx] pipeline dc0fc79e6c7d23c6/249253a2a99962be: not in the archive, compiling (202 archive hits, 41 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/249253a2a99962be: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline dc0fc79e6c7d23c6/97a931ea043d49de: not in the archive, compiling (202 archive hits, 42 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/97a931ea043d49de: built while the render thread waited (new render target), 5 ms
+[gfx] pipeline 4f961ea213d5f26e/e994f99534d81584: not in the archive, compiling (206 archive hits, 43 misses)
+[gfx] pipeline 66aafa894e344eaf/2f0c8b3ddbfe4d15: not in the archive, compiling (208 archive hits, 44 misses)
+[gfx] pipeline fd2a46441fc2007f/87ef3b4dc6383fb4: not in the archive, compiling (210 archive hits, 45 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/818b2895d44b2447: not in the archive, compiling (211 archive hits, 46 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/e9fa8062eb6ec881: not in the archive, compiling (211 archive hits, 47 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/5609580fd642392d: not in the archive, compiling (211 archive hits, 48 misses)
+[gfx] pipeline fd2a46441fc2007f/590186bb0911f333: not in the archive, compiling (212 archive hits, 49 misses)
+[gfx] pipeline fd2a46441fc2007f/77e7244fe6454146: not in the archive, compiling (212 archive hits, 50 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/06f1225577c15a92: not in the archive, compiling (212 archive hits, 51 misses)
+[gfx] pipeline fd2a46441fc2007f/590186bb0911f333: building took 5191 ms
+[gfx] pipeline dc0fc79e6c7d23c6/b026feaa60900875: not in the archive, compiling (212 archive hits, 52 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/06f1225577c15a92: building took 5218 ms
+[gfx] pipeline d7ade5e09ed86cdb/6293a24d3c667a11: not in the archive, compiling (212 archive hits, 53 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/8a6e04e0daf0bb38: not in the archive, compiling (214 archive hits, 54 misses)
+[gfx] pipeline dc0fc79e6c7d23c6/aa6b8df194e4ca51: not in the archive, compiling (214 archive hits, 55 misses)
+[gfx] pipeline f965b3d5faa7f41e/776b93668e184102: not in the archive, compiling (214 archive hits, 56 misses)
+[gfx] pipeline fd2a46441fc2007f/fb3afcabbb46d4d2: not in the archive, compiling (214 archive hits, 57 misses)
+[gfx] pipeline 2f4250e478a2cb19/2c70d4d6aeaefa2b: not in the archive, compiling (214 archive hits, 58 misses)
+[gfx] pipeline cfa070c3a534af61/6a01a1e4122b7ada: not in the archive, compiling (214 archive hits, 59 misses)
+[gfx] pipeline 2f4250e478a2cb19/cb12091562c8a4ef: not in the archive, compiling (215 archive hits, 60 misses)
+[gfx] pipeline 2f4250e478a2cb19/d76c27d691892eda: not in the archive, compiling (215 archive hits, 61 misses)
+[gfx] pipeline 534d7f37ec5f1f3b/b75bf0346cd7c8a7: not in the archive, compiling (215 archive hits, 62 misses)
+[gfx] pipeline 6d44226dba11eb19/3fff4a69df4ddc82: not in the archive, compiling (216 archive hits, 63 misses)
+[gfx] pipeline 31f366e7c1c19bb6/e8c6595db2c522a9: not in the archive, compiling (216 archive hits, 64 misses)
+[gfx] pipeline 11767000dfe215fe/6a93e7e057924607: not in the archive, compiling (218 archive hits, 65 misses)
+[gfx] pipeline f291034927b31d1d/8c18e1236fbf2e2a: not in the archive, compiling (220 archive hits, 66 misses)
+[gfx] pipeline 62ae071014fe5913/a6cafbf5d4bfcc5e: not in the archive, compiling (220 archive hits, 67 misses)
+[gfx] pipeline c275c59151283bc9/4469ce1345475811: not in the archive, compiling (222 archive hits, 68 misses)
+[gfx] pipeline 13222d297705104f/130bec382c1d333f: not in the archive, compiling (222 archive hits, 69 misses)
+[gfx] pipeline 5d404d8933c83809/be177bb21ceaac89: not in the archive, compiling (222 archive hits, 70 misses)
+[gfx] pipeline 0f58b717de4562ed/be177bb21ceaac89: not in the archive, compiling (222 archive hits, 71 misses)
+[gfx] pipeline d0778e9093faab7f/130bec382c1d333f: not in the archive, compiling (222 archive hits, 72 misses)
+[fps] 0.1 fps, worst frame 6915.9 ms
+[prof] per frame: game/other 6915.9 ms, gfx cpu 780.2 ms (texture uploads 100.2), waiting for display 8.0 ms, gpu 682.6 ms, 2331 draws | pipeline builds 1669 ms/s, frames not shown 0
+[prof] graphics thread: busy 780.2 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 10.4 ms per frame (of which waiting for GPU fences 6853.1 ms)
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+=== the game stopped (attempt 6): starting it again
