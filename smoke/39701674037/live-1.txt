@@ -1,4 +1,4 @@
-run 1, 01:52 UTC, 3519 s, game attempt 4
+run 1, 02:01 UTC, 4042 s, game attempt 5
 tracks:
 7.3s /Course/Gu_Menu
 336.7s /Course/Cnsw_55
@@ -9,64 +9,66 @@ tracks:
 4.7s /Course/Gu_Menu
 335.9s /Course/Cnsw_55
 1438.8s /Course/Cnsw_27
+6.6s /Course/Gu_Menu
+335.3s /Course/Du_DragonRoad
 last game files read:
-1442.3s /MapObj/TrampolineKinokoBlue/TrampolineKinokoBlue.barslist
-1442.3s /MapObj/TrampolineKinokoBlue/TrampolineKinokoBlue.bfres
-1442.3s /MapObj/TrampolineKinokoBlue/TrampolineKinokoBlue.kcl
-1442.3s /MapObj/TrampolineKinokoBlue/Wood.bars
-1442.3s /MapObj/TrampolineKinokoGreen/MapObjKart_Col_Wood.bars
-1442.3s /MapObj/TrampolineKinokoGreen/MapObjKart_TrampolineKinokoGreen.barslist
-1442.3s /MapObj/TrampolineKinokoGreen/MapObjKart_TrampolineLeafGreen.bars
-1442.3s /MapObj/TrampolineKinokoGreen/TrampolineKinokoGreen.barslist
-1442.3s /MapObj/TrampolineKinokoGreen/TrampolineKinokoGreen.bfres
-1442.3s /MapObj/TrampolineKinokoGreen/TrampolineKinokoGreen.kcl
-1442.3s /MapObj/TrampolineKinokoGreen/TrampolineKinokoGreen_JA.kcl
-1442.3s /MapObj/TrampolineKinokoGreen/TrampolineKinokoGreen_JB.kcl
-1442.3s /MapObj/TrampolineKinokoGreen/Wood.bars
-1442.3s /MapObj/VRCnsw27/VRCnsw27.bfres
-1442.3s /MapObj/TrampolineKinokoMg/TrampolineKinokoMg.bfres
-1442.3s /MapObj/TrampolineKinokoMg/TrampolineKinokoMg.kcl
-1442.3s /MapObj/TrampolineKinokoRed2/TrampolineKinokoRed2.bfres
-1442.3s /MapObj/TrampolineKinokoRed2/TrampolineKinokoRed2.kcl
-1442.6s /Audio/Ground/Ground_GrassSmall.bars
-1442.6s /Audio/Ground/Ground_GrassSmall.barslist
-1442.6s /Audio/Ground/Ground_Dirt.bars
-1442.6s /Audio/Ground/Ground_Dirt.barslist
-1442.6s /Audio/Ground/Wall_Gake.bars
-1442.6s /Audio/Ground/Wall_Gake.barslist
-1476.8s /Audio/Resource/Stream/pBGM_Cnsw_27_N.bfstm
-game fps (last minute): 27.8
-[hang] thread 0xd50b 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x66cbc _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x616a4 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x3fd10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x4e1a0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x40364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x16213 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0xe03 'memlog': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x6975c _RNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0B5_+0xe4 <- nxhost+0x63818 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0+0x0 <- nxhost+0x3fe1c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0zEs_00B+0x0 <- nxhost+0x4e208 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x41364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0zEs_+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x8903 'vsync': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x673a0 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_event00B9_+0x1d8 <- nxhost+0x616bc _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18st+0x0 <- nxhost+0x3fd5c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_inp+0x0 <- nxhost+0x4e1b8 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x4055c _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_e+0x34 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x9903 'hid': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x67984 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_input_thread00B9_+0x30c <- nxhost+0x616c8 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state+0x0 <- nxhost+0x3fd88 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5st+0x0 <- nxhost+0x4e1c4 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x4065c _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_+0x34 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0xd50b 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x66cbc _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x616a4 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x3fd10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x4e1a0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x40364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x16213 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[hang] thread 0x1c26b 'pipeline-archive': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x115434 _RNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state10save_group+0x70 <- nxhost+0x62d88 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5sta+0x1c4 <- nxhost+0x40e24 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state7h+0x94 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+336.9s /Audio/Body/Body_V_Atv.bars
+336.9s /Audio/Driver/Driver_SplatoonGirl.bars
+336.9s /Audio/Body/Body_B_Std.bars
+336.9s /Audio/Driver/Driver_AnimalGirlA.bars
+336.9s /Audio/Body/Body_K_Ten.bars
+336.9s /Audio/Driver/Driver_Luigi.bars
+336.9s /Audio/Body/Body_K_Ufo.bars
+336.9s /Audio/Driver/Driver_Karon.bars
+336.9s /Audio/Driver/Driver_Iggy.bars
+336.9s /Audio/Driver/Driver_Kinopico.bars
+336.9s /Audio/Body/Body_K_Cat.bars
+336.9s /Audio/Driver/Driver_CatPeach.bars
+336.9s /Audio/Driver/Driver_BbLuigi.bars
+336.9s /Audio/Driver/Driver_BbPeach.bars
+336.9s /Audio/Driver/Driver_Jugem.bars
+336.9s /UI/USen/race/tc_RT_Go_Msk_USen^s.bntx
+336.9s /UI/USen/race/tc_RT_Go_USen^h.bntx
+336.9s /UI/USen/race/tc_RT_Finish_Msk_USen^s.bntx
+336.9s /UI/USen/race/tc_RT_Finish_USen^h.bntx
+336.9s /UI/cmn/race/ym_ClassIconBG150_00^s.bntx
+336.9s /UI/cmn/race/ym_ModeIconBGVs_00^s.bntx
+336.9s /UI/cmn/race/ym_ModeIconVs_00^l.bntx
+358.5s /Audio/Resource/Stream/BGM_COURSE_IN.bfstm
+365.4s /Audio/Resource/Stream/BGM_START_GRID_VS.bfstm
+379.8s /Audio/Resource/Stream/pBGM_WU_DRAGONROAD_N.bfstm
+game fps (last minute): 32.2
 === the game stopped (attempt 3): starting it again
 === attempt 4 at 1533 s
 === script variant 0,        3 tracks done, cup keys: 
 === the game stopped (attempt 4): starting it again
-[mem] textures: 29 loaded (0 MB), 1701 render targets (425 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
-[mem] 1979 s: app uses 2317 MB, iOS still allows 0 MB (lowest so far 0 MB)
+=== attempt 5 at 3532 s
+=== script variant 0,        4 tracks done, cup keys: 
+[hang] thread 0x2003 'memlog': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x6975c _RNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0B5_+0xe4 <- nxhost+0x63818 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0+0x0 <- nxhost+0x3fe1c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost4diag11start_watchs_0zEs_00B+0x0 <- nxhost+0x4e208 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x41364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNvNtCsiqoAeEVo7TP_6nxhost3gfx12start_memlogs_0zEs_+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0xeb17 'vsync': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x673a0 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_event00B9_+0x1d8 <- nxhost+0x616bc _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18st+0x0 <- nxhost+0x3fd5c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_inp+0x0 <- nxhost+0x4e1b8 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x4055c _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services2vi11vsync_e+0x34 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0xc30f 'hid': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x67984 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_input_thread00B9_+0x30c <- nxhost+0x616c8 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state+0x0 <- nxhost+0x3fd88 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5st+0x0 <- nxhost+0x4e1c4 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x4065c _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_+0x34 <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0xd003 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x24f8cc _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x66cbc _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x616a4 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x3fd10 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x4e1a0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x40364 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x2548c8 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+[hang] thread 0x1620b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
+=== the game stopped (attempt 5): starting it again
+[mem] textures: 31 loaded (0 MB), 1428 render targets (380 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 507 s: app uses 2168 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1884 MB, internal 1786 MB, external 91 MB, compressed 128 MB, purgeable 0 MB, reusable 6 MB, footprint 2317 MB
-[mem] Metal besides the game RAM: 444 MB = textures 392 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 35 MB
+[mem] detail: game RAM 3112 MB, Metal 3495 MB | resident 1798 MB, internal 1720 MB, external 51 MB, compressed 98 MB, purgeable 0 MB, reusable 25 MB, footprint 2168 MB
+[mem] Metal besides the game RAM: 395 MB = textures 351 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 27 MB
 --- end of the log
-[mem] 1967 s: app uses 2313 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 496 s: app uses 2174 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1891 MB, internal 1792 MB, external 91 MB, compressed 122 MB, purgeable 0 MB, reusable 7 MB, footprint 2313 MB
-[cpu] 65% of a core in all: guest-0x50 26%, gfx-submit 16%, guest-0x55 5%, guest-0x56 3%, thread-0x2403 3%, thread-0x18547 2%, guest-0x6c 2%, thread-0x6b03 2%, guest-0x51 2%, guest-0x6d 1%
-[cpu] system calls: 0x1d 3206/s, 0x1b 1550/s, 0x1c 1361/s, 0x34 711/s, 0x35 711/s, 0x21 196/s, 0x1a 189/s, 0x17 128/s
-[mem] Metal besides the game RAM: 444 MB = textures 392 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 35 MB
-[mem] textures: 29 loaded (0 MB), 1701 render targets (425 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
-[mem] 1979 s: app uses 2317 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3112 MB, Metal 3494 MB | resident 1796 MB, internal 1719 MB, external 51 MB, compressed 98 MB, purgeable 0 MB, reusable 26 MB, footprint 2174 MB
+[cpu] 65% of a core in all: guest-0x50 26%, gfx-submit 14%, guest-0x55 5%, thread-0x2503 3%, guest-0x56 3%, guest-0x6c 2%, thread-0x1c02b 2%, thread-0x712b 2%, guest-0x51 2%, thread-0x2803 1%
+[cpu] system calls: 0x1d 3032/s, 0x1b 1478/s, 0x1c 1280/s, 0x34 664/s, 0x35 664/s, 0x1a 198/s, 0x21 194/s, 0x17 126/s
+[mem] Metal besides the game RAM: 394 MB = textures 349 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 28 MB
+[mem] textures: 31 loaded (0 MB), 1428 render targets (380 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
+[mem] 507 s: app uses 2168 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1884 MB, internal 1786 MB, external 91 MB, compressed 128 MB, purgeable 0 MB, reusable 6 MB, footprint 2317 MB
-[cpu] 61% of a core in all: guest-0x50 24%, gfx-submit 16%, guest-0x55 4%, guest-0x56 3%, thread-0x6b03 3%, thread-0x2403 2%, guest-0x6c 2%, guest-0x51 2%, thread-0x8103 2%, guest-0x6d 1%
-[cpu] system calls: 0x1d 2988/s, 0x1b 1446/s, 0x1c 1263/s, 0x34 651/s, 0x35 651/s, 0x21 193/s, 0x1a 184/s, 0x17 126/s
-[mem] Metal besides the game RAM: 444 MB = textures 392 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 35 MB
+[mem] detail: game RAM 3112 MB, Metal 3495 MB | resident 1798 MB, internal 1720 MB, external 51 MB, compressed 98 MB, purgeable 0 MB, reusable 25 MB, footprint 2168 MB
+[cpu] 73% of a core in all: guest-0x50 31%, gfx-submit 14%, guest-0x55 6%, guest-0x56 4%, thread-0x712b 3%, guest-0x6c 2%, thread-0x1c02b 2%, thread-0x2503 2%, thread-0x2803 2%, guest-0x51 2%
+[cpu] system calls: 0x1d 3538/s, 0x1b 1713/s, 0x1c 1511/s, 0x34 787/s, 0x35 787/s, 0x21 206/s, 0x1a 203/s, 0x17 132/s
+[mem] Metal besides the game RAM: 395 MB = textures 351 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 27 MB
 Assertion failed: (_commandCurrentStorage.currentOffset), function -[AppleParavirtCommandBuffer endCurrentChunk], file AppleParavirtCommandBuffer.mm, line 266.
-=== the game stopped (attempt 4): starting it again
-new pipelines so far:      174
+=== the game stopped (attempt 5): starting it again
+new pipelines so far:      240
