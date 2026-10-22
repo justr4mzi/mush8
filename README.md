@@ -96,6 +96,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   when the game was slow and so slowed it down further.
 - Texture change checks every 2 frames instead of every frame.
 - **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
+- **GPU errors**: `[gpu] GPU error on a frame: …` with Metal's reason when a command buffer fails on the GPU (iOS can end an app whose GPU work keeps failing without any crash report), `[gpu] a frame took the GPU N s` for very slow ones.
 - **Crash clues**: `[mem] … heat now …` at every change of the phone's heat state, and `[mem] … only N MB left` every second once less than 300 MB is left (iOS kills without a report leave nothing else).
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
   nobody waiting; after those, the second scheduling check (global lock + walk over all threads) is skipped.

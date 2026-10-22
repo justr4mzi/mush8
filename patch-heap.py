@@ -4769,3 +4769,37 @@ s_ = s_.replace(old, '''            let (p, l, lb, sb) = (gfx::prof::PASSES.swap
             eprintln!("[prof] gpu passes per drawn frame: {:.0} ({:.0} on the same targets as the pass before), attachments loaded {:.0} ({:.0} MB), stored {:.0} MB", p as f64 / shown, same as f64 / shown, l as f64 / shown, lb as f64 / shown / 1048576.0, sb as f64 / shown / 1048576.0);''')
 dm.write_text(s_)
 print("patched", gm, dm, "(same-target passes, heat changes, low memory every second)")
+
+# ---- GPU errors in the log. A command buffer that failed on the GPU (page fault, timeout,
+# "impacting interactivity"...) was dropped without a word; iOS can end an app whose GPU work keeps
+# faulting or hanging WITHOUT any crash report, which is what the phone shows (Oct 22: 4 silent
+# ends). Now every failed frame command buffer is logged with Metal's reason (first 50), and any
+# frame that took the GPU more than 1 s.
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = '''        if cb.0.status() == MTLCommandBufferStatus::Completed {
+            t += (cb.0.GPUEndTime() - cb.0.GPUStartTime()).max(0.0);
+            false
+        } else {
+            cb.0.status() != MTLCommandBufferStatus::Error
+        }'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''        if cb.0.status() == MTLCommandBufferStatus::Completed {
+            let d = (cb.0.GPUEndTime() - cb.0.GPUStartTime()).max(0.0);
+            if d > 1.0 {
+                eprintln!("[gpu] a frame took the GPU {:.1} s", d);
+            }
+            t += d;
+            false
+        } else if cb.0.status() == MTLCommandBufferStatus::Error {
+            static N: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+            if N.fetch_add(1, Relaxed) < 50 {
+                let why = cb.0.error().map_or("?".to_string(), |e| format!("{} (code {})", e.localizedDescription(), e.code()));
+                eprintln!("[gpu] GPU error on a frame: {why}");
+            }
+            false
+        } else {
+            true
+        }''')
+dm.write_text(s_)
+print("patched", dm, "(GPU errors logged)")
