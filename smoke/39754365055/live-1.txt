@@ -1,8 +1,7 @@
-run 1, 09:30 UTC, 66 s, game attempt 1
+run 1, 09:32 UTC, 138 s, game attempt 1
 tracks:
 6.4s /Course/Gu_Menu
 last game files read:
-23.0s /Kart/Arm/ArmK_Wod.szs
 23.8s /Driver/DrvChr06.szs
 23.8s /Kart/Body/BodyK_Spo.szs
 23.9s /Kart/WingTex/Wing_Std_Dch06_Alb.szs
@@ -27,26 +26,27 @@ last game files read:
 30.3s /Kart/Body/BodyK_Fml.szs
 30.3s /Kart/BodyTex/BodyK_Fml_B_Alb.szs
 30.3s /Kart/WingTex/Wing_Std_Dch03_Alb.szs
-game fps (last minute): 37.7
+76.5s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
+game fps (last minute): 44.4
 === attempt 1 at 0 s
-[mem] 55 s: app uses 1913 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] textures: 35 loaded (0 MB), 233 render targets (107 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] 132 s: app uses 1923 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3116 MB, Metal 3208 MB | resident 1731 MB, internal 1678 MB, external 52 MB, compressed 145 MB, purgeable 0 MB, reusable 0 MB, footprint 1913 MB
-[mem] Metal besides the game RAM: 108 MB = textures 76 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
-[mem] textures: 35 loaded (0 MB), 186 render targets (101 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[mem] detail: game RAM 3116 MB, Metal 3215 MB | resident 1763 MB, internal 1696 MB, external 52 MB, compressed 132 MB, purgeable 0 MB, reusable 14 MB, footprint 1923 MB
+[mem] Metal besides the game RAM: 115 MB = textures 84 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 15 MB
 --- end of the log
-[mem] textures: 35 loaded (0 MB), 142 render targets (99 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[smart30] the game is at full speed again: 30 fps lock
-[mem] 55 s: app uses 1913 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3116 MB, Metal 3208 MB | resident 1731 MB, internal 1678 MB, external 52 MB, compressed 145 MB, purgeable 0 MB, reusable 0 MB, footprint 1913 MB
-[cpu] 16% of a core in all: guest-0x50 5%, gfx-submit 4%, thread-0x2803 2%, thread-0x8303 1%, thread-0x2a03 1%, guest-0x55 1%, guest-0x6c 1%
-[cpu] system calls: 0x1d 3578/s, 0x1b 1732/s, 0x1c 1522/s, 0x34 761/s, 0x35 761/s, 0x1a 210/s, 0x17 140/s, 0x21 102/s
-[mem] Metal besides the game RAM: 108 MB = textures 76 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
-[smart30] the game is slower than 50 updates/s (27): every frame drawn
+[mem] detail: game RAM 3116 MB, Metal 3215 MB | resident 1763 MB, internal 1696 MB, external 52 MB, compressed 132 MB, purgeable 0 MB, reusable 14 MB, footprint 1923 MB
+[cpu] 27% of a core in all: gfx-submit 8%, guest-0x50 7%, thread-0x2a03 2%, thread-0x2803 2%, com.apple.coremedia.sharedRootQueue.47 2%, thread-0xa503 1%, guest-0x55 1%, movie-decode 1%, guest-0x77 1%
+[cpu] system calls: 0x1d 4326/s, 0x1b 2087/s, 0x1c 1777/s, 0x35 876/s, 0x34 876/s, 0x1a 309/s, 0x17 145/s, 0x18 145/s
+[mem] Metal besides the game RAM: 115 MB = textures 84 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 15 MB
+[smart30] the game is slower than 50 updates/s (33): every frame drawn
 [smart30] the game is at full speed again: 30 fps lock
-[gfx] device pipeline archive: 86 pipelines saved this run (4 files, 0 left out)
-[smart30] the game is slower than 50 updates/s (26): every frame drawn
-[smart30] the game is at full speed again: 30 fps lock
-[mem] textures: 35 loaded (0 MB), 186 render targets (101 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[smart30] the game is slower than 50 updates/s (28): every frame drawn
+[shader] 065f8de0692fef68: compiled while the render thread waited (new render target), 81 ms
+[gfx] pipeline 065f8de0692fef68/1ef1bc9eb646cb1f: built while the render thread waited (new render target), 11 ms
+[shader] f0a79175563e6d66: compiled while the render thread waited (new render target), 122 ms
+[shader] 9ed561837ced940c: compiled while the render thread waited (new render target), 29 ms
+[gfx] pipeline 9ed561837ced940c/f0a79175563e6d66: built while the render thread waited (new render target), 7 ms
+[shader] 655cb61fd11cb08a: compiled while the render thread waited (new render target), 78 ms
+[shader] 28bea45f294c57c0: compiled while the render thread waited (new render target), 33 ms
+[gfx] pipeline 28bea45f294c57c0/655cb61fd11cb08a: built while the render thread waited (new render target), 11 ms
