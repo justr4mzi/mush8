@@ -95,7 +95,8 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   lines in the log show the switches. It replaces the "smart 30 fps lock" of Oct 21, which drew every frame
   when the game was slow and so slowed it down further.
 - Texture change checks every 2 frames instead of every frame.
-- **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory).
+- **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
+- **Crash clues**: `[mem] … heat now …` at every change of the phone's heat state, and `[mem] … only N MB left` every second once less than 300 MB is left (iOS kills without a report leave nothing else).
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
   nobody waiting; after those, the second scheduling check (global lock + walk over all threads) is skipped.
 - **Game thread priorities**: the game's main thread (game logic) and the thread that presents frames get

@@ -4716,3 +4716,56 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, "                    if files >= 800 {\n")
 sp.write_text(s_)
 print("patched", sp, "(device archive up to 1500 MB)")
+
+# ---- Measurements for the next steps.
+# 1) GPU: render passes that use exactly the same targets as the pass just before (and don't clear
+#    them): candidates to merge into one pass (an upper bound: a copy or a read of those targets in
+#    between can make a merge impossible). 2) Crash without any report: the memory left is logged
+#    every second once it is under 300 MB, and every change of the phone's heat state right away.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "    pub static PASSES: AtomicU64 = AtomicU64::new(0);\n"
+assert g.count(old) == 1
+g = g.replace(old, old + "    pub static SAME_PASSES: AtomicU64 = AtomicU64::new(0);\n")
+old = "        prof::PASSES.fetch_add(1, Relaxed);\n"
+assert g.count(old) == 1
+g = g.replace(old, old + """        {
+            static LAST: std::sync::Mutex<Vec<usize>> = std::sync::Mutex::new(Vec::new());
+            let mut id: Vec<usize> = a.colors.iter().map(|c| c.as_ref().map_or(0, |c| Retained::as_ptr(&c.0 .0) as *const () as usize)).collect();
+            id.push(a.depth.as_ref().map_or(0, |d| Retained::as_ptr(&d.0 .0) as *const () as usize));
+            id.extend(a.subs.iter().map(|s| (s.0 as usize) << 16 | s.1 as usize));
+            id.push((a.depth_sub.0 as usize) << 16 | a.depth_sub.1 as usize);
+            let clears = a.colors.iter().flatten().any(|c| matches!(c.1, Load::ClearColor(_))) || a.depth.as_ref().is_some_and(|d| matches!(d.1, Load::ClearDepthStencil(..)));
+            let mut last = LAST.lock().unwrap();
+            if !clears && *last == id {
+                prof::SAME_PASSES.fetch_add(1, Relaxed);
+            }
+            *last = id;
+        }
+""")
+old = '''            if tick % 10 != 0 {
+'''
+assert g.count(old) == 1
+g = g.replace(old, '''            {
+                static HEAT: std::sync::atomic::AtomicIsize = std::sync::atomic::AtomicIsize::new(-1);
+                let h = objc2_foundation::NSProcessInfo::processInfo().thermalState().0;
+                if HEAT.swap(h, std::sync::atomic::Ordering::Relaxed) != h {
+                    eprintln!("[mem] {:.0} s: heat now {}", t0.elapsed().as_secs_f32(), ["normal", "fair", "serious (slowed down)", "critical (slowed down)"].get(h as usize).copied().unwrap_or("?"));
+                }
+                let left = available_memory();
+                if left < 300 << 20 {
+                    eprintln!("[mem] {:.0} s: only {} MB left (app {} MB)", t0.elapsed().as_secs_f32(), left >> 20, now >> 20);
+                }
+            }
+''' + old, 1)
+gm.write_text(g)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = '''            let (p, l, lb, sb) = (gfx::prof::PASSES.swap(0, Relaxed), gfx::prof::LOADS.swap(0, Relaxed), gfx::prof::LOAD_BYTES.swap(0, Relaxed), gfx::prof::STORE_BYTES.swap(0, Relaxed));
+            eprintln!("[prof] gpu passes per drawn frame: {:.0}, attachments loaded {:.0} ({:.0} MB), stored {:.0} MB", p as f64 / shown, l as f64 / shown, lb as f64 / shown / 1048576.0, sb as f64 / shown / 1048576.0);'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''            let (p, l, lb, sb) = (gfx::prof::PASSES.swap(0, Relaxed), gfx::prof::LOADS.swap(0, Relaxed), gfx::prof::LOAD_BYTES.swap(0, Relaxed), gfx::prof::STORE_BYTES.swap(0, Relaxed));
+            let same = gfx::prof::SAME_PASSES.swap(0, Relaxed);
+            eprintln!("[prof] gpu passes per drawn frame: {:.0} ({:.0} on the same targets as the pass before), attachments loaded {:.0} ({:.0} MB), stored {:.0} MB", p as f64 / shown, same as f64 / shown, l as f64 / shown, lb as f64 / shown / 1048576.0, sb as f64 / shown / 1048576.0);''')
+dm.write_text(s_)
+print("patched", gm, dm, "(same-target passes, heat changes, low memory every second)")
