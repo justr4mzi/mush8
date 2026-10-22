@@ -1,0 +1,12 @@
+-rw-r--r--  1 runner  staff   6.8G Oct 22 11:10 base.nsp
+-rw-r--r--  1 runner  staff    14K Oct 22 11:08 prod.keys
+-rw-r--r--  1 runner  staff   4.5G Oct 22 11:20 upd4-0-1.nsp
+Filesystem        Size    Used   Avail Capacity iused ifree %iused  Mounted on
+/dev/disk2s1s1   320Gi    12Gi   101Gi    11%    459k  1.1G    0%   /
+ERROR: Unsupported Method : userdata.dat
+7zz could not unpack the save, trying unar
+[32m==>[0m [1mDownloading bottle manifests[0m
+✔︎ Bottle Manifest unar (1.10.8_7)
+[32m==>[0m [1mFetching downloads for: [32munar[39m[0m
+✔︎ Bottle unar (1.10.8_7)
+unlocked-save/userdata.dat
