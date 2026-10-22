@@ -170,6 +170,9 @@ jobs:
             work/v-upd/exefs/main work/v-upd/exefs/subsdk0 work/v-upd/exefs/sdk
 
       - name: Run
+        # ends before the job limit (360 min), so the next steps still save the pipelines
+        # (a job stopped by its own limit skips them: a whole night of pipelines was lost once)
+        timeout-minutes: 310
         env:
           MODES: ${{ inputs.modes || '0 1' }}
           SECS: ${{ inputs.seconds || '200' }}
@@ -226,15 +229,14 @@ jobs:
             stuck() {
               local now=$(date +%s) since=$(( $(date +%s) - AT ))
               [ $since -lt 300 ] && return 1
-              local part; part="$(tail -n +"$START_LINE" "$L")"
-              [ -z "$(printf '%s\n' "$part" | grep '^\[fps\]' | tail -1)" ] && [ $since -gt 600 ] && return 0
+              [ -z "$(tail -n +"$START_LINE" "$L" | grep '^\[fps\]' | tail -1)" ] && [ $since -gt 600 ] && return 0
               # VS run: a new track every ~4 min when the rules are right ("in order"); the log
               # lists each file once, so with the wrong rules (same track again) nothing new
               # comes: no new track for 10 min after 15 min -> next, slower menu script variant
               # (random courses repeat tracks, which the log lists once: 30 min there)
               local quiet=600; [ "$COURSES" = random ] && quiet=1800
               if [ "$VS96" = 1 ] && [ $since -gt $(( quiet + 300 )) ]; then
-                local last; last=$(printf '%s\n' "$part" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | grep -v Gu_Menu | tail -1 | awk '{print int($2)}')
+                local last; last=$(tail -n +"$START_LINE" "$L" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | grep -v Gu_Menu | tail -1 | awk '{print int($2)}')
                 if [ -z "$last" ] || [ $(( since - last )) -gt $quiet ]; then
                   VARIANT=$((VARIANT+1)); echo "=== no new track for 10 min: menu script variant $VARIANT" >> "$L"; return 0
                 fi
@@ -255,7 +257,7 @@ jobs:
               } > "out/live-$n.txt" 2>/dev/null
               # only the small progress file goes out now, the full log at the end; plus the last
               # 6 screenshots, small JPEGs in a zip encrypted with the IPA password (repo is public)
-              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out" "$D/shots"; cp "out/live-$n.txt" "$D/out/"; cp out/stopped-*.txt "$D/out/" 2>/dev/null
+              ( D="$RUNNER_TEMP/live"; rm -rf "$D"; mkdir -p "$D/out" "$D/shots"; cp "out/live-$n.txt" "$D/out/"; cp out/stopped-*.txt "$D/out/" 2>/dev/null; cp work/pipelines.tsv "$D/out/pipelines-live.tsv" 2>/dev/null
                 if [ -n "${IPA_PASSWORD:-}" ] && command -v 7zz >/dev/null; then
                   for f in $(ls -t work/frame/t*.png 2>/dev/null | head -6); do
                     python3 -c "import sys; from PIL import Image; Image.open(sys.argv[1]).convert('RGB').resize((640,360)).save(sys.argv[2], quality=70)" "$f" "$D/shots/$(basename "$f" .png).jpg"
