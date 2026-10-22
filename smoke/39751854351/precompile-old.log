@@ -1,0 +1,19 @@
+[host] RomFS: 12.13 GB
+[shader] 14026 programs found in 63.2 s (1085 recorded variants)
+[shader] a5593dc0ec6ef161: translation failed: unsupported stage Geometry
+[shader] 0 shaders already compiled, 14028 to compile
+xcrun: error: couldn't stat toolchains directory: '/Users/runner/Library/Developer/DVTDownloads/MetalToolchain/mounts/058e1b31129b642e40598a87b55aa54b2a29e538' (errno=No such file or directory)
+xcrun: error: couldn't stat toolchain: '/Users/runner/Library/Developer/DVTDownloads/MetalToolchain/mounts/058e1b31129b642e40598a87b55aa54b2a29e538/Metal.xctoolchain' (errno=No such file or directory)
+[shader] 1024/14028
+[shader] 2048/14028
+[shader] 3008/14028
+[shader] 4032/14028
+[shader] 5056/14028
+[shader] 6016/14028
+[shader] 7040/14028
+[shader] 8000/14028
+[shader] 9024/14028
+[shader] 10048/14028
+[shader] 11008/14028
+[shader] 12032/14028
+[shader] 13056/14028
