@@ -1,0 +1,52 @@
+run 1, 06:22 UTC, 67 s, game attempt 1
+tracks:
+6.4s /Course/Gu_Menu
+last game files read:
+24.6s /Driver/Peach.szs
+24.7s /Kart/Body/BodyK_Pch.szs
+24.7s /Kart/Wing/Wing_Umb.szs
+24.7s /Kart/WingTex/Wing_Umb_A_Alb.szs
+24.7s /Kart/Arm/ArmK_Wod.szs
+25.2s /Driver/DrvChr01.szs
+25.2s /DriverTex/DrvChr01_Tex00.szs
+25.2s /Kart/Body/BodyB_Std.szs
+25.2s /Kart/BodyTex/BodyB_Std_Dch0100_Alb.szs
+25.2s /Kart/WingTex/Wing_Std_Dch0100_Alb.szs
+25.7s /Driver/BbRosetta.szs
+25.7s /Kart/BodyTex/BodyK_Std_RstB_Alb.szs
+25.8s /Kart/WingTex/Wing_Std_RstB_Alb.szs
+26.8s /Driver/Rosetta.szs
+26.8s /Kart/Body/BodyK_Fml.szs
+26.8s /Kart/BodyTex/BodyK_Fml_A_Alb.szs
+26.8s /Kart/WingTex/Wing_Std_Rst_Alb.szs
+27.8s /Driver/Karon.szs
+27.8s /Kart/Body/BodyK_Sbm.szs
+27.8s /Kart/Wing/Wing_Prf.szs
+27.8s /Kart/Arm/ArmK_Mtl.szs
+30.9s /Driver/Jugem.szs
+30.9s /Kart/Body/BodyV_Atv.szs
+30.9s /Kart/BodyTex/BodyV_Atv_Jgm_Alb.szs
+30.9s /Kart/Wing/Wing_Jgm.szs
+game fps (last minute): 37.2
+=== attempt 1 at 0 s
+[mem] 56 s: app uses 1914 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3208 MB | resident 1748 MB, internal 1695 MB, external 52 MB, compressed 130 MB, purgeable 0 MB, reusable 0 MB, footprint 1914 MB
+[mem] Metal besides the game RAM: 108 MB = textures 76 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[mem] textures: 35 loaded (0 MB), 186 render targets (101 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+--- end of the log
+[smart30] the game is slower than 50 updates/s (29): every frame drawn
+[mem] 56 s: app uses 1914 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3117 MB, Metal 3208 MB | resident 1748 MB, internal 1695 MB, external 52 MB, compressed 130 MB, purgeable 0 MB, reusable 0 MB, footprint 1914 MB
+[cpu] 20% of a core in all: guest-0x50 6%, gfx-submit 4%, thread-0x2703 2%, thread-0x8303 1%, guest-0x55 1%, guest-0x6c 1%, memlog 1%, thread-0x870b 1%, thread-0x2b03 1%
+[cpu] system calls: 0x1d 3567/s, 0x1b 1728/s, 0x1c 1515/s, 0x34 754/s, 0x35 754/s, 0x1a 213/s, 0x17 137/s, 0x21 100/s
+[mem] Metal besides the game RAM: 108 MB = textures 76 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (38): every frame drawn
+[gfx] device pipeline archive: 86 pipelines saved this run (4 files, 0 left out)
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (34): every frame drawn
+[mem] textures: 35 loaded (0 MB), 186 render targets (101 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
+[smart30] the game is at full speed again: 30 fps lock
+[smart30] the game is slower than 50 updates/s (26): every frame drawn
