@@ -4526,3 +4526,19 @@ s_ = s_.replace(old, """    if *SMART {
 """ + old)
 dm.write_text(s_)
 print("patched", dm, "(smart 30 fps lock)")
+
+# ---- Crash fix (2): no unlocked archive use. After an archive miss, the full compile ran with the
+# archives still attached to the descriptor, so Metal searched them again outside ARCHIVE_LOCK, at the
+# same time as a locked lookup on another thread -> "-[OS_dispatch_data data]: unrecognized selector"
+# (seen 45 times in the Oct 22 Mac sessions, always in the locked lookup). The archives are detached
+# before compiling: it is a known miss, so nothing is lost.
+sp = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = sp.read_text()
+old = '        eprintln!("[gfx] pipeline {name}: not in the archive, compiling ({} archive hits, {misses} misses)", HITS.load(Relaxed));\n    }\n'
+assert s_.count(old) == 1
+s_ = s_.replace(old, '        eprintln!("[gfx] pipeline {name}: not in the archive, compiling ({} archive hits, {misses} misses)", HITS.load(Relaxed));\n        d.setBinaryArchives(None);\n    }\n')
+old = '                                if let Some(p) = hit.or_else(|| dev.newRenderPipelineStateWithDescriptor_error(&d).ok()) {\n'
+assert s_.count(old) == 1
+s_ = s_.replace(old, '                                if let Some(p) = hit.or_else(|| { d.setBinaryArchives(None); dev.newRenderPipelineStateWithDescriptor_error(&d).ok() }) {\n')
+sp.write_text(s_)
+print("patched", sp, "(archives detached before compiling a miss)")
