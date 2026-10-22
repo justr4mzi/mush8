@@ -1,4 +1,4 @@
-run 1, 08:44 UTC, 8896 s, game attempt 3
+run 1, 08:55 UTC, 9567 s, game attempt 3
 tracks:
 6.2s /Course/Gu_Menu
 335.3s /Course/Gu_City
@@ -16,33 +16,34 @@ tracks:
 1660.7s /Course/Gds_WarioStadium
 2208.7s /Course/Ggc_SherbetLand
 2818.8s /Course/Cnsw_16
+3398.8s /Course/Cnsw_21
 last game files read:
-2210.8s /Audio/Ground/Wall_Glass.bars
-2210.8s /Audio/Ground/Wall_Glass.barslist
-2246.5s /Audio/Resource/Stream/pBGM_GC_SHERBET_LAND_N.bfstm
-2621.1s /Audio/Resource/Stream/pBGM_GC_SHERBET_LAND_F.bfstm
-2818.8s /Course/Cnsw_16/course_model.szs
-2818.8s /Course/Cnsw_16/course.bgenv
-2818.8s /Course/Cnsw_16/course.ptcl
-2818.8s /Course/Cnsw_16/course_bglpbd.szs
-2820.1s /Course/Cnsw_16/Course.bars
-2820.4s /Course/Cnsw_16/Course_Cnsw_16.bars
-2820.4s /Course/Cnsw_16/Course_Cnsw_16.barslist
-2820.4s /Course/Cnsw_16/course_mapcamera.bin
-2820.4s /Course/Cnsw_16/course_maptexture.bntx
-2820.5s /Course/Cnsw_16/course_muunt.byaml
-2820.5s /Course/Cnsw_16/course_kcl.szs
-2820.8s /MapObj/VRCnsw16/VRCnsw16.bfres
-2820.8s /MapObj/GlideStand/GlideStand.bfres
-2820.8s /MapObj/GlideStand/GlideStand.kcl
-2820.8s /MapObj/AirCurrent/AirCurrent.bars
-2820.8s /MapObj/AirCurrent/AirCurrent.barslist
-2820.8s /MapObj/AirCurrent/AirCurrent.bfres
-2821.0s /Audio/Ground/Ground_GrassSmall.bars
-2821.0s /Audio/Ground/Ground_GrassSmall.barslist
-2845.4s /Audio/Resource/Stream/pBGM_Cnsw_16_N.bfstm
-3199.6s /Audio/Resource/Stream/pBGM_Cnsw_16_F.bfstm
-game fps (last minute): 28.9
+3401.1s /MapObj/WaterColumnManhole/WaterColumnManhole_Item.kcl
+3401.1s /MapObj/WaterColumnManhole/WaterColumnManhole_Spouting.kcl
+3401.1s /MapObj/WaterColumnManhole/WaterColumnManhole_Vibration.kcl
+3401.1s /MapObj/JumpFloor/JumpFloor.bfres
+3401.1s /MapObj/JumpFloor/JumpFloor_Iron_JA_cl.kcl
+3401.1s /MapObj/JumpFloor/JumpFloor_Iron_JB_cl.kcl
+3401.1s /MapObj/ArrowBoardWood/ArrowBoardWood.barslist
+3401.1s /MapObj/ArrowBoardWood/ArrowBoardWood.bfres
+3401.1s /MapObj/ArrowBoardWood/Wood.bars
+3401.1s /MapObj/VRCnsw21/VRCnsw21.bfres
+3401.1s /MapObj/FlagSquareTC1/FlagSquareTC1.bfres
+3401.1s /MapObj/FlagSquareTC2/FlagSquareTC2.bfres
+3401.1s /MapObj/FlagSquareTC3/FlagSquareTC3.bfres
+3401.1s /MapObj/FlagSquareTC4/FlagSquareTC4.bfres
+3401.1s /MapObj/StopBus/Col_car.bars
+3401.1s /MapObj/StopBus/MapObjKart_CarA.bars
+3401.1s /MapObj/StopBus/MapObjKart_StopBus.barslist
+3401.1s /MapObj/StopBus/StopBus.bars
+3401.1s /MapObj/StopBus/StopBus.barslist
+3401.1s /MapObj/StopBus/StopBus.bfres
+3401.2s /MapObj/StopBus/StopBus.kcl
+3401.3s /Audio/Ground/Ground_AsphaltWet.bars
+3401.3s /Audio/Ground/Ground_AsphaltWet.barslist
+3452.6s /Audio/Resource/Stream/pBGM_Cnsw_21_N.bfstm
+3985.1s /Audio/Resource/Stream/pBGM_Cnsw_21_F.bfstm
+game fps (last minute): 19.4
 [hang] thread 0xbc03 'hid': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x25014c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x12b03c _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_input_thread00B9_+0x30c <- nxhost+0x12587c _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state+0x0 <- nxhost+0x8247c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5st+0x0 <- nxhost+0x95be0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x82e08 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_+0x34 <- nxhost+0x255148 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [hang] thread 0xcd07 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x25014c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x12a3a4 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x125858 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x82404 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x95bbc _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x82b10 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x255148 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [hang] thread 0x1ed0b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
@@ -55,25 +56,25 @@ fatal runtime error: Rust cannot catch foreign exceptions, aborting
 [hang] thread 0xe807 'hid': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x25014c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x12b03c _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_input_thread00B9_+0x30c <- nxhost+0x12587c _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw5state+0x0 <- nxhost+0x8247c _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw9async_gfx5st+0x0 <- nxhost+0x95be0 _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x82e08 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost8services3hid18start_+0x34 <- nxhost+0x255148 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [hang] thread 0xcc03 'nvn-reaper': pc libsystem_kernel.dylib+0x41c8 __semwait_signal+0x8 | lr libsystem_c.dylib+0xd6f4 nanosleep+0xdc <- nxhost+0x25014c _RNvNtNtCsdnanKjkF2cC_3std6thread9functions5sleep+0x64 <- nxhost+0x12a3a4 _RNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00B9_+0x50 <- nxhost+0x125858 _RINvNtNtCsdnanKjkF2cC_3std3sys9backtrace28___rust_begin_short_backtraceNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_+0x0 <- nxhost+0x82404 _RNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn4draw14start_watchdo+0x0 <- nxhost+0x95bbc _RNvXsn_NtNtCs3bJEMBXHbwl_4core5panic11unwind_safeINtB5_16AssertUnwindSafeNCNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle+0x0 <- nxhost+0x82b10 _RNSNvYNCINvNtNtCsdnanKjkF2cC_3std6thread9lifecycle15spawn_uncheckedNCNCNvNtNtCsiqoAeEVo7TP_6nxhost3nvn3cmd4reap00zEs_0I+0x2c <- nxhost+0x255148 _RNvNvMs0_NtNtNtCsdnanKjkF2cC_3std3sys6thread4unixNtB7_6Thread3new12thread_start+0x188 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
 [hang] thread 0x1660b 'com.apple.audio.IOThread.client': pc libsystem_kernel.dylib+0xbbc semaphore_wait_signal_trap+0x8 | lr caulk+0x1e2f8 _ZN5caulk4mach9semaphore20wait_signal_or_errorERS1_+0x24 <- CoreAudio+0x1f369c _ZN19HALC_ProxyIOContext10IOWorkLoopEv+0x149c <- CoreAudio+0x1f1aec ___ZN19HALC_ProxyIOContextC2Ejj_block_invoke+0xac <- CoreAudio+0x39c088 _ZN13HALC_IOThread5EntryEPv+0x58 <- libsystem_pthread.dylib+0x6bc8 _pthread_start+0x88 <- libsystem_pthread.dylib+0x1b80 thread_start+0x8
-[mem] 3366 s: app uses 2337 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 4036 s: jump to 23337 MB (was 23179 MB), iOS still allows 0 MB
+[mem] 4040 s: app uses 23441 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1907 MB, internal 1814 MB, external 75 MB, compressed 135 MB, purgeable 0 MB, reusable 17 MB, footprint 2337 MB
-[mem] Metal besides the game RAM: 444 MB = textures 380 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 47 MB
-[mem] textures: 30 loaded (0 MB), 1736 render targets (413 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
+[mem] detail: game RAM 885 MB, Metal 43540 MB | resident 2672 MB, internal 2613 MB, external 52 MB, compressed 20391 MB, purgeable 0 MB, reusable 5 MB, footprint 23441 MB
+[mem] Metal besides the game RAM: 40440 MB = textures 424 MB (of which 0 MB outside the main list), draw scratch 39964 MB, block copies 1 MB, uploads in flight 0 MB, other 51 MB
 --- end of the log
-[cpu] system calls: 0x1d 3024/s, 0x1b 1463/s, 0x1c 1279/s, 0x34 675/s, 0x35 675/s, 0x21 193/s, 0x1a 185/s, 0x17 127/s
-[mem] Metal besides the game RAM: 444 MB = textures 380 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 47 MB
-[mem] 3355 s: app uses 2336 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 4023 s: jump to 22974 MB (was 22804 MB), iOS still allows 0 MB
+[mem] 4028 s: jump to 23156 MB (was 22974 MB), iOS still allows 0 MB
+[mem] 4029 s: app uses 23179 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1907 MB, internal 1814 MB, external 75 MB, compressed 135 MB, purgeable 0 MB, reusable 17 MB, footprint 2336 MB
-[cpu] 68% of a core in all: guest-0x50 22%, gfx-submit 21%, thread-0x1e0af 4%, guest-0x55 4%, thread-0x2403 3%, thread-0x1be57 3%, guest-0x6c 2%, thread-0xa51b 2%, guest-0x56 2%, guest-0x51 2%
-[cpu] system calls: 0x1d 2601/s, 0x1b 1270/s, 0x1c 1085/s, 0x34 564/s, 0x35 564/s, 0x1a 185/s, 0x21 185/s, 0x17 122/s
-[mem] Metal besides the game RAM: 444 MB = textures 380 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 47 MB
-[mem] 3366 s: app uses 2337 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 886 MB, Metal 43096 MB | resident 2666 MB, internal 2608 MB, external 52 MB, compressed 20133 MB, purgeable 0 MB, reusable 5 MB, footprint 23179 MB
+[cpu] 142% of a core in all: gfx-submit 40%, thread-0x1be57 24%, thread-0x1a853 23%, thread-0x1ba3b 21%, thread-0x1e0af 17%, thread-0x2403 8%, guest-0x50 8%, guest-0x55 1%
+[cpu] system calls: 0x1d 1773/s, 0x1b 836/s, 0x1c 749/s, 0x34 391/s, 0x35 391/s, 0x21 120/s, 0x1a 88/s, 0x0b 75/s
+[mem] Metal besides the game RAM: 39996 MB = textures 424 MB (of which 0 MB outside the main list), draw scratch 39520 MB, block copies 1 MB, uploads in flight 0 MB, other 51 MB
+[mem] 4036 s: jump to 23337 MB (was 23179 MB), iOS still allows 0 MB
+[mem] 4040 s: app uses 23441 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3112 MB, Metal 3544 MB | resident 1907 MB, internal 1814 MB, external 75 MB, compressed 135 MB, purgeable 0 MB, reusable 17 MB, footprint 2337 MB
-[cpu] 69% of a core in all: guest-0x50 24%, gfx-submit 22%, guest-0x55 4%, thread-0x1e0af 3%, thread-0x2403 3%, thread-0x1be57 3%, guest-0x56 2%, guest-0x6c 2%, thread-0xa51b 2%, guest-0x51 2%
-[cpu] system calls: 0x1d 2701/s, 0x1b 1316/s, 0x1c 1131/s, 0x35 587/s, 0x34 587/s, 0x21 188/s, 0x1a 185/s, 0x17 124/s
-[mem] Metal besides the game RAM: 444 MB = textures 380 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 1 MB, uploads in flight 0 MB, other 47 MB
-[mem] textures: 30 loaded (0 MB), 1736 render targets (413 MB), 0 pipelines kept ready, 0 purgeable, 3 taken back by iOS
-new pipelines so far:      672
+[mem] detail: game RAM 885 MB, Metal 43540 MB | resident 2672 MB, internal 2613 MB, external 52 MB, compressed 20391 MB, purgeable 0 MB, reusable 5 MB, footprint 23441 MB
+[cpu] 138% of a core in all: gfx-submit 40%, thread-0x1e0af 25%, thread-0x1a853 24%, thread-0x1ba3b 22%, thread-0x1be57 21%, guest-0x50 6%
+[cpu] system calls: 0x1d 990/s, 0x1b 466/s, 0x1c 410/s, 0x34 217/s, 0x35 217/s, 0x21 82/s, 0x0b 66/s, 0x1a 56/s
+[mem] Metal besides the game RAM: 40440 MB = textures 424 MB (of which 0 MB outside the main list), draw scratch 39964 MB, block copies 1 MB, uploads in flight 0 MB, other 51 MB
+new pipelines so far:      714
