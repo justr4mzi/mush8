@@ -4434,3 +4434,32 @@ s_ = s_.replace(old, """    kernel::sched_point();
 """)
 sv.write_text(s_)
 print("patched", kr, sv, "(fewer scheduler passes)")
+
+# ---------------------------------------------------------------------------
+# Crash fix: Metal threw "-[OS_dispatch_data data]: unrecognized selector"
+# inside newRenderPipelineState when a pipeline was looked up in the binary
+# archives while another thread was adding pipelines to an archive or writing
+# one to disk (seen 5 times on the Macs, it ends the app; the iPhone runs the
+# same code). Every use of the archives now holds one lock.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = st.read_text()
+for a_, b_ in [
+    ("static ARCHIVES: LazyLock<", "/// Held around every binary archive lookup, addition and write (see the crash fix in patch-heap.py).\nstatic ARCHIVE_LOCK: Mutex<()> = Mutex::new(());\n\nstatic ARCHIVES: LazyLock<"),
+    ("        if let Ok(p) = dev.newRenderPipelineStateWithDescriptor_options_reflection_error(&d, MTLPipelineOption::FailOnBinaryArchiveMiss, None) {\n",
+     "        let looked = { let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner()); dev.newRenderPipelineStateWithDescriptor_options_reflection_error(&d, MTLPipelineOption::FailOnBinaryArchiveMiss, None) };\n        if let Ok(p) = looked {\n"),
+    ("let hit = (*ARCHIVES).as_ref().and_then(|_| dev.newRenderPipelineStateWithDescriptor_options_reflection_error(&d, MTLPipelineOption::FailOnBinaryArchiveMiss, None).ok());",
+     "let hit = (*ARCHIVES).as_ref().and_then(|_| { let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner()); dev.newRenderPipelineStateWithDescriptor_options_reflection_error(&d, MTLPipelineOption::FailOnBinaryArchiveMiss, None).ok() });"),
+    ("    archive.0.addRenderPipelineFunctionsWithDescriptor_error(d).is_ok()\n",
+     "    let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n    archive.0.addRenderPipelineFunctionsWithDescriptor_error(d).is_ok()\n"),
+    ("    a.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&tmp))).map_err(|e| e.localizedDescription().to_string())?;\n",
+     "    {\n        let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n        a.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&tmp))).map_err(|e| e.localizedDescription().to_string())?;\n    }\n"),
+    ("    archive.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&path))).map_err(|e| anyhow::anyhow!(\"{}\", e.localizedDescription()))?;\n",
+     "    {\n        let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n        archive.0.serializeToURL_error(&NSURL::fileURLWithPath(&NSString::from_str(&path))).map_err(|e| anyhow::anyhow!(\"{}\", e.localizedDescription()))?;\n    }\n"),
+]:
+    assert s_.count(a_) == 1, a_[:60]
+    s_ = s_.replace(a_, b_)
+old = "    let r = gfx::gpu().device.0.newRenderPipelineStateWithDescriptor_options_reflection_error(&copy, MTLPipelineOption::FailOnBinaryArchiveMiss, None);\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    let r = { let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner()); gfx::gpu().device.0.newRenderPipelineStateWithDescriptor_options_reflection_error(&copy, MTLPipelineOption::FailOnBinaryArchiveMiss, None) };\n")
+st.write_text(s_)
+print("patched", st, "(binary archive lock: crash fix)")

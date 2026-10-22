@@ -96,6 +96,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   the game needed; it now waits at most 250 ms and shows the previous frame.
 - An open render pass dropped by an early exit no longer kills the app ("Command encoder released without
   endEncoding", seen on a macOS 14 Mac).
+- **Crash while looking up a pipeline**: Metal threw an exception ("-[OS_dispatch_data data]: unrecognized selector") when a pipeline was looked up in the archives while another thread wrote to an archive; all archive use now holds one lock. Objective-C exceptions are logged with our call stack.
 - Mii `GetIndex` answers "not found" instead of a bogus index; `SignalToAddress` (kind 2) follows
   Atmosphère/yuzu; iOS link fix ("compact unwind ... doesn't fit in 24 bits").
 - Watchdog: if no frame is shown for 6 s, every thread's position is written to the log.
