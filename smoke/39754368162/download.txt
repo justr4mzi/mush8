@@ -1,0 +1,6 @@
+-rw-r--r--  1 runner  staff   118K Oct 22 09:47 dlc.nsp
+-rw-r--r--  1 runner  staff   6.8G Oct 22 09:37 base.nsp
+-rw-r--r--  1 runner  staff    14K Oct 22 09:35 prod.keys
+-rw-r--r--  1 runner  staff   4.5G Oct 22 09:47 upd4-0-1.nsp
+Firmware:      238 files
+       1
