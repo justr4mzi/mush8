@@ -18,10 +18,24 @@ cup_arg = sys.argv[3] if len(sys.argv) > 3 else ""
 # fourth argument "random": courses in random order instead of in order (a second session
 # then also reaches the later tracks; the order "in order" always starts at the first track)
 random_courses = len(sys.argv) > 4 and sys.argv[4] == "random"
+# fourth argument "battle": Battle -> Balloon Battle instead of VS race (the 8 battle arenas
+# are their own maps). The rules are left as they are (A on them), the arena is chosen by the
+# random stick moves of the race loop below, so the arenas change from one battle to the next.
+battle = len(sys.argv) > 4 and sys.argv[4] == "battle"
 cup_keys = ["RIGHT"] * int(cup_arg) if cup_arg.isdigit() else [k for k in cup_arg.split("+") if k]
 SLOW, FAST = 30.0 * (1 + 0.5 * variant), 4.0 + 3.0 * variant
 # (menus wrap around, so no "push to the top": the phone's sequence as is)
-seq = ([(45, "A"),                       # title (accepted later on the Mac)
+if battle:
+    seq = [(45, "A"), (SLOW, "A"),                                   # title, Single Player
+           (15.0, "DOWN"), (6.0, "DOWN"), (6.0, "DOWN"), (SLOW, "A"),  # Battle (under VS race)
+           (SLOW, "A"),                                             # Balloon Battle (first)
+           (SLOW, "A"), (10.0, "A"),                                # character, vehicle: body -> tires
+           (20.0, "PLUS"), (8.0, "L"), (8.0, "R"), (8.0, "PLUS"),   # smart steering, auto accelerate
+           (8.0, "A"), (8.0, "A"),                                  # tires -> glider -> OK
+           (SLOW, "A"), (FAST, "A"), (FAST, "A"), (FAST, "A"),      # rules: A down to OK
+           (SLOW, "A"), (FAST, "A")]                                # arena
+else:
+  seq = ([(45, "A"),                       # title (accepted later on the Mac)
         (SLOW, "A"),                     # Single Player
         (15.0, "DOWN"), (6.0, "DOWN"), (SLOW, "A"),   # VS race (the mode menu needs time to appear)
         (SLOW, "A"),                     # character (cc is chosen later, in the rules)
@@ -55,7 +69,7 @@ while k < secs:
     press(k, "A")
     side = rnd.choice(["SLEFT", "SRIGHT"])
     other = "SRIGHT" if side == "SLEFT" else "SLEFT"
-    if k >= t + 60:   # not before the race has started (B goes back in the menus)
+    if k >= t + 60 and not battle:   # not before the race has started (B goes back in the menus; battle: menus between every battle, no B)
         ev.extend(f"{k + 3 + j / 10:.1f}:B" for j in range(15))
     ev.extend(f"{k + 3 + j / 10:.1f}:{side}" for j in range(15))
     ev.extend(f"{k + 6 + j / 10:.1f}:{other}" for j in range(10))

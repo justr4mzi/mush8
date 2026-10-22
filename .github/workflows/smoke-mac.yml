@@ -30,7 +30,7 @@ on:
         description: "1 = VS race, all tracks in order (tools/vs96.py)"
         default: "0"
       courses:
-        description: "VS run: inorder or random"
+        description: "VS run: inorder, random, or battle (Balloon Battle, the 8 arenas)"
         default: "inorder"
       cups_right:
         description: "VS run: cups already done before this session (start at the next cup, see tools/cupkeys.py)"
@@ -222,6 +222,8 @@ jobs:
           # right after a screenshot several times: fewer screenshots, fewer crashes)
           STEP=10; DUMP_EVERY=60; [ "$VS96" = 1 ] && STEP=100000 && DUMP_EVERY=0   # VS run: no screenshots (the GitHub Mac GPU driver crashed after some)
           DUMPS="$(python3 -c "print(','.join(str(t) for t in range(10, int('$SECS'), $STEP)))")"
+          # battle run: a screenshot every minute for the first 25 min only, to check the menus
+          [ "$COURSES" = battle ] && DUMPS="$(python3 -c "print(','.join(str(t) for t in range(60, 1500, 60)))")"
           n=0
           for m in $MODES; do
             n=$((n+1)); L="out/run-$n-async$m.log"
@@ -263,7 +265,7 @@ jobs:
               # lists each file once, so with the wrong rules (same track again) nothing new
               # comes: no new track for 10 min after 15 min -> next, slower menu script variant
               # (random courses repeat tracks, which the log lists once: 30 min there)
-              local quiet=600; [ "$COURSES" = random ] && quiet=1800
+              local quiet=600; [ "$COURSES" != inorder ] && quiet=1800
               if [ "$VS96" = 1 ] && [ $since -gt $(( quiet + 300 )) ]; then
                 local last; last=$(tail -n +"$START_LINE" "$L" | grep -E "^\[romfs\] [0-9.]+ s (dlc:)?/Course/[^/]+/course_model" | grep -v Gu_Menu | tail -1 | awk '{print int($2)}')
                 if [ -z "$last" ] || [ $(( since - last )) -gt $quiet ]; then

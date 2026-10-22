@@ -253,7 +253,14 @@ Other workflows:
   `SAVE_URL`. Inputs: `runner`, `modes` (`NX_ASYNC_GFX` values), `seconds`, `script` (`time:BUTTON,...`),
   `vs96=1` (VS race, 150cc, all tracks in order, 96 races, smart steering + auto accelerate: `tools/vs96.py`),
   `probe` (`tools/probe.py`), `monkey=1` (random play, `tools/monkey.py`), `soft_bc=1` (decode textures like
-  an iPhone, for memory tests), `record`.
+  an iPhone, for memory tests), `record`, `courses` with `vs96=1`: `inorder`, `random` (VS race, tracks in
+  random order: later sessions reach the tracks not played yet) or `battle` (Battle -> Balloon Battle: the 8
+  battle arenas are their own maps with their own pipelines; the arena changes from one battle to the next
+  through random stick moves; a screenshot every minute for the first 25 min to check the menus),
+  `prewarm_test=N` (RAM test instead of a play run: precompiles and prewarms the first N lines of
+  `data/pipelines.tsv`, then the whole list, and writes the app's memory before/after to `prewarm-test.txt`).
+  A run ends at 310 min so its pipelines are saved before GitHub's 360-min limit; they are also published
+  every 10 min (`pipelines-live.tsv`).
   `NX_AUTOINPUT` takes `time:BUTTON` pairs (A, B, X, Y, L, R, PLUS, UP, DOWN, LEFT, RIGHT, SLEFT/SRIGHT for
   the stick...) or `@file` to read them from a file.
 - **A16 lab**: Metal tool experiments.
