@@ -4700,3 +4700,19 @@ s_ = s_.replace(old, '''        {
 ''' + old)
 dm.write_text(s_)
 print("patched", gm, dm, "(render pass profile)")
+
+# ---- Device pipeline archive limit raised (300 MB / 400 files -> 1500 MB / 800 files). With the
+# 10,000-pipeline list it was full at 434 MB (6,175 pipelines saved), so the ~3,900 others were
+# compiled again at EVERY launch: the full prewarm held the game 494 s each time (Oct 22 log).
+# ~70 KB per pipeline: the whole list fits in ~750 MB of the phone's storage; the files are
+# mapped, not loaded (154 files cost 9 MB of RAM).
+sp = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = sp.read_text()
+old = "        if files.len() >= 400 || bytes > 300 << 20 {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "        if files.len() >= 800 || bytes > 1500 << 20 {\n")
+old = "                    if files >= 400 {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "                    if files >= 800 {\n")
+sp.write_text(s_)
+print("patched", sp, "(device archive up to 1500 MB)")
