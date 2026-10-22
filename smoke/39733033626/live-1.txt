@@ -1,4 +1,4 @@
-run 1, 06:26 UTC, 222 s, game attempt 1
+run 1, 06:27 UTC, 296 s, game attempt 1
 tracks:
 6.1s /Course/Gu_Menu
 last game files read:
@@ -27,26 +27,26 @@ last game files read:
 156.4s /UI/cmn/menu/tc_KP_V_Tnd_00^l.bntx
 156.4s /UI/cmn/menu/tc_KP_G_Std_Mro^l.bntx
 156.4s /UI/cmn/menu/tc_KP_G_Umb_00^l.bntx
-game fps (last minute): 46.7
+game fps (last minute): 46.4
 === attempt 1 at 0 s
-[mem] textures: 34 loaded (0 MB), 422 render targets (123 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[mem] 222 s: app uses 1939 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 288 s: app uses 1945 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3232 MB | resident 1755 MB, internal 1693 MB, external 51 MB, compressed 136 MB, purgeable 0 MB, reusable 9 MB, footprint 1939 MB
-[mem] Metal besides the game RAM: 132 MB = textures 100 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[mem] detail: game RAM 3109 MB, Metal 3237 MB | resident 1661 MB, internal 1603 MB, external 51 MB, compressed 226 MB, purgeable 0 MB, reusable 6 MB, footprint 1945 MB
+[mem] Metal besides the game RAM: 137 MB = textures 104 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 17 MB
+[mem] textures: 34 loaded (0 MB), 441 render targets (127 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
 --- end of the log
-[cpu] system calls: 0x1d 3788/s, 0x1b 1825/s, 0x1c 1612/s, 0x34 805/s, 0x35 805/s, 0x1a 213/s, 0x17 141/s, 0x21 101/s
-[mem] Metal besides the game RAM: 132 MB = textures 99 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 17 MB
 [smart30] the game is at full speed again: 30 fps lock
-[mem] textures: 34 loaded (0 MB), 422 render targets (123 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
-[smart30] the game is slower than 50 updates/s (35): every frame drawn
+[smart30] the game is slower than 50 updates/s (32): every frame drawn
+[smart30] the game is at full speed again: 30 fps lock
+[mem] 288 s: app uses 1945 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 3109 MB, Metal 3237 MB | resident 1661 MB, internal 1603 MB, external 51 MB, compressed 226 MB, purgeable 0 MB, reusable 6 MB, footprint 1945 MB
+[cpu] 24% of a core in all: guest-0x50 8%, gfx-submit 5%, thread-0xa603 2%, thread-0x2c03 2%, guest-0x55 2%, thread-0x2303 1%, guest-0x6c 1%, guest-0x56 1%, memlog 1%
+[cpu] system calls: 0x1d 4067/s, 0x1b 1945/s, 0x1c 1739/s, 0x34 874/s, 0x35 874/s, 0x1a 207/s, 0x17 145/s, 0x21 101/s
+[mem] Metal besides the game RAM: 137 MB = textures 104 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 17 MB
+[smart30] the game is slower than 50 updates/s (39): every frame drawn
+[mem] textures: 34 loaded (0 MB), 441 render targets (127 MB), 0 pipelines kept ready, 2 purgeable, 1 taken back by iOS
 [smart30] the game is at full speed again: 30 fps lock
 [smart30] the game is slower than 50 updates/s (31): every frame drawn
 [smart30] the game is at full speed again: 30 fps lock
-[smart30] the game is slower than 50 updates/s (32): every frame drawn
-[mem] 222 s: app uses 1939 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3110 MB, Metal 3232 MB | resident 1755 MB, internal 1693 MB, external 51 MB, compressed 136 MB, purgeable 0 MB, reusable 9 MB, footprint 1939 MB
-[cpu] 25% of a core in all: guest-0x50 8%, gfx-submit 7%, thread-0x2c03 2%, thread-0xa503 2%, guest-0x55 2%, thread-0x2303 1%, guest-0x6c 1%, guest-0x56 1%, memlog 1%
-[cpu] system calls: 0x1d 4108/s, 0x1b 1967/s, 0x1c 1757/s, 0x34 886/s, 0x35 886/s, 0x1a 210/s, 0x17 147/s, 0x21 103/s
-[mem] Metal besides the game RAM: 132 MB = textures 100 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
+[smart30] the game is slower than 50 updates/s (37): every frame drawn
