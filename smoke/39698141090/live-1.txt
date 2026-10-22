@@ -1,8 +1,7 @@
-run 1, 00:26 UTC, 66 s, game attempt 1
+run 1, 00:27 UTC, 137 s, game attempt 1
 tracks:
 7.1s /Course/Gu_Menu
 last game files read:
-27.1s /Kart/Body/BodyB_Std.szs
 27.1s /Kart/BodyTex/BodyB_Std_Dch02_Alb.szs
 27.2s /Kart/WingTex/Wing_Std_Dch02_Alb.szs
 28.3s /Driver/DrvChr07Suit.szs
@@ -27,26 +26,27 @@ last game files read:
 36.5s /Kart/Body/BodyV_Atv.szs
 36.5s /Kart/BodyTex/BodyV_Atv_KopJ_Alb.szs
 36.5s /Kart/WingTex/Wing_Std_KopJ_Alb.szs
-game fps (last minute): 28.1
+76.5s /Audio/Resource/Stream/BGM_MENU_SINGLE_MULTI.bfstm
+game fps (last minute): 32.0
 === attempt 1 at 0 s
+[mem] 131 s: app uses 1924 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3116 MB, Metal 3210 MB | resident 1745 MB, internal 1691 MB, external 51 MB, compressed 129 MB, purgeable 0 MB, reusable 2 MB, footprint 1912 MB
-[mem] Metal besides the game RAM: 110 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
-[mem] textures: 35 loaded (0 MB), 186 render targets (103 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[mem] 66 s: app uses 1912 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3117 MB, Metal 3217 MB | resident 1760 MB, internal 1702 MB, external 51 MB, compressed 125 MB, purgeable 0 MB, reusable 6 MB, footprint 1924 MB
+[mem] Metal besides the game RAM: 117 MB = textures 86 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 15 MB
+[mem] textures: 35 loaded (2 MB), 335 render targets (115 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
 --- end of the log
-[mem] 44 s: app uses 1910 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] 131 s: app uses 1924 MB, iOS still allows 0 MB (lowest so far 0 MB)
 [mem] phone: heat normal
-[mem] detail: game RAM 3116 MB, Metal 3208 MB | resident 1743 MB, internal 1690 MB, external 50 MB, compressed 130 MB, purgeable 0 MB, reusable 2 MB, footprint 1910 MB
-[cpu] 22% of a core in all: guest-0x50 7%, gfx-submit 4%, thread-0x8407 2%, thread-0x16f07 2%, guest-0x61 2%, thread-0x2703 2%, guest-0x6c 1%, guest-0x55 1%, memlog 1%
-[cpu] system calls: 0x1d 3095/s, 0x1b 1499/s, 0x1c 1305/s, 0x35 640/s, 0x34 640/s, 0x1a 194/s, 0x17 133/s, 0x21 105/s
-[mem] Metal besides the game RAM: 108 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 14 MB
-[mem] 55 s: app uses 1912 MB, iOS still allows 0 MB (lowest so far 0 MB)
-[mem] phone: heat normal
-[mem] detail: game RAM 3116 MB, Metal 3210 MB | resident 1745 MB, internal 1691 MB, external 51 MB, compressed 129 MB, purgeable 0 MB, reusable 2 MB, footprint 1912 MB
-[cpu] 17% of a core in all: guest-0x50 6%, gfx-submit 3%, thread-0x2703 2%, thread-0x16f07 2%, guest-0x6c 1%, guest-0x55 1%, thread-0x8407 1%
-[cpu] system calls: 0x1d 2586/s, 0x1b 1261/s, 0x1c 1077/s, 0x34 521/s, 0x35 521/s, 0x1a 184/s, 0x17 127/s, 0x21 101/s
-[mem] Metal besides the game RAM: 110 MB = textures 78 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 16 MB
-[mem] textures: 35 loaded (0 MB), 186 render targets (103 MB), 0 pipelines kept ready, 2 purgeable, 0 taken back by iOS
-[gfx] device pipeline archive: 85 pipelines saved this run (4 files, 0 left out)
-[mem] 66 s: app uses 1912 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] detail: game RAM 3117 MB, Metal 3217 MB | resident 1760 MB, internal 1702 MB, external 51 MB, compressed 125 MB, purgeable 0 MB, reusable 6 MB, footprint 1924 MB
+[cpu] 25% of a core in all: guest-0x50 9%, gfx-submit 4%, com.apple.coremedia.sharedRootQueue.47 2%, thread-0x2703 2%, thread-0x8407 2%, thread-0x16f07 2%, guest-0x55 2%, guest-0x6c 2%, guest-0x56 1%
+[cpu] system calls: 0x1d 3387/s, 0x1b 1638/s, 0x1c 1376/s, 0x35 660/s, 0x34 660/s, 0x1a 262/s, 0x17 134/s, 0x18 134/s
+[mem] Metal besides the game RAM: 117 MB = textures 86 MB (of which 0 MB outside the main list), draw scratch 16 MB, block copies 0 MB, uploads in flight 0 MB, other 15 MB
+[shader] 065f8de0692fef68: compiled while the render thread waited (new render target), 48 ms
+[gfx] pipeline 065f8de0692fef68/1ef1bc9eb646cb1f: built while the render thread waited (new render target), 9 ms
+[shader] f0a79175563e6d66: compiled while the render thread waited (new render target), 89 ms
+[shader] 9ed561837ced940c: compiled while the render thread waited (new render target), 30 ms
+[gfx] pipeline 9ed561837ced940c/f0a79175563e6d66: built while the render thread waited (new render target), 9 ms
+[shader] 655cb61fd11cb08a: compiled while the render thread waited (new render target), 84 ms
+[shader] 28bea45f294c57c0: compiled while the render thread waited (new render target), 27 ms
+[gfx] pipeline 28bea45f294c57c0/655cb61fd11cb08a: built while the render thread waited (new render target), 10 ms
+[mem] textures: 35 loaded (2 MB), 335 render targets (115 MB), 0 pipelines kept ready, 1 purgeable, 1 taken back by iOS
