@@ -1,0 +1,80 @@
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 2992 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1237 MB, internal 1127 MB, external 96 MB, compressed 22875 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 29/s, 0x21 26/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3003 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1235 MB, internal 1125 MB, external 96 MB, compressed 22878 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 27/s, 0x21 24/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3014 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1234 MB, internal 1125 MB, external 96 MB, compressed 22878 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 25/s, 0x21 22/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3026 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1227 MB, internal 1118 MB, external 96 MB, compressed 22885 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 26/s, 0x21 23/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3037 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1227 MB, internal 1118 MB, external 96 MB, compressed 22885 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 26/s, 0x21 24/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3049 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1225 MB, internal 1116 MB, external 96 MB, compressed 22887 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 25/s, 0x21 23/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3060 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1224 MB, internal 1114 MB, external 96 MB, compressed 22888 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 25/s, 0x21 22/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3072 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1222 MB, internal 1112 MB, external 96 MB, compressed 22890 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 23/s, 0x21 21/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3083 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1221 MB, internal 1111 MB, external 96 MB, compressed 22891 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 26/s, 0x21 23/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3095 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1219 MB, internal 1109 MB, external 96 MB, compressed 22893 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 26/s, 0x21 23/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3106 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1214 MB, internal 1105 MB, external 96 MB, compressed 22898 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 25/s, 0x21 22/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3117 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1211 MB, internal 1102 MB, external 95 MB, compressed 22900 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 23/s, 0x21 20/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+[mem] 3128 s: app uses 45243 MB, iOS still allows 0 MB (lowest so far 0 MB)
+[mem] phone: heat normal
+[mem] detail: game RAM 1023 MB, Metal 46588 MB | resident 1209 MB, internal 1100 MB, external 95 MB, compressed 22902 MB, purgeable 0 MB, reusable 13 MB, footprint 45243 MB
+[cpu] -0% of a core in all: 
+[cpu] system calls: 0x0b 24/s, 0x21 21/s, 0x34 3/s
+[mem] Metal besides the game RAM: 43488 MB = textures 395 MB (of which 0 MB outside the main list), draw scratch 43068 MB, block copies 1 MB, uploads in flight 0 MB, other 24 MB
+=== the game stopped (attempt 5): starting it again
