@@ -4803,3 +4803,45 @@ s_ = s_.replace(old, '''        if cb.0.status() == MTLCommandBufferStatus::Comp
         }''')
 dm.write_text(s_)
 print("patched", dm, "(GPU errors logged)")
+
+# ---- Full prewarm also waits for the device archive to be written. The pipelines compiled during
+# the prewarm are written to work/devarch in the background, slowly (~32 every 7 s); the game started
+# as soon as they were compiled, and when it ended early (Oct 22: twice ~10 s after the menu) the
+# ones not written yet were compiled AGAIN at the next launch (494 s, then 340, then 175).
+# Now the game is held until they are all written ("Saving shaders…"), at most 15 min. Only when
+# the prewarm compiled new pipelines, so once per new list.
+sp = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = sp.read_text()
+old = "static PREWARM_DONE: std::sync::atomic::AtomicBool = std::sync::atomic::AtomicBool::new(false);\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "/// Pipelines sent to the device archive writer, and written (or left out) so far.\nstatic ARCH_SENT: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);\nstatic ARCH_DONE: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);\n")
+old = "                                    saved += group.len();\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "                                    ARCH_DONE.fetch_add(group.len(), std::sync::atomic::Ordering::SeqCst);\n")
+old = "                                    rejected += 1;\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + "                                    ARCH_DONE.fetch_add(1, std::sync::atomic::Ordering::SeqCst);\n")
+old = "        let _ = tx.lock().unwrap().send(Shared(copy));\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "        if tx.lock().unwrap().send(Shared(copy)).is_ok() {\n            ARCH_SENT.fetch_add(1, std::sync::atomic::Ordering::SeqCst);\n        }\n")
+old = '''    #[cfg(target_os = "ios")]
+    crate::gfx::set_status("");
+    eprintln!("[gfx] full prewarm: game held for {:.0} s", t0.elapsed().as_secs_f32());
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let t1 = std::time::Instant::now();
+    loop {
+        let (sent, done) = (ARCH_SENT.load(SeqCst), ARCH_DONE.load(SeqCst));
+        if done >= sent || t1.elapsed().as_secs() > 900 {
+            if sent > 0 {
+                eprintln!("[gfx] full prewarm: {done}/{sent} new pipelines written to the device archive in {:.0} s", t1.elapsed().as_secs_f32());
+            }
+            break;
+        }
+        #[cfg(target_os = "ios")]
+        crate::gfx::set_status(&format!("Saving shaders… {}%\\n\\n{done} / {sent}\\nOnly once", done * 100 / sent.max(1)));
+        std::thread::sleep(std::time::Duration::from_millis(300));
+    }
+''' + old)
+sp.write_text(s_)
+print("patched", sp, "(full prewarm waits for the device archive)")

@@ -71,6 +71,8 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   copied from another iPhone), since an archive made for another iOS/GPU is useless.
   Limit: 1500 MB / 800 files (~70 KB per pipeline, the whole 10,000-pipeline list takes ~750 MB). It was
   300 MB: full at ~6,000 pipelines, so the rest was compiled again at every launch (8 min of prewarm each time).
+  The full prewarm also waits until the newly compiled pipelines are written to it ("Saving shaders…", at most
+  15 min, only when there are new ones): before, a game that ended early lost the unwritten ones and compiled them again.
 - **Failed pipelines are retried** after 1 s and 3 s (the iOS shader compiler sometimes dies mid-build)
   instead of staying black until the next launch.
 - **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10091 pipelines (Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
