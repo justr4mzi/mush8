@@ -1,0 +1,80 @@
+[prof] game thread: graphics calls 2.1 ms per frame (of which waiting for GPU fences 8.6 ms)
+[fps] 29.2 fps, worst frame 303.6 ms
+[prof] per frame: game/other 34.3 ms, gfx cpu 3.7 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 26.6 ms, 480 draws | pipeline builds 2 ms/s, frames not shown 15
+[prof] graphics thread: busy 3.7 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 1.6 ms per frame (of which waiting for GPU fences 26.3 ms)
+[fps] 47.3 fps, worst frame 51.7 ms
+[prof] per frame: game/other 21.1 ms, gfx cpu 4.0 ms (texture uploads 0.0), waiting for display 0.0 ms, gpu 12.7 ms, 473 draws | pipeline builds 0 ms/s, frames not shown 24
+[prof] graphics thread: busy 4.0 ms per frame, game thread waited for it 0.0 ms per frame
+[prof] game thread: graphics calls 2.9 ms per frame (of which waiting for GPU fences 12.3 ms)
+[host] Objective-C exception: -[OS_dispatch_data data]: unrecognized selector sent to instance 0x60000270bb40
+[host] thrown from:
+   0: std::backtrace_rs::backtrace::libunwind::trace
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/../../backtrace/src/backtrace/libunwind.rs:117:9
+   1: std::backtrace_rs::backtrace::trace_unsynchronized::<<std::backtrace::Backtrace>::create::{closure#0}>
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/../../backtrace/src/backtrace/mod.rs:66:14
+   2: <std::backtrace::Backtrace>::create
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/backtrace.rs:331:13
+   3: nxhost::diag::objc_exception_logger
+             at ./crates/nxhost/src/diag.rs:100:46
+   4: <unknown>
+   5: <unknown>
+   6: <unknown>
+   7: <unknown>
+   8: <unknown>
+   9: <unknown>
+  10: <unknown>
+  11: <unknown>
+  12: <unknown>
+  13: <(&objc2_metal::generated::__MTLRenderPipeline::MTLRenderPipelineDescriptor, objc2_metal::generated::__MTLDevice::MTLPipelineOption, core::option::Option<core::ptr::non_null::NonNull<*mut objc2_metal::generated::__MTLRenderPipeline::MTLRenderPipelineReflection>>, *mut *mut objc2_foundation::ge
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/encode.rs:433:26
+  14: objc2::runtime::message_receiver::msg_send_primitive::send::<(&objc2_metal::generated::__MTLRenderPipeline::MTLRenderPipelineDescriptor, objc2_metal::generated::__MTLDevice::MTLPipelineOption, core::option::Option<core::ptr::non_null::NonNull<*mut objc2_metal::generated::__MTLRenderPipeline::M
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/runtime/message_receiver.rs:172:18
+  15: <*mut objc2::runtime::AnyObject as objc2::runtime::message_receiver::MessageReceiver>::send_message::<(&objc2_metal::generated::__MTLRenderPipeline::MTLRenderPipelineDescriptor, objc2_metal::generated::__MTLDevice::MTLPipelineOption, core::option::Option<core::ptr::non_null::NonNull<*mut objc2
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/runtime/message_receiver.rs:432:38
+  16: <objc2::__macro_helpers::method_family::MethodFamily<1> as objc2::__macro_helpers::msg_send_retained::MsgSend<&objc2::runtime::protocol_object::ProtocolObject<dyn objc2_metal::generated::__MTLDevice::MTLDevice>, core::option::Option<objc2::rc::retained::Retained<objc2::runtime::protocol_object
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/__macro_helpers/msg_send_retained.rs:35:28
+  17: <objc2::__macro_helpers::method_family::MethodFamily<1> as objc2::__macro_helpers::msg_send_retained::MsgSendError<&objc2::runtime::protocol_object::ProtocolObject<dyn objc2_metal::generated::__MTLDevice::MTLDevice>, objc2::rc::retained::Retained<objc2::runtime::protocol_object::ProtocolObject
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/__macro_helpers/msg_send_retained.rs:147:28
+  18: <objc2::runtime::protocol_object::ProtocolObject<dyn objc2_metal::generated::__MTLDevice::MTLDevice> as objc2_metal::generated::__MTLDevice::MTLDevice>::newRenderPipelineStateWithDescriptor_options_reflection_error
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-metal-0.3.2/src/generated/MTLDevice.rs:660:1
+  19: nxhost::nvn::draw::state::build_pipeline_inner
+             at ./crates/nxhost/src/nvn/draw/state.rs:353:28
+  20: nxhost::nvn::draw::state::build_pipeline
+             at ./crates/nxhost/src/nvn/draw/state.rs:336:9
+  21: <nxhost::nvn::draw::state::States>::pipeline::{closure#4}
+             at ./crates/nxhost/src/nvn/draw/state.rs:290:21
+  22: <<nxhost::nvn::draw::state::States>::pipeline::{closure#4} as core::ops::function::FnOnce<()>>::call_once::{shim:vtable#0}
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/core/src/ops/function.rs:250:5
+  23: <alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/alloc/src/boxed.rs:2320:9
+  24: nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}::{closure#0}
+             at ./crates/nxhost/src/nvn/draw/shaders.rs:79:67
+  25: objc2::rc::autorelease::autoreleasepool::<(), nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}::{closure#0}>
+             at /Users/runner/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/objc2-0.6.5/src/rc/autorelease.rs:453:15
+  26: nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}
+             at ./crates/nxhost/src/nvn/draw/shaders.rs:79:36
+  27: std::sys::backtrace::__rust_begin_short_backtrace::<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/sys/backtrace.rs:166:18
+  28: std::thread::lifecycle::spawn_unchecked::<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}::{closure#0}
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/thread/lifecycle.rs:70:13
+  29: <core::panic::unwind_safe::AssertUnwindSafe<std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}::{closure#0}> as core::ops::function::FnOnce<()>>::call_once
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/core/src/panic/unwind_safe.rs:275:9
+  30: std::panicking::catch_unwind::do_call::<core::panic::unwind_safe::AssertUnwindSafe<std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}::{closure#0}>, ()>
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/panicking.rs:576:43
+  31: std::panicking::catch_unwind::<(), core::panic::unwind_safe::AssertUnwindSafe<std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}::{closure#0}>>
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/panicking.rs:544:19
+  32: std::panic::catch_unwind::<core::panic::unwind_safe::AssertUnwindSafe<std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}::{closure#0}>, ()>
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/panic.rs:359:14
+  33: std::thread::lifecycle::spawn_unchecked::<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1}
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/thread/lifecycle.rs:68:26
+  34: <std::thread::lifecycle::spawn_unchecked<nxhost::nvn::draw::shaders::spawn_job::QUEUE::{closure#0}::{closure#1}, ()>::{closure#1} as core::ops::function::FnOnce<()>>::call_once::{shim:vtable#0}
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/core/src/ops/function.rs:250:5
+  35: <alloc::boxed::Box<dyn core::ops::function::FnOnce<(), Output = ()> + core::marker::Send> as core::ops::function::FnOnce<()>>::call_once
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/alloc/src/boxed.rs:2320:9
+  36: <std::sys::thread::unix::Thread>::new::thread_start
+             at /rustc/58cf8f9c35b355199727627d07ae34a4e2846d67/library/std/src/sys/thread/unix.rs:123:17
+  37: __pthread_cond_wait
+
+fatal runtime error: Rust cannot catch foreign exceptions, aborting
+=== the game stopped (attempt 10): starting it again
