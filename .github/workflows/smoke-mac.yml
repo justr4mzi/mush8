@@ -44,6 +44,9 @@ on:
       soft_bc:
         description: "1 = decode BC textures on the CPU like an iPhone (memory test)"
         default: "0"
+      prewarm_test:
+        description: "N = RAM test instead of a play run: prewarm the first N lines of data/pipelines.tsv, then the whole list, and compare the app's memory"
+        default: ""
 
 permissions:
   contents: write
@@ -169,7 +172,33 @@ jobs:
           [ "$(cat "$P/nxpatch.stamp" 2>/dev/null)" = "$(./target/release/nxpatch stamp)" ] || ./target/release/nxpatch rewrite --out "$P" \
             work/v-upd/exefs/main work/v-upd/exefs/subsdk0 work/v-upd/exefs/sdk
 
+      - name: Prewarm RAM test (old list vs whole list)
+        if: inputs.prewarm_test != ''
+        timeout-minutes: 150
+        env:
+          OLDN: ${{ inputs.prewarm_test }}
+        run: |
+          mkdir -p out work/save; R=out/prewarm-test.txt
+          if [ -d smoke-save ]; then
+            if ls -d smoke-save/type* >/dev/null 2>&1; then cp -R smoke-save/. work/save/; else mkdir -p work/save/type1-index0 && cp -R smoke-save/. work/save/type1-index0/; fi
+          fi
+          head -n "$OLDN" data/pipelines.tsv > old.tsv; cp data/pipelines.tsv new.tsv
+          python3 -c "print(','.join(f'{t}:A' for t in range(12, 600)))" > work/autoinput.txt
+          for t in old new; do
+            rm -f work/pipelines.tsv; C="$PWD/work/aot-$t"
+            echo "=== $t list: $(wc -l < $t.tsv) pipelines" | tee -a $R
+            S=$(date +%s)
+            NX_PIPELINE_LIST="$PWD/$t.tsv" NX_SHADER_CACHE="$C" ./target/release/nxhost --precompile > out/precompile-$t.log 2>&1 || { tail -20 out/precompile-$t.log; exit 1; }
+            echo "precompile: $(( $(date +%s) - S )) s, shader cache $(du -sm "$C" | cut -f1) MB" | tee -a $R
+            NX_PREWARM=1 NX_PREWARM_FULL=1 NX_PIPELINE_LIST="$PWD/$t.tsv" NX_SHADER_CACHE="$C" NX_FPS=1 NX_HANDHELD=1 \
+              NX_AUTOINPUT="@$PWD/work/autoinput.txt" ./target/release/nxhost > out/prewarm-$t.log 2>&1 &
+            pid=$!; sleep 480; kill $pid 2>/dev/null; sleep 3; kill -9 $pid 2>/dev/null || true
+            grep -E "prewarm|\[mem\]|panicked|exception" out/prewarm-$t.log | grep -v "^\[mem\] textures" | head -40 | tee -a $R
+            grep -E "^\[mem\]" out/prewarm-$t.log | tail -4 | tee -a $R
+          done
+
       - name: Run
+        if: inputs.prewarm_test == ''
         # ends before the job limit (360 min), so the next steps still save the pipelines
         # (a job stopped by its own limit skips them: a whole night of pipelines was lost once)
         timeout-minutes: 310
