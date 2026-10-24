@@ -4845,3 +4845,53 @@ s_ = s_.replace(old, '''    let t1 = std::time::Instant::now();
 ''' + old)
 sp.write_text(s_)
 print("patched", sp, "(full prewarm waits for the device archive)")
+
+# ---- Crash found (Oct 24 log): loading Sunshine Airport, the app went 2179 -> 2334 -> 2592 -> 2748 MB
+# in 3 s (323 MB left) and iOS ended it in the next second. The ~480 MB of prewarmed pipelines kept
+# ready (10,000-pipeline list) leave too little room for a track load. They are now let go as soon as
+# less than 450 MB is left (was 150 MB), checked 4 times a second by the memory thread and during
+# texture uploads; only the ones not used yet go (the game gets them back from the device archive if it
+# needs them: a few black objects for a moment instead of a crash). Once per pressure, logged.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+t = st.read_text()
+old = "        if left < 150 << 20 {\n            super::state::drop_prewarmed();\n        }\n"
+assert t.count(old) == 1
+t = t.replace(old, "        if left < 450 << 20 {\n            super::state::drop_prewarmed();\n        }\n")
+st.write_text(t)
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+d = dm.read_text()
+old = "pub use state::{prewarm, prewarm_wait};\n"
+assert d.count(old) == 1
+d = d.replace(old, "pub use state::{drop_prewarmed, prewarm, prewarm_wait};\n")
+dm.write_text(d)
+nm = pathlib.Path("crates/nxhost/src/nvn/mod.rs")
+n = nm.read_text()
+old = "pub use draw::{precompile, prewarm, prewarm_wait};\n"
+assert n.count(old) == 1
+n = n.replace(old, "pub use draw::{drop_prewarmed, precompile, prewarm, prewarm_wait};\n")
+nm.write_text(n)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "            std::thread::sleep(std::time::Duration::from_secs(1));\n            tick += 1;\n            let now = footprint();\n"
+assert g.count(old) == 1
+g = g.replace(old, """            for _ in 0..4 {
+                std::thread::sleep(std::time::Duration::from_millis(250));
+                let left = available_memory();
+                if left > 0 && left < 450 << 20 && crate::nvn::draw_prewarmed_left() > 0 {
+                    eprintln!("[mem] {:.1} s: only {} MB left: letting the prewarmed pipelines go", t0.elapsed().as_secs_f32(), left >> 20);
+                    crate::nvn::drop_prewarmed();
+                }
+            }
+            tick += 1;
+            let now = footprint();
+""")
+gm.write_text(g)
+s_ = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs").read_text()
+assert "pub fn prewarmed_count() -> usize {" in s_
+d = dm.read_text()
+d = d.replace("pub use state::{drop_prewarmed, prewarm, prewarm_wait};\n", "pub use state::{drop_prewarmed, prewarm, prewarm_wait};\npub fn prewarmed_left() -> usize {\n    state::prewarmed_count()\n}\n")
+dm.write_text(d)
+n = nm.read_text()
+n = n.replace("pub use draw::{drop_prewarmed, precompile, prewarm, prewarm_wait};\n", "pub use draw::{drop_prewarmed, precompile, prewarm, prewarm_wait};\npub use draw::prewarmed_left as draw_prewarmed_left;\n")
+nm.write_text(n)
+print("patched", st, dm, nm, gm, "(prewarmed pipelines let go under 450 MB left)")
