@@ -101,6 +101,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   when the game was slow and so slowed it down further.
 - Texture change checks every 2 frames instead of every frame.
 - **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
+- **Null index buffers** (from upstream, found by 184904): indexed draws with a null or overflowing index buffer are skipped instead of making the GPU read address 0 (`[nvn] skipping draw …`, logged once).
 - **GPU errors**: `[gpu] GPU error on a frame: …` with Metal's reason when a command buffer fails on the GPU (iOS can end an app whose GPU work keeps failing without any crash report), `[gpu] a frame took the GPU N s` for very slow ones.
 - **Crash clues**: `[mem] … heat now …` at every change of the phone's heat state, and `[mem] … only N MB left` every second once less than 300 MB is left (iOS kills without a report leave nothing else).
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
@@ -263,23 +264,9 @@ unless the pipeline list changes. Build logs go to the `ci-logs` branch.
 
 Other workflows:
 - **Check patch**: compiles with the patches for macOS and iOS, no game files, ~10 min.
-- **Mac smoke test**: runs the game on a GitHub Mac with scripted buttons and publishes text logs,
-  low-resolution screenshots every minute (then every 10 min) and the recorded pipelines to the
-  `ci-logs` branch. Needs the extra secrets `FIRMWARE_URL` (a zip of your own `Firmware` folder) and
-  `SAVE_URL`. Inputs: `runner`, `modes` (`NX_ASYNC_GFX` values), `seconds`, `script` (`time:BUTTON,...`),
-  `vs96=1` (VS race, 150cc, all tracks in order, 96 races, smart steering + auto accelerate: `tools/vs96.py`),
-  `probe` (`tools/probe.py`), `monkey=1` (random play, `tools/monkey.py`), `soft_bc=1` (decode textures like
-  an iPhone, for memory tests), `record`, `courses` with `vs96=1`: `inorder`, `random` (VS race, tracks in
-  random order: later sessions reach the tracks not played yet) or `battle` (Battle -> Balloon Battle: the 8
-  battle arenas are their own maps with their own pipelines; the arena changes from one battle to the next
-  through random stick moves; a screenshot every minute for the first 25 min to check the menus),
-  `prewarm_test=N` (RAM test instead of a play run: precompiles and prewarms the first N lines of
-  `data/pipelines.tsv`, then the whole list, and writes the app's memory before/after to `prewarm-test.txt`).
-  A run ends at 310 min so its pipelines are saved before GitHub's 360-min limit; they are also published
-  every 10 min (`pipelines-live.tsv`).
-  `NX_AUTOINPUT` takes `time:BUTTON` pairs (A, B, X, Y, L, R, PLUS, UP, DOWN, LEFT, RIGHT, SLEFT/SRIGHT for
-  the stick...) or `@file` to read them from a file.
-- **A16 lab**: Metal tool experiments.
+- The long Mac workflows (Mac smoke test: hours of the game running on GitHub Macs to collect pipelines;
+  A16 lab) were removed: GitHub disabled Actions on the first repository because of them. Only short jobs
+  now (IPA build ~20 min, Check patch ~10 min); new pipelines come from the phone (Share the pipeline list).
 - Game files for the workflows can come from Google Drive through a service account (`GDRIVE_SA_JSON`),
   which avoids Drive's "too many downloads" limit.
 

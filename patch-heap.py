@@ -4895,3 +4895,46 @@ n = nm.read_text()
 n = n.replace("pub use draw::{drop_prewarmed, precompile, prewarm, prewarm_wait};\n", "pub use draw::{drop_prewarmed, precompile, prewarm, prewarm_wait};\npub use draw::prewarmed_left as draw_prewarmed_left;\n")
 nm.write_text(n)
 print("patched", st, dm, nm, gm, "(prewarmed pipelines let go under 450 MB left)")
+
+# ---- From upstream (c22dev 434b51de, found by 184904): skip indexed draws whose index buffer is
+# null or whose range overflows, instead of letting the GPU read address 0 (a GPU fault; iOS can end an
+# app whose GPU work keeps faulting without any report). Checked when the draw is recorded and again when
+# it is replayed; the first one is logged.
+cm = pathlib.Path("crates/nxhost/src/nvn/cmd.rs")
+c = cm.read_text()
+old = "#[derive(Debug, Clone)]\npub enum Cmd {\n"
+assert c.count(old) == 1
+c = c.replace(old, '''impl Draw {
+    pub(super) fn validate_indices(&self) -> Result<(), &'static str> {
+        let Some((ty, addr)) = self.index else { return Ok(()) };
+        if self.count == 0 || self.instances == 0 {
+            return Ok(());
+        }
+        if addr == 0 {
+            return Err("null index buffer");
+        }
+        let size = match ty { 0 => 1, 1 => 2, _ => 4 };
+        addr.checked_add(size * self.count as u64).ok_or("index buffer range overflows")?;
+        Ok(())
+    }
+}
+
+''' + old)
+old = "fn draw(a: &Args, d: Draw) -> u64 {\n    push(a.0[0], Cmd::Draw(d));\n"
+assert c.count(old) == 1
+c = c.replace(old, '''fn draw(a: &Args, d: Draw) -> u64 {
+    if let Err(reason) = d.validate_indices() {
+        static LOGGED: std::sync::Once = std::sync::Once::new();
+        LOGGED.call_once(|| eprintln!("[nvn] skipping draw in command buffer {:#x}: {reason}; {d:?}", a.0[0]));
+        return 0;
+    }
+    push(a.0[0], Cmd::Draw(d));
+''')
+cm.write_text(c)
+em = pathlib.Path("crates/nxhost/src/nvn/draw/exec.rs")
+e = em.read_text()
+old = "    fn primitives(&mut self, d: &super::Draw) -> Result<Prim, &'static str> {\n"
+assert e.count(old) == 1
+e = e.replace(old, old + "        d.validate_indices()?;\n")
+em.write_text(e)
+print("patched", cm, em, "(null index buffer draws skipped, from upstream)")
