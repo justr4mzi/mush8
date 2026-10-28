@@ -4849,7 +4849,7 @@ print("patched", sp, "(full prewarm waits for the device archive)")
 # ---- Crash found (Oct 24 log): loading Sunshine Airport, the app went 2179 -> 2334 -> 2592 -> 2748 MB
 # in 3 s (323 MB left) and iOS ended it in the next second. The ~480 MB of prewarmed pipelines kept
 # ready (10,000-pipeline list) leave too little room for a track load. They are now let go as soon as
-# less than 450 MB is left (was 150 MB), checked 4 times a second by the memory thread and during
+# less than 700 MB is left (memory thread, 4 times a second; was 150 MB) or 450 MB during texture uploads, and during
 # texture uploads; only the ones not used yet go (the game gets them back from the device archive if it
 # needs them: a few black objects for a moment instead of a crash). Once per pressure, logged.
 st = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
@@ -4877,7 +4877,7 @@ assert g.count(old) == 1
 g = g.replace(old, """            for _ in 0..4 {
                 std::thread::sleep(std::time::Duration::from_millis(250));
                 let left = available_memory();
-                if left > 0 && left < 450 << 20 && crate::nvn::draw_prewarmed_left() > 0 {
+                if left > 0 && left < 700 << 20 && crate::nvn::draw_prewarmed_left() > 0 {
                     eprintln!("[mem] {:.1} s: only {} MB left: letting the prewarmed pipelines go", t0.elapsed().as_secs_f32(), left >> 20);
                     crate::nvn::drop_prewarmed();
                 }
