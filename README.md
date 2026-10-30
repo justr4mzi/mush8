@@ -78,7 +78,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   15 min, only when there are new ones): before, a game that ended early lost the unwritten ones and compiled them again.
 - **Failed pipelines are retried** after 1 s and 3 s (the iOS shader compiler sometimes dies mid-build)
   instead of staying black until the next launch.
-- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10091 pipelines (Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
+- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10167 pipelines (Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
   and the Mac smoke runs): their shaders are compiled ahead of time on the build Mac, so a phone that never
   ran the game doesn't have to compile them for minutes.
 - **Full prewarm before playing**: holds the game until every known pipeline is ready, with a progress
@@ -109,6 +109,9 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   ramp it does the trick and its small boost, like shaking a Joy-Con in the original game. `NX_SHAKE=0` off,
   `NX_SHAKE_G` strength (default 2.6). `[input] shake` in the log.
 - Texture change checks every 2 frames instead of every frame.
+- **Archive writer does not block the game**: the device archive writer compiles pipelines into its own new
+  archive file without the archive lock; only the game's lookups take it (Oct 31: track loads stalled up to
+  15 s, "no frame for 6 s", while the writer held the lock during its compiles).
 - **GPU: relaxed shader math**: shaders are compiled with Metal's `relaxed` math mode (Apple's default on Apple
   silicon; still honors Inf/NaN) instead of `safe`, so the compiler can simplify floating-point math. Position
   invariance stays on. The shader cache key changed with it (every shader compiled again once).

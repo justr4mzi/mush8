@@ -5298,3 +5298,23 @@ t = t.replace(old, """            static MAX: std::sync::LazyLock<usize> = std::
 """)
 tx.write_text(t)
 print("patched", tx, "(anisotropy capped at 4x)")
+
+# ---- Track loads stalled for seconds (Oct 31 log, London Loop: pipelines "building took" 1-15 s,
+# "no frame for 6 s", shader threads waiting on a lock). The device archive writer held ARCHIVE_LOCK
+# while compiling each pipeline into its new archive file (addRenderPipelineFunctions compiles), up to
+# 32 per batch, so every archive lookup of the game waited behind those compiles. The writer only
+# works on its own new archive (never in the ARCHIVES list the game searches, and its pipelines have
+# no archive attached), so it does not need the lock; lookups keep it.
+sp = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = sp.read_text()
+old = "    let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n    archive.0.addRenderPipelineFunctionsWithDescriptor_error(d).is_ok()\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    archive.0.addRenderPipelineFunctionsWithDescriptor_error(d).is_ok()\n")
+old = "    {\n        let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n        a.0.serializeToURL_error("
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    {\n        a.0.serializeToURL_error(")
+old = "    {\n        let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());\n        archive.0.serializeToURL_error("
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    {\n        archive.0.serializeToURL_error(")
+sp.write_text(s_)
+print("patched", sp, "(archive writer no longer blocks lookups)")
