@@ -5082,3 +5082,79 @@ s_ = s_.replace(old, "    let nn = if *SPEED { plan_gap(plan_n(frame).1) } else 
 assert "AUTO_INTERVAL.store((m + 1)" not in s_
 dm.write_text(s_)
 print("patched", dm, "(adaptive 20-30 fps, 1 fps steps)")
+
+# ---- Game speed: frame pacing catches up (Oct 30 log, Paris: the game made 52-60 updates/s at 20 fps
+# with the CPU mostly idle, 71 % of ONE core for the whole app). Skipped frames sleep to keep a 60 Hz
+# cadence; after a late frame the next slot was counted from "now", so every hiccup (a GPU fence wait,
+# a slow update) was lost for good and the game averaged 55-58 instead of 60. Now the clock keeps its
+# 60 Hz grid: after a late frame the next skipped frames don't sleep until the game is back on time
+# (only if it is more than 3 frames late does it start a new grid).
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = "    *NEXT.lock().unwrap() = Some(deadline.max(now) + IV);\n}\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    *NEXT.lock().unwrap() = Some(deadline + IV);\n}\n")
+
+# ---- Adaptive fps that only lowers the frame rate when it really makes the game faster. The Oct 30
+# log: the game stayed at 56-59 updates/s whether 30 or 20 fps were drawn, so the 1-fps-at-a-time
+# controller went down to 20 and stayed there for nothing. Now the game speed is measured over ~1.5 s
+# per frame rate tried; the rate goes down only if that made the game at least 2 % faster than one fps
+# higher, goes back up when it did not, and tries one fps higher whenever the game is at full speed
+# (results kept 30 s, then tried again).
+a = s_.index("/// Called at each present (game thread): follows the time per game update and picks the fps.")
+b = s_.index("fn skip_frame() -> bool {")
+s_ = s_[:a] + '''/// Called at each present (game thread): measures the time per game update at each frame rate
+/// and picks the highest rate that does not slow the game down (see patch-heap.py).
+fn speed_decide() {
+    struct S { last: Option<std::time::Instant>, sum: f32, n: u32, rec: [Option<(f32, std::time::Instant)>; 31] }
+    static ST: Mutex<S> = Mutex::new(S { last: None, sum: 0.0, n: 0, rec: [None; 31] });
+    static MIN: LazyLock<u64> = LazyLock::new(|| {
+        if std::env::var("NX_SKIP_MAX").is_ok_and(|v| v.trim() == "1") {
+            return 30;
+        }
+        std::env::var("NX_FPS_MIN").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(20u64).clamp(15, 30)
+    });
+    const FULL: f32 = 17.4; // ms per update: 57.5 updates/s and more = full speed
+    let now = std::time::Instant::now();
+    let mut st = ST.lock().unwrap();
+    if let Some(l) = st.last {
+        let dt = now.duration_since(l).as_secs_f32() * 1000.0;
+        if dt < 250.0 {
+            st.sum += dt;
+            st.n += 1;
+        }
+    }
+    st.last = Some(now);
+    if st.n < 90 {
+        return;
+    }
+    let p = st.sum / st.n as f32;
+    (st.sum, st.n) = (0.0, 0);
+    let f = FRAME.load(Relaxed);
+    let fps = plan_n(f).1;
+    st.rec[fps as usize] = Some((p, now));
+    let fresh = |r: &[Option<(f32, std::time::Instant)>; 31], k: u64| -> Option<f32> {
+        r.get(k as usize).copied().flatten().filter(|(_, t)| now.duration_since(*t).as_secs() < 30).map(|(v, _)| v)
+    };
+    let new = if p <= FULL {
+        (fps < 30 && fresh(&st.rec, fps + 1).is_none_or(|u| u <= FULL)).then(|| fps + 1)
+    } else if fps < 30 && fresh(&st.rec, fps + 1).is_some_and(|u| p > u * 0.98) {
+        Some(fps + 1)
+    } else if fps > *MIN && fresh(&st.rec, fps - 1).is_none_or(|lo| lo < p * 0.98) {
+        Some(fps - 1)
+    } else {
+        None
+    };
+    if let Some(m) = new {
+        {
+            let mut pl = PLAN.lock().unwrap();
+            pl[1] = pl[0];
+            pl[0] = (f + 2, m);
+        }
+        eprintln!("[speed] game at {:.1} updates/s with {} fps drawn: now {} fps", 1000.0 / p, fps, m);
+    }
+}
+
+''' + s_[b:]
+dm.write_text(s_)
+print("patched", dm, "(pacing catches up, fps lowered only when it helps)")

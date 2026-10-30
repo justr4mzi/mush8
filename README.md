@@ -93,9 +93,14 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **Speed first, adaptive 20-30 fps** (on with the 30 fps lock, `NX_SPEED_FIRST=0` for the plain lock): the
   game's own speed comes before the frame rate (MK8 moves the race one step per update: 30 updates/s = slow
   motion at 50 %). While the game makes fewer than ~58 updates/s, the drawn frame rate goes down **1 fps at a
-  time** (30, 29, 28 ... down to `NX_FPS_MIN`, default 20), and while the game is at full speed it goes back
-  up 1 fps at a time to 30, trying the highest rate again and again (it waits longer after each fall back, so
-  it does not flicker). Frames drawn are spread evenly. `[speed] … N fps drawn` lines in the log.
+  time** (30, 29, 28 ... down to `NX_FPS_MIN`, default 20), **but only if that really makes the game faster**:
+  the game speed is measured over ~1.5 s at each rate; a lower rate is kept only if the game got at least 2 %
+  faster, otherwise it goes back up (Oct 30: the game made 56-59 updates/s at 30 and at 20 fps alike, and the
+  first version sat at 20 fps for nothing). At full speed it tries one fps higher (results kept 30 s).
+  Frames drawn are spread evenly. `[speed] game at … updates/s with N fps drawn: now M fps` in the log.
+- **Frame pacing catches up**: skipped frames keep a fixed 60 Hz grid; after a late frame (GPU fence wait,
+  slow update) the next ones don't sleep until the game is back on time, instead of losing that time for
+  good (the game averaged 55-58 updates/s with the CPU mostly idle).
   `NX_SKIP_MAX=1` = always 30 fps. (Oct 22: steps of 30/20/15 fps; before that the "smart 30 lock" drew
   every frame when the game was slow and slowed it down further.)
 - **Shake = trick**: with the touch controls, shaking the phone (more than 2 g) presses R for 150 ms: on a
