@@ -65,9 +65,9 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **Pipeline prewarm** at startup, which pauses as soon as the game needs a pipeline.
 - **Prewarmed pipelines are kept** in memory (`NX_KEEP_PREWARMED=0` for the old behaviour): before, they
   were thrown away and rebuilt from the archive at the start of a race, which showed black objects for
-  0.5 to 10 s (up to 2 laps when memory is tight). The ones not used yet are let go as soon as less than
-  700 MB is left (checked 4 times a second; the race that crashed went from 737 to 323 MB left in 3 s): with the 10,000-pipeline list they take ~480 MB, and a track load
-  (Oct 24: Sunshine Airport, +570 MB in 3 s) then ran out of memory and iOS ended the app.
+  0.5 to 10 s (up to 2 laps when memory is tight). The ones not used yet are let go only when less than
+  120 MB is left: letting all ~10,000 go saved just 19 MB (Oct 30; the memory the prewarm adds is the shader
+  libraries, which stay) and the race then rebuilt them from the archive (dips to 35-45 updates/s).
   `[mem] … letting the prewarmed pipelines go` in the log.
 - **Device pipeline archive** (`work/devarch/`): every pipeline compiled on the phone is saved and found
   again on the next launch. It is **cleared by itself** when iOS or the GPU changes (iOS update, `work/`

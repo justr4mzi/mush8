@@ -5178,3 +5178,22 @@ g = g.replace(old, """    let os = unsafe { os_proc_available_memory() as u64 };
 """)
 gm.write_text(g)
 print("patched", gm, "(memory left counted as without extra RAM)")
+
+# ---- Prewarmed pipelines are let go only at the very end (120 MB left) again. The Oct 30 test with
+# the 3 GB limit showed letting all 9,957 of them go saved only 19 MB (2458 -> 2439 MB): they hardly
+# count in the app's memory (the memory the prewarm adds is the shader libraries, which stay). And
+# the game then had to get them back from the archive during the race (11-16 s of pipeline builds per
+# second, dips to 35-45 updates/s). Textures and render targets are what the trims free.
+st = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+t = st.read_text()
+old = "        if left < 450 << 20 {\n            super::state::drop_prewarmed();\n        }\n"
+assert t.count(old) == 1
+t = t.replace(old, "        if left < 120 << 20 {\n            super::state::drop_prewarmed();\n        }\n")
+st.write_text(t)
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "if left > 0 && left < 700 << 20 && crate::nvn::draw_prewarmed_left() > 0 {"
+assert g.count(old) == 1
+g = g.replace(old, "if left > 0 && left < 120 << 20 && crate::nvn::draw_prewarmed_left() > 0 {")
+gm.write_text(g)
+print("patched", st, gm, "(prewarmed pipelines let go only under 120 MB left)")
