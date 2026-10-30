@@ -109,6 +109,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - Texture change checks every 2 frames instead of every frame.
 - **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
 - **Null index buffers** (from upstream, found by 184904): indexed draws with a null or overflowing index buffer are skipped instead of making the GPU read address 0 (`[nvn] skipping draw …`, logged once).
+- **Memory as without extra RAM**: the memory left used by every trim is the smaller of what iOS says and 3070 MB minus what the app uses (`NX_MEM_LIMIT_MB`, `0` = iOS only), so the app behaves the same with or without SideStore's "Get more RAM" (with it, the trims never ran and render targets kept growing).
 - **GPU errors**: `[gpu] GPU error on a frame: …` with Metal's reason when a command buffer fails on the GPU (iOS can end an app whose GPU work keeps failing without any crash report), `[gpu] a frame took the GPU N s` for very slow ones.
 - **Crash clues**: `[mem] … heat now …` at every change of the phone's heat state, and `[mem] … only N MB left` every second once less than 300 MB is left (iOS kills without a report leave nothing else).
 - **Fewer scheduler passes**: the game makes thousands of unlock/signal system calls per second, most with
@@ -196,6 +197,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_ASYNC_GFX` | 1 | Graphics on a separate thread (`0` = off) |
 | `NX_FRAMESKIP` | 1 | Frames skipped between two drawn ones (0 = none, max 4) |
 | `NX_SPEED_FIRST` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
+| `NX_MEM_LIMIT_MB` | 3070 | Memory limit the trims assume (0 = only what iOS says) |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.0 | Shake the phone = trick (R), strength needed in g |

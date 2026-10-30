@@ -5158,3 +5158,23 @@ fn speed_decide() {
 ''' + s_[b:]
 dm.write_text(s_)
 print("patched", dm, "(pacing catches up, fps lowered only when it helps)")
+
+# ---- Memory as if the phone had no extra RAM. With SideStore's "Get more RAM" the app may use ~4 GB
+# instead of ~3.07 GB, so the trims (textures, render targets, prewarmed pipelines) never ran and the
+# app grew to sizes a normal install cannot reach (Oct 30: 2.66 GB in a race, render targets growing
+# from 408 to 472 MB). The memory left is now the smaller of what iOS says and 3070 MB minus what the
+# app uses (NX_MEM_LIMIT_MB, 0 = iOS only), so the app behaves the same with or without the extra RAM.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = "    unsafe { os_proc_available_memory() as u64 }\n}\n"
+assert g.count(old) == 1
+g = g.replace(old, """    let os = unsafe { os_proc_available_memory() as u64 };
+    static CAP: std::sync::LazyLock<u64> = std::sync::LazyLock::new(|| std::env::var("NX_MEM_LIMIT_MB").ok().and_then(|v| v.trim().parse::<u64>().ok()).unwrap_or(3070) << 20);
+    if *CAP == 0 || os == 0 {
+        return os;
+    }
+    os.min(CAP.saturating_sub(footprint()))
+}
+""")
+gm.write_text(g)
+print("patched", gm, "(memory left counted as without extra RAM)")
