@@ -109,6 +109,11 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   ramp it does the trick and its small boost, like shaking a Joy-Con in the original game. `NX_SHAKE=0` off,
   `NX_SHAKE_G` strength (default 2.6). `[input] shake` in the log.
 - Texture change checks every 2 frames instead of every frame.
+- **GPU: relaxed shader math**: shaders are compiled with Metal's `relaxed` math mode (Apple's default on Apple
+  silicon; still honors Inf/NaN) instead of `safe`, so the compiler can simplify floating-point math. Position
+  invariance stays on. The shader cache key changed with it (every shader compiled again once).
+- **GPU: anisotropic filtering capped at 4x** (`NX_MAX_ANISO`, 1-16, the game asks up to 16x): less texture
+  bandwidth per pixel, the difference is only visible on surfaces seen at a very low angle.
 - **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
 - **Null index buffers** (from upstream, found by 184904): indexed draws with a null or overflowing index buffer are skipped instead of making the GPU read address 0 (`[nvn] skipping draw …`, logged once).
 - **Memory as without extra RAM**: the memory left used by every trim is the smaller of what iOS says and 3070 MB minus what the app uses (`NX_MEM_LIMIT_MB`, `0` = iOS only), so the app behaves the same with or without SideStore's "Get more RAM" (with it, the trims never ran and render targets kept growing).
@@ -200,6 +205,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_FRAMESKIP` | 1 | Frames skipped between two drawn ones (0 = none, max 4) |
 | `NX_SPEED_FIRST` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
 | `NX_MEM_LIMIT_MB` | 3070 | Memory limit the trims assume (0 = only what iOS says) |
+| `NX_MAX_ANISO` | 4 | Highest anisotropic filtering (the game asks up to 16) |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |

@@ -42,7 +42,7 @@ cargo build --release
 mkdir -p "$CACHE"
 LIST="$CACHE/pipelines.all.tsv"
 cat data/pipelines.tsv work/pipelines.tsv 2>/dev/null | awk 'NF && !seen[$0]++' > "$LIST.new"
-STAMP="$(shasum "$LIST.new" | cut -d' ' -f1)"
+STAMP="$(shasum "$LIST.new" | cut -d' ' -f1)-relaxed1"  # suffix: shader compile settings (math mode) changed
 mv "$LIST.new" "$LIST"
 
 if [ "$SHADERS" = 1 ] || [ ! -f "$CACHE/index.tsv" ] || [ "$(cat "$CACHE/pipelines.stamp" 2>/dev/null)" != "$STAMP" ]; then

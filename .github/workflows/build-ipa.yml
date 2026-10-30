@@ -109,7 +109,7 @@ jobs:
         id: need
         run: |
           C=work/shader_cache_ios.noindex
-          STAMP="$(cat data/pipelines.tsv phone-pipelines.tsv 2>/dev/null | awk 'NF && !seen[$0]++' | shasum | cut -d' ' -f1)"
+          STAMP="$(cat data/pipelines.tsv phone-pipelines.tsv 2>/dev/null | awk 'NF && !seen[$0]++' | shasum | cut -d' ' -f1)-relaxed1"
           if [ -f work/v-upd/exefs/main ] && [ -f "$C/index.tsv" ] && [ "$(cat "$C/pipelines.stamp" 2>/dev/null)" = "$STAMP" ]; then
             echo "game modules and shaders are cached: no download needed"
             echo "download=no" >> "$GITHUB_OUTPUT"

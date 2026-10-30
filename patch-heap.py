@@ -5265,3 +5265,36 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, '''        eprintln!("[speed] game at {:.1} updates/s with {} fps drawn (GPU wait {:.1} ms per update): now {} fps", 1000.0 / p, fps, wait, m);''')
 dm.write_text(s_)
 print("patched", dm, "(adaptive fps follows the GPU wait)")
+
+# ---- GPU: shaders compiled with Metal's "relaxed" math instead of "safe". Relaxed lets the compiler
+# simplify floating-point math (fused multiply-add, reassociation...) while still honoring Inf/NaN
+# (Apple: "the default for Apple silicon devices"; Chrome's WebGPU uses it too), so the game's math
+# keeps its edge cases. Position invariance stays on (passes that redraw the same geometry must give
+# the same depth). The shader cache key changes with it, so every shader is compiled again once (the
+# phone also rebuilds its pipeline archive once, "Saving shaders...").
+sh = pathlib.Path("crates/nxhost/src/nvn/draw/shaders.rs")
+h = sh.read_text()
+old = '    opts.setMathMode(MTLMathMode::Safe);\n'
+assert h.count(old) == 1
+h = h.replace(old, '    opts.setMathMode(MTLMathMode::Relaxed);\n')
+old = 'const AOT_FLAGS: [&str; 3] = ["-fmetal-math-mode=safe", "-fpreserve-invariance", "-w"];'
+assert h.count(old) == 1
+h = h.replace(old, 'const AOT_FLAGS: [&str; 3] = ["-fmetal-math-mode=relaxed", "-fpreserve-invariance", "-w"];')
+old = '    let key = fnv1a(&t.msl.as_bytes()[nxshader::prelude().len()..]);\n'
+assert h.count(old) == 1
+h = h.replace(old, '    // salted: shaders compiled with the old math mode must not be reused\n    let key = fnv1a(&t.msl.as_bytes()[nxshader::prelude().len()..]) ^ 0x7e1a_0000_0000_0001;\n')
+sh.write_text(h)
+print("patched", sh, "(relaxed shader math)")
+
+# ---- GPU: anisotropic filtering capped at 4x (NX_MAX_ANISO, 1-16; the game asks up to 16x). Each
+# extra anisotropic sample costs texture bandwidth on every textured pixel; beyond 4x the difference
+# is only visible on surfaces seen at a very low angle (the far road).
+tx = pathlib.Path("crates/nxhost/src/nvn/draw/textures.rs")
+t = tx.read_text()
+old = "            d.setMaxAnisotropy((aniso as usize).clamp(1, 16));\n"
+assert t.count(old) == 1
+t = t.replace(old, """            static MAX: std::sync::LazyLock<usize> = std::sync::LazyLock::new(|| std::env::var("NX_MAX_ANISO").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(4usize).clamp(1, 16));
+            d.setMaxAnisotropy((aniso as usize).clamp(1, *MAX));
+""")
+tx.write_text(t)
+print("patched", tx, "(anisotropy capped at 4x)")
