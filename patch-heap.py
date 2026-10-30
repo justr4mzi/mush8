@@ -4938,3 +4938,147 @@ assert e.count(old) == 1
 e = e.replace(old, old + "        d.validate_indices()?;\n")
 em.write_text(e)
 print("patched", cm, em, "(null index buffer draws skipped, from upstream)")
+
+# ---- Shake the phone = trick (like shaking a Joy-Con in the original game: on a ramp it does the
+# trick and gives the small boost). Touch controls only (player 1 without a controller): a shake
+# (more than 2 g on the phone) presses R for 150 ms, at most once every 0.4 s. NX_SHAKE=0 turns it off,
+# NX_SHAKE_G sets the strength needed (default 2.0).
+im = pathlib.Path("crates/nxhost/src/input.rs")
+i_ = im.read_text()
+old = '''                if i == 0 {
+                    acc.keyboard();
+                    if slot.is_none() {
+                        acc.touch();
+                    }
+                }
+'''
+assert i_.count(old) == 1
+i_ = i_.replace(old, '''                if i == 0 {
+                    acc.keyboard();
+                    if slot.is_none() {
+                        acc.touch();
+                        if shake_trick(phone) {
+                            acc.buttons |= R;
+                        }
+                    }
+                }
+''')
+old = "#[cfg(not(target_os = \"ios\"))]\nunsafe fn phone_sample(_: &mut Phone, _: usize) -> Option<Motion> {\n"
+assert i_.count(old) == 1
+i_ = i_.replace(old, '''/// Shake the phone = R for 150 ms (trick on a ramp). See patch-heap.py.
+fn shake_trick(phone: &mut Phone) -> bool {
+    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE").map_or(true, |v| v.trim() != "0"));
+    static G: std::sync::LazyLock<f32> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE_G").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(2.0f32));
+    static ST: std::sync::Mutex<(Option<std::time::Instant>, Option<std::time::Instant>)> = std::sync::Mutex::new((None, None));
+    if !*ON || !cfg!(target_os = "ios") {
+        return false;
+    }
+    let Some(m) = (unsafe { phone_sample(phone, 0) }) else { return false };
+    let g = (m.accel[0] * m.accel[0] + m.accel[1] * m.accel[1] + m.accel[2] * m.accel[2]).sqrt();
+    let now = std::time::Instant::now();
+    let mut st = ST.lock().unwrap();
+    if g > *G && st.0.is_none_or(|t| now.duration_since(t).as_millis() > 400) {
+        st.0 = Some(now);
+        st.1 = Some(now + std::time::Duration::from_millis(150));
+        eprintln!("[input] shake ({g:.1} g): trick");
+    }
+    st.1.is_some_and(|u| now < u)
+}
+
+''' + old)
+im.write_text(i_)
+print("patched", im, "(shake = trick)")
+
+# ---- Adaptive frame rate, 20 to 30 fps, one fps at a time (replaces the 30/20/15 steps of "speed
+# first"). The game speed still comes first: while the game makes fewer than ~58 updates/s the drawn
+# frame rate goes down by 1 fps (min NX_FPS_MIN, default 20), and while it is at full speed it goes
+# back up by 1 fps (max 30), trying the highest rate again and again (it waits longer after each fall
+# back so it does not flicker). The frames drawn follow an even pattern for the rate: k*fps/60
+# changes. The pattern is fixed per frame number (start, fps) so the graphics thread, a few frames
+# behind, agrees with the game thread. NX_SKIP_MAX=1 (old setting) = always 30.
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+a = s_.index("static PLAN: Mutex<[(u64, u64); 2]> = Mutex::new([(0, 1), (0, 1)]);")
+b = s_.index("fn skip_frame() -> bool {")
+s_ = s_[:a] + '''/// Two plans (start frame, fps drawn): the current one and the previous one.
+static PLAN: Mutex<[(u64, u64); 2]> = Mutex::new([(0, 30), (0, 30)]);
+
+fn plan_n(f: u64) -> (u64, u64) {
+    let p = PLAN.lock().unwrap();
+    if f >= p[0].0 { p[0] } else { p[1] }
+}
+
+/// Is frame f drawn with the plan (start, fps)?
+fn plan_draws(f: u64, (start, fps): (u64, u64)) -> bool {
+    let k = f.saturating_sub(start);
+    k == 0 || k * fps / 60 != (k - 1) * fps / 60
+}
+
+/// Frames skipped at most in a row with this plan.
+fn plan_gap(fps: u64) -> u64 {
+    60u64.div_ceil(fps.max(1)) - 1
+}
+
+/// Called at each present (game thread): follows the time per game update and picks the fps.
+fn speed_decide() {
+    struct S { last: Option<std::time::Instant>, ema: f32, since: u32, need: u32, up_at: Option<std::time::Instant> }
+    static ST: Mutex<S> = Mutex::new(S { last: None, ema: 16.7, since: 0, need: 120, up_at: None });
+    static MIN: LazyLock<u64> = LazyLock::new(|| {
+        if std::env::var("NX_SKIP_MAX").is_ok_and(|v| v.trim() == "1") {
+            return 30;
+        }
+        std::env::var("NX_FPS_MIN").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(20u64).clamp(15, 30)
+    });
+    let now = std::time::Instant::now();
+    let mut st = ST.lock().unwrap();
+    if let Some(l) = st.last {
+        let dt = now.duration_since(l).as_secs_f32() * 1000.0;
+        if dt < 250.0 {
+            st.ema = st.ema * 0.95 + dt * 0.05;
+        }
+    }
+    st.last = Some(now);
+    st.since += 1;
+    let f = FRAME.load(Relaxed);
+    let fps = plan_n(f).1;
+    let new = if st.ema > 17.3 && st.since > 30 && fps > *MIN {
+        Some(fps - 1)
+    } else if fps < 30 && st.ema < 16.95 && st.since > st.need {
+        Some(fps + 1)
+    } else {
+        None
+    };
+    if let Some(m) = new {
+        if m > fps {
+            st.up_at = Some(now);
+        } else if st.up_at.is_some_and(|u| now.duration_since(u).as_secs() < 10) {
+            // went up and had to come back down soon: wait longer before the next try
+            st.need = (st.need * 2).min(1200);
+        } else {
+            st.need = 120;
+        }
+        {
+            let mut p = PLAN.lock().unwrap();
+            p[1] = p[0];
+            p[0] = (f + 2, m);
+        }
+        eprintln!("[speed] game at {:.0} updates/s: {} fps drawn", 1000.0 / st.ema, m);
+        st.since = 0;
+    }
+}
+
+''' + s_[b:]
+old = '''        let f = cur_frame();
+        let (start, n) = plan_n(f);
+        return f.saturating_sub(start) % (n + 1) != 0;
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''        let f = cur_frame();
+        return !plan_draws(f, plan_n(f));
+''')
+old = "    let nn = if *SPEED { plan_n(frame).1 } else { *N };\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, "    let nn = if *SPEED { plan_gap(plan_n(frame).1) } else { *N };\n")
+assert "AUTO_INTERVAL.store((m + 1)" not in s_
+dm.write_text(s_)
+print("patched", dm, "(adaptive 20-30 fps, 1 fps steps)")
