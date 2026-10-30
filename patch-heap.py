@@ -4941,8 +4941,8 @@ print("patched", cm, em, "(null index buffer draws skipped, from upstream)")
 
 # ---- Shake the phone = trick (like shaking a Joy-Con in the original game: on a ramp it does the
 # trick and gives the small boost). Touch controls only (player 1 without a controller): a shake
-# (more than 2 g on the phone) presses R for 150 ms, at most once every 0.4 s. NX_SHAKE=0 turns it off,
-# NX_SHAKE_G sets the strength needed (default 2.0).
+# (more than 2.6 g on the phone) presses R for 150 ms, at most once every 0.4 s. NX_SHAKE=0 turns it off,
+# NX_SHAKE_G sets the strength needed (default 2.6; 2.0 fired 20 times in one race just from holding the phone).
 im = pathlib.Path("crates/nxhost/src/input.rs")
 i_ = im.read_text()
 old = '''                if i == 0 {
@@ -4968,7 +4968,7 @@ assert i_.count(old) == 1
 i_ = i_.replace(old, '''/// Shake the phone = R for 150 ms (trick on a ramp). See patch-heap.py.
 fn shake_trick(phone: &mut Phone) -> bool {
     static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE").map_or(true, |v| v.trim() != "0"));
-    static G: std::sync::LazyLock<f32> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE_G").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(2.0f32));
+    static G: std::sync::LazyLock<f32> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE_G").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(2.6f32));
     static ST: std::sync::Mutex<(Option<std::time::Instant>, Option<std::time::Instant>)> = std::sync::Mutex::new((None, None));
     if !*ON || !cfg!(target_os = "ios") {
         return false;
@@ -5197,3 +5197,71 @@ assert g.count(old) == 1
 g = g.replace(old, "if left > 0 && left < 120 << 20 && crate::nvn::draw_prewarmed_left() > 0 {")
 gm.write_text(g)
 print("patched", st, gm, "(prewarmed pipelines let go only under 120 MB left)")
+
+# ---- Adaptive fps decides with the GPU wait, not only with speed comparisons. Oct 31 log (London Loop,
+# heat normal/fair): the game made 37-46 updates/s at 27-29 fps, waiting ~11 ms per update for the
+# GPU (fences), so drawing fewer frames would have helped, but comparing noisy 1.5 s speed samples kept
+# it near 29. Now: game below full speed AND waiting more than 2.5 ms per update on the GPU -> 1 fps
+# lower (2 if the wait is over 6 ms); game below full speed while hardly waiting on the GPU (the CPU is
+# the limit) -> back up, fewer frames would not help; game at full speed -> try 1 fps higher (unless that
+# was too slow in the last 30 s).
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = '''    let cb = ENGINE.lock().unwrap().syncs.remove(&sync);
+    match cb {
+        Some(cb) => {
+            crate::kernel::blocking(|| cb.0.waitUntilCompleted());
+            1
+        }
+        None => 0,
+    }
+}
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let cb = ENGINE.lock().unwrap().syncs.remove(&sync);
+    match cb {
+        Some(cb) => {
+            let t = std::time::Instant::now();
+            crate::kernel::blocking(|| cb.0.waitUntilCompleted());
+            GPU_WAIT_NS.fetch_add(t.elapsed().as_nanos() as u64, Relaxed);
+            1
+        }
+        None => 0,
+    }
+}
+
+/// Time the game spent waiting for the GPU (fences), for the adaptive fps.
+static GPU_WAIT_NS: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
+''')
+old = '''    let p = st.sum / st.n as f32;
+    (st.sum, st.n) = (0.0, 0);
+'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let p = st.sum / st.n as f32;
+    let wait = GPU_WAIT_NS.swap(0, Relaxed) as f32 / 1e6 / st.n as f32;
+    (st.sum, st.n) = (0.0, 0);
+''')
+old = '''    let new = if p <= FULL {
+        (fps < 30 && fresh(&st.rec, fps + 1).is_none_or(|u| u <= FULL)).then(|| fps + 1)
+    } else if fps < 30 && fresh(&st.rec, fps + 1).is_some_and(|u| p > u * 0.98) {
+        Some(fps + 1)
+    } else if fps > *MIN && fresh(&st.rec, fps - 1).is_none_or(|lo| lo < p * 0.98) {
+        Some(fps - 1)
+    } else {
+        None
+    };'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''    let new = if p <= FULL {
+        (fps < 30 && fresh(&st.rec, fps + 1).is_none_or(|u| u <= FULL)).then(|| fps + 1)
+    } else if wait > 2.5 && fps > *MIN {
+        Some(fps.saturating_sub(if wait > 6.0 { 2 } else { 1 }).max(*MIN))
+    } else if wait <= 2.5 && fps < 30 {
+        Some(fps + 1)
+    } else {
+        None
+    };''')
+old = '''        eprintln!("[speed] game at {:.1} updates/s with {} fps drawn: now {} fps", 1000.0 / p, fps, m);'''
+assert s_.count(old) == 1
+s_ = s_.replace(old, '''        eprintln!("[speed] game at {:.1} updates/s with {} fps drawn (GPU wait {:.1} ms per update): now {} fps", 1000.0 / p, fps, wait, m);''')
+dm.write_text(s_)
+print("patched", dm, "(adaptive fps follows the GPU wait)")

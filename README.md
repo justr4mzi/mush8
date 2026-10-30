@@ -96,16 +96,18 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   time** (30, 29, 28 ... down to `NX_FPS_MIN`, default 20), **but only if that really makes the game faster**:
   the game speed is measured over ~1.5 s at each rate; a lower rate is kept only if the game got at least 2 %
   faster, otherwise it goes back up (Oct 30: the game made 56-59 updates/s at 30 and at 20 fps alike, and the
-  first version sat at 20 fps for nothing). At full speed it tries one fps higher (results kept 30 s).
+  first version sat at 20 fps for nothing). It goes down only while the game waits for the GPU (more than
+  2.5 ms per update, 2 fps at a time over 6 ms); if the game is slow without waiting for the GPU, the CPU is the
+  limit and fewer frames would not help, so it goes back up. At full speed it tries one fps higher.
   Frames drawn are spread evenly. `[speed] game at … updates/s with N fps drawn: now M fps` in the log.
 - **Frame pacing catches up**: skipped frames keep a fixed 60 Hz grid; after a late frame (GPU fence wait,
   slow update) the next ones don't sleep until the game is back on time, instead of losing that time for
   good (the game averaged 55-58 updates/s with the CPU mostly idle).
   `NX_SKIP_MAX=1` = always 30 fps. (Oct 22: steps of 30/20/15 fps; before that the "smart 30 lock" drew
   every frame when the game was slow and slowed it down further.)
-- **Shake = trick**: with the touch controls, shaking the phone (more than 2 g) presses R for 150 ms: on a
+- **Shake = trick**: with the touch controls, shaking the phone (more than 2.6 g) presses R for 150 ms: on a
   ramp it does the trick and its small boost, like shaking a Joy-Con in the original game. `NX_SHAKE=0` off,
-  `NX_SHAKE_G` strength (default 2.0). `[input] shake` in the log.
+  `NX_SHAKE_G` strength (default 2.6). `[input] shake` in the log.
 - Texture change checks every 2 frames instead of every frame.
 - **GPU profile** (with `NX_FPS`): `[prof] gpu passes per drawn frame` = render passes, attachments loaded from memory and MB loaded/stored per drawn frame (an A16 is a tile GPU: each pass moves its attachments through memory), and how many passes use the same targets as the pass just before (candidates to merge).
 - **Null index buffers** (from upstream, found by 184904): indexed draws with a null or overflowing index buffer are skipped instead of making the GPU read address 0 (`[nvn] skipping draw …`, logged once).
@@ -200,7 +202,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_MEM_LIMIT_MB` | 3070 | Memory limit the trims assume (0 = only what iOS says) |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
-| `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.0 | Shake the phone = trick (R), strength needed in g |
+| `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |
 | `NX_AUTOSKIP` | off | `1` = skip frames only when late |
 | `NX_HASH_EVERY` | 2 | Check textures for changes every N frames (1 to 30) |
 | `NX_HANDHELD` | 1 | Handheld (720p) / docked — *launcher wins* |
