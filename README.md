@@ -80,6 +80,8 @@ Any browser can be a controller too : turn "Remote controller" and "Browser cont
 
 On macOS, if your controller or a part of it (for example rumble) does not work, set "Gamepad driver" to SDL in the launcher
 
+On iOS, extra options (fps log, language, 60 fps split screen, 4K...) can be set in an `env.txt` file, see [docs/env.md](docs/env.md)
+
 ## Mods
 Mush8 loads mods from `mods` inside the selected game files folder on macOS, or the app's Documents folder on iOS. Open Game data → Mods → Customize on macOS, or the launcher's Mods section on iOS. Mods load in name order; later mods win file conflicts.
 
