@@ -5318,3 +5318,43 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, "    {\n        archive.0.serializeToURL_error(")
 sp.write_text(s_)
 print("patched", sp, "(archive writer no longer blocks lookups)")
+
+# ---- Track starts stalled 5-15 s and buttons answered 20 s late (Oct 31 log, Cnsw_41: "no frame for
+# 6 s", shader-0 inside Metal's archive lookup holding ARCHIVE_LOCK while shader-1..3 waited on it, the
+# render thread waiting for those pipelines). A lookup of a pipeline that is in the archive still does
+# work in the GPU driver (up to seconds each at a track start), and the lock made them one at a time.
+# The lock was the first fix of the OS_dispatch_data crash; the real cause (compiling a miss with the
+# archives still attached) is fixed since, and the archive writer works on its own archives, so the
+# lookups now run in parallel. NX_ARCHIVE_LOCK=1 puts the lock back.
+sp = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+s_ = sp.read_text()
+old = "let _l = ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner());"
+n = s_.count(old)
+assert n == 3, n
+s_ = s_.replace(old, "let _l = archive_guard();")
+old = "static ARCHIVE_LOCK: Mutex<()> = Mutex::new(());\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + """
+/// The archive lock, only with NX_ARCHIVE_LOCK=1 (see patch-heap.py: lookups run in parallel).
+fn archive_guard() -> Option<std::sync::MutexGuard<'static, ()>> {
+    static ON: LazyLock<bool> = LazyLock::new(|| std::env::var("NX_ARCHIVE_LOCK").is_ok_and(|v| v.trim() == "1"));
+    (*ON).then(|| ARCHIVE_LOCK.lock().unwrap_or_else(|e| e.into_inner()))
+}
+""")
+sp.write_text(s_)
+print("patched", sp, "(archive lookups in parallel)")
+
+# ---- Menu stutter (Oct 31 log: the mode menu ran at 35-48 updates/s with a 230-320 ms frame every
+# second, right after "[movie] video decoder is late"). When the menu's preview video decoder was
+# behind, the game waited up to 250 ms for its next frame, on every frame it was late. Now it waits at
+# most 8 ms (NX_MOVIE_WAIT_MS) and shows the previous video frame: the video may skip a frame, the
+# menu stays smooth.
+vm = pathlib.Path("crates/nxhost/src/movie/video.rs")
+v = vm.read_text()
+old = "        let r = self.worker.frames.recv_timeout(std::time::Duration::from_millis(250));\n"
+assert v.count(old) == 1
+v = v.replace(old, """        static WAIT: LazyLock<u64> = LazyLock::new(|| std::env::var("NX_MOVIE_WAIT_MS").ok().and_then(|s| s.trim().parse().ok()).unwrap_or(8));
+        let r = self.worker.frames.recv_timeout(std::time::Duration::from_millis(*WAIT));
+""")
+vm.write_text(v)
+print("patched", vm, "(menu videos wait 8 ms at most)")

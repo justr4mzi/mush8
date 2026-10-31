@@ -112,6 +112,12 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **Archive writer does not block the game**: the device archive writer compiles pipelines into its own new
   archive file without the archive lock; only the game's lookups take it (Oct 31: track loads stalled up to
   15 s, "no frame for 6 s", while the writer held the lock during its compiles).
+- **Archive lookups in parallel**: pipelines found in the archives are created on all shader threads at once
+  (Oct 31: at a track start one lookup at a time under a lock, 5-15 s stalls, buttons answered 20 s late).
+  `NX_ARCHIVE_LOCK=1` puts the lock back.
+- **Smooth menus with preview videos**: when the menu video decoder is behind, the game waits at most 8 ms
+  (`NX_MOVIE_WAIT_MS`, was 250 ms) and shows the previous video frame (the mode menu had a 250 ms hitch
+  every second).
 - **GPU: relaxed shader math**: shaders are compiled with Metal's `relaxed` math mode (Apple's default on Apple
   silicon; still honors Inf/NaN) instead of `safe`, so the compiler can simplify floating-point math. Position
   invariance stays on. The shader cache key changed with it (every shader compiled again once).
@@ -209,6 +215,8 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_SPEED_FIRST` | 1 | `0` = plain 30 fps lock (1 frame out of 2 even when the game is slow) |
 | `NX_MEM_LIMIT_MB` | 3070 | Memory limit the trims assume (0 = only what iOS says) |
 | `NX_MAX_ANISO` | 4 | Highest anisotropic filtering (the game asks up to 16) |
+| `NX_ARCHIVE_LOCK` | 0 | `1` = one pipeline archive lookup at a time (old behaviour) |
+| `NX_MOVIE_WAIT_MS` | 8 | Longest wait for a menu video frame before showing the previous one |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |
