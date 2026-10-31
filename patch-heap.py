@@ -5358,3 +5358,55 @@ v = v.replace(old, """        static WAIT: LazyLock<u64> = LazyLock::new(|| std:
 """)
 vm.write_text(v)
 print("patched", vm, "(menu videos wait 8 ms at most)")
+
+# ---- Graphics thread profile. In the Oct 31 race the graphics thread spent ~12 ms per game update
+# turning the game's commands into Metal (more than the GPU's 8 ms), and the game waits for it. To
+# know which commands cost that time, the replay loop adds the time of each command to its kind, and
+# every 10 s the log shows the top kinds: "[prof] graphics thread (10 s): Draw 61 %, ...".
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+NAMES = "SetRenderTargets ClearColor ClearDepthStencil Call Program VertexAttribs VertexStreams VertexBuffer Uniform Texture Storage UpdateUniform ColorState ChannelMask Blend DepthStencil Polygon Viewport Scissor BlendColor StencilRef StencilValueMask StencilMask TexturePool SamplerPool DepthClamp CopyBufferToTexture CopyTextureToTexture CopyTextureToBuffer ClearTexture RenderEnable Dispatch RasterizerDiscard ReportCounter DepthRange PolygonOffset Draw".split()
+arms = "\n".join(f"        Cmd::{n} {{ .. }} => {i}," for i, n in enumerate(NAMES))
+old = "    fn run(&mut self, cmds: &[Cmd], depth: usize) {\n        for c in cmds {\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """    fn run(&mut self, cmds: &[Cmd], depth: usize) {
+        let mut last: Option<(usize, std::time::Instant)> = None;
+        for c in cmds {
+            let now = std::time::Instant::now();
+            if let Some((k, t)) = last.take() {
+                CMD_NS[k].fetch_add(now.duration_since(t).as_nanos() as u64, Relaxed);
+            }
+            let k = cmd_kind(c);
+            if k != 3 {
+                last = Some((k, now));
+            }
+""")
+# flush the last command's time at the end of run()
+old2 = "    fn ensure_pass(&mut self) -> Result<(), &'static str> {\n"
+assert s_.count(old2) == 1
+s_ = s_.replace(old2, old2, 1)
+s_ = s_.replace("pub fn finish() {\n", f"""/// Time spent per command kind on the graphics thread (see patch-heap.py).
+static CMD_NS: [std::sync::atomic::AtomicU64; {len(NAMES)}] = [const {{ std::sync::atomic::AtomicU64::new(0) }}; {len(NAMES)}];
+const CMD_NAMES: [&str; {len(NAMES)}] = {NAMES!r};
+
+fn cmd_kind(c: &Cmd) -> usize {{
+    match c {{
+{arms}
+    }}
+}}
+
+fn cmd_report() -> String {{
+    let v: Vec<(usize, u64)> = CMD_NS.iter().map(|a| a.swap(0, Relaxed)).enumerate().collect();
+    let total: u64 = v.iter().map(|(_, n)| n).sum::<u64>().max(1);
+    let mut v = v;
+    v.sort_by(|a, b| b.1.cmp(&a.1));
+    v.iter().take(6).map(|(i, n)| format!("{{}} {{}} % ({{:.0}} ms)", CMD_NAMES[*i], n * 100 / total, *n as f64 / 1e6)).collect::<Vec<_>>().join(", ")
+}}
+
+pub fn finish() {{
+""".replace("'", '"'), 1)
+old = '                eprintln!("[prof] slowest graphics calls (10 s): {}", super::top_calls(6));\n'
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + '                eprintln!("[prof] graphics thread (10 s): {}", cmd_report());\n')
+dm.write_text(s_)
+print("patched", dm, "(graphics thread profile per command kind)")
