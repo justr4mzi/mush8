@@ -5677,3 +5677,68 @@ t = t.replace(old, """    let mut held = p.held.values().fold(0, |m, b| m | b);
 """)
 tc.write_text(t)
 print("patched", tc, "(L + R + stick = stick press)")
+
+# Optional anti-aliasing (NX_AA=1 in env.txt, off by default): FXAA on the game
+# image while it is scaled to the screen, plus a light sharpening so the
+# 720p picture looks less jagged/pixelated. Costs about 0.3 ms of GPU per frame.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = '''fragment float4 fs(V v [[stage_in]], constant P& p [[buffer(0)]], texture2d<float> t [[texture(0)]], sampler s [[sampler(0)]]) {
+    return float4(t.sample(s, clamp(v.uv, p.lo, p.hi)).rgb, 1.0);
+}
+'''
+assert g.count(old) == 1, "present fs not found"
+g = g.replace(old, old + '''"#;\n\nconst AA_MSL: &str = r#"\nstatic float luma(float3 c) { return dot(c, float3(0.299, 0.587, 0.114)); }
+static float3 tap(texture2d<float> t, sampler s, constant P& p, float2 q) { return t.sample(s, clamp(q, p.lo, p.hi)).rgb; }
+fragment float4 fs_aa(V v [[stage_in]], constant P& p [[buffer(0)]], texture2d<float> t [[texture(0)]], sampler s [[sampler(0)]]) {
+    float2 uv = clamp(v.uv, p.lo, p.hi);
+    float2 px = 1.0 / float2(t.get_width(), t.get_height());
+    float3 m = tap(t, s, p, uv);
+    float3 nw = tap(t, s, p, uv + float2(-1.0, -1.0) * px);
+    float3 ne = tap(t, s, p, uv + float2(1.0, -1.0) * px);
+    float3 sw = tap(t, s, p, uv + float2(-1.0, 1.0) * px);
+    float3 se = tap(t, s, p, uv + float2(1.0, 1.0) * px);
+    float lm = luma(m), lnw = luma(nw), lne = luma(ne), lsw = luma(sw), lse = luma(se);
+    float lmin = min(lm, min(min(lnw, lne), min(lsw, lse)));
+    float lmax = max(lm, max(max(lnw, lne), max(lsw, lse)));
+    float3 c = m;
+    if (lmax - lmin > max(0.0312, lmax * 0.125)) {
+        float2 dir = float2(-((lnw + lne) - (lsw + lse)), (lnw + lsw) - (lne + lse));
+        float reduce = max((lnw + lne + lsw + lse) * (0.25 / 8.0), 1.0 / 128.0);
+        float k = 1.0 / (min(abs(dir.x), abs(dir.y)) + reduce);
+        dir = clamp(dir * k, -8.0, 8.0) * px;
+        float3 a = 0.5 * (tap(t, s, p, uv + dir * (1.0 / 3.0 - 0.5)) + tap(t, s, p, uv + dir * (2.0 / 3.0 - 0.5)));
+        float3 b = a * 0.5 + 0.25 * (tap(t, s, p, uv - dir * 0.5) + tap(t, s, p, uv + dir * 0.5));
+        float lb = luma(b);
+        c = (lb < lmin || lb > lmax) ? a : b;
+    } else {
+        float3 blur = (nw + ne + sw + se) * 0.25;
+        float3 lo = min(m, min(min(nw, ne), min(sw, se)));
+        float3 hi = max(m, max(max(nw, ne), max(sw, se)));
+        c = clamp(m + (m - blur) * 0.35, lo, hi);
+    }
+    return float4(c, 1.0);
+}
+''')
+old = '''    let fs = lib.newFunctionWithName(&NSString::from_str("fs")).unwrap();'''
+assert g.count(old) == 1, "present fs lookup not found"
+g = g.replace(old, '''    let mut aa = std::env::var("NX_AA").is_ok_and(|v| v.trim() == "1");
+    if aa {
+        eprintln!("[gfx] anti-aliasing on (NX_AA=1)");
+    }
+    let lib = if aa {
+        // compiled only when asked; any error falls back to the normal picture
+        match device.newLibraryWithSource_options_error(&NSString::from_str(&(PRESENT_MSL.to_owned() + AA_MSL)), None) {
+            Ok(l) => l,
+            Err(e) => {
+                eprintln!("[gfx] anti-aliasing shader failed, off: {e:?}");
+                aa = false;
+                lib
+            }
+        }
+    } else {
+        lib
+    };
+    let fs = lib.newFunctionWithName(&NSString::from_str(if aa { "fs_aa" } else { "fs" })).unwrap();''')
+gm.write_text(g)
+print("patched", gm, "(NX_AA)")
