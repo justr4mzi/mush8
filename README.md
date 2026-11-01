@@ -90,7 +90,8 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   ~45 game fps instead of ~36 on heavy scenes.
 - **30 fps lock (frameskip)**: one frame out of two is drawn, evenly paced, while the game still updates
   at 60 Hz (multiplayer timing unchanged). Render targets drawn rarely are never skipped.
-- **Speed first, adaptive 20-30 fps** (on with the 30 fps lock, `NX_SPEED_FIRST=0` for the plain lock): the
+- **Speed first, adaptive 20-60 fps** (Nov 1: above 30 too, up to `NX_FPS_MAX`, default 60, 2 fps at a time,
+  as long as the race stays at full speed; above 30 fps frames are shown at the next 1/60 s) (on with the 30 fps lock, `NX_SPEED_FIRST=0` for the plain lock): the
   game's own speed comes before the frame rate (MK8 moves the race one step per update: 30 updates/s = slow
   motion at 50 %). While the game makes fewer than ~58 updates/s, the drawn frame rate goes down **1 fps at a
   time** (30, 29, 28 ... down to `NX_FPS_MIN`, default 20), **but only if that really makes the game faster**:
@@ -218,6 +219,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_MAX_ANISO` | 4 | Highest anisotropic filtering (the game asks up to 16) |
 | `NX_ARCHIVE_LOCK` | 0 | `1` = one pipeline archive lookup at a time (old behaviour) |
 | `NX_MOVIE_WAIT_MS` | 8 | Longest wait for a menu video frame before showing the previous one |
+| `NX_FPS_MAX` | 60 | Speed first: highest frame rate drawn (20-60; `30` = never above 30) |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |

@@ -5410,3 +5410,27 @@ assert s_.count(old) == 1
 s_ = s_.replace(old, old + '                eprintln!("[prof] graphics thread (10 s): {}", cmd_report());\n')
 dm.write_text(s_)
 print("patched", dm, "(graphics thread profile per command kind)")
+
+# ---- Adaptive fps up to 60 (Nov 1 tests: with the 30 fps lock the race ran at 59 updates/s, 98 % speed,
+# 24-26 fps shown; with the lock off, 50 fps shown but the game at 50 updates/s, 83 % speed, and it
+# felt smoother). Now the same controller goes above 30 too, up to NX_FPS_MAX (default 60), 2 fps at a
+# time above 30, as long as the game stays at full speed: as many frames as the phone can draw without
+# slowing the race. Above 30 fps the frames are shown at the next 1/60 s instead of 1/30 s.
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+rep = [
+    ("rec: [Option<(f32, std::time::Instant)>; 31] }\n    static ST: Mutex<S> = Mutex::new(S { last: None, sum: 0.0, n: 0, rec: [None; 31] });",
+     "rec: [Option<(f32, std::time::Instant)>; 61] }\n    static ST: Mutex<S> = Mutex::new(S { last: None, sum: 0.0, n: 0, rec: [None; 61] });\n    static MAX: LazyLock<u64> = LazyLock::new(|| {\n        if std::env::var(\"NX_SKIP_MAX\").is_ok_and(|v| v.trim() == \"1\") {\n            return 30;\n        }\n        std::env::var(\"NX_FPS_MAX\").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(60u64).clamp(20, 60)\n    });"),
+    ("let fresh = |r: &[Option<(f32, std::time::Instant)>; 31], k: u64|", "let fresh = |r: &[Option<(f32, std::time::Instant)>; 61], k: u64|"),
+    ("        (fps < 30 && fresh(&st.rec, fps + 1).is_none_or(|u| u <= FULL)).then(|| fps + 1)\n",
+     "        let up = (fps + if fps >= 30 { 2 } else { 1 }).min(*MAX);\n        (up > fps && fresh(&st.rec, up).is_none_or(|u| u <= FULL)).then_some(up)\n"),
+    ("        Some(fps.saturating_sub(if wait > 6.0 { 2 } else { 1 }).max(*MIN))\n",
+     "        Some(fps.saturating_sub(if wait > 6.0 || fps > 30 { 2 } else { 1 }).max(*MIN))\n"),
+    ("            pl[0] = (f + 2, m);\n        }\n        eprintln!(\"[speed] game at",
+     "            pl[0] = (f + 2, m);\n        }\n        gfx::AUTO_INTERVAL.store(if m > 30 { 1 } else { 2 }, Relaxed);\n        eprintln!(\"[speed] game at"),
+]
+for o, n in rep:
+    assert s_.count(o) == 1, o[:60]
+    s_ = s_.replace(o, n)
+dm.write_text(s_)
+print("patched", dm, "(adaptive fps up to 60)")
