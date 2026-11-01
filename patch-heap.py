@@ -5472,3 +5472,19 @@ s_ = s_.replace(old, old + """            {
 """)
 dm.write_text(s_)
 print("patched", dm, "(submits split into command buffers every 80 draws)")
+
+# ---- The speed the adaptive fps protects is a setting: NX_SPEED_TARGET = game updates per second
+# counted as "full speed" (default 57, i.e. 95 %; 60 = only exact full speed, 50 = more frames drawn,
+# race a bit slower when the phone can't keep up).
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = "    const FULL: f32 = 17.4; // ms per update: 57.5 updates/s and more = full speed\n"
+assert s_.count(old) == 1
+s_ = s_.replace(old, """    static TARGET: LazyLock<f32> = LazyLock::new(|| std::env::var("NX_SPEED_TARGET").ok().and_then(|v| v.trim().parse::<f32>().ok()).unwrap_or(57.0).clamp(30.0, 60.0));
+    let full: f32 = 1000.0 / *TARGET + 0.05; // ms per update counted as full speed
+""")
+n = s_.count("FULL")
+s_ = s_.replace("<= FULL", "<= full")
+assert "FULL" not in s_.split("fn speed_decide")[1].split("fn skip_frame")[0], "FULL left"
+dm.write_text(s_)
+print("patched", dm, "(NX_SPEED_TARGET)")
