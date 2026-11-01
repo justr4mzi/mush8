@@ -5434,3 +5434,41 @@ for o, n in rep:
     s_ = s_.replace(o, n)
 dm.write_text(s_)
 print("patched", dm, "(adaptive fps up to 60)")
+
+# ---- GPU starts earlier: one game submit is split into several Metal command buffers. The GPU is
+# only ~50 % busy (Nov 1: 8 ms of GPU per game update at 59 updates/s) yet the game waits 5-8 ms per
+# update for its fences: the GPU could only start once the graphics thread had encoded the WHOLE submit.
+# Now, between render passes (no encoder open), every NX_SPLIT_DRAWS draws (default 80, 0 = off) the
+# command buffer is committed and a new one started, so the GPU works on the first part while the rest
+# is encoded (MacNativeGames does the same with 60-75 draws). Same commands, same order, same queue.
+dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
+s_ = dm.read_text()
+old = """            let k = cmd_kind(c);
+            if k != 3 {
+                last = Some((k, now));
+            }
+"""
+assert s_.count(old) == 1
+s_ = s_.replace(old, old + """            {
+                static SPLIT_AT: LazyLock<u32> = LazyLock::new(|| std::env::var("NX_SPLIT_DRAWS").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(80));
+                static SINCE: std::sync::atomic::AtomicU32 = std::sync::atomic::AtomicU32::new(0);
+                if *SPLIT_AT > 0 && self.pass.is_none() && SINCE.load(Relaxed) >= *SPLIT_AT {
+                    if let Some(next) = gfx::gpu().queue.0.commandBuffer() {
+                        let done = std::mem::replace(&mut self.cb, next);
+                        done.commit();
+                        if prof_on() {
+                            let mut v = GPU_CBS.lock().unwrap();
+                            if v.len() < 2000 {
+                                v.push(Shared(done));
+                            }
+                        }
+                    }
+                    SINCE.store(0, Relaxed);
+                }
+                if k == 36 {
+                    SINCE.fetch_add(1, Relaxed);
+                }
+            }
+""")
+dm.write_text(s_)
+print("patched", dm, "(submits split into command buffers every 80 draws)")

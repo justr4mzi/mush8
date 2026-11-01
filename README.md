@@ -113,6 +113,9 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
 - **Archive writer does not block the game**: the device archive writer compiles pipelines into its own new
   archive file without the archive lock; only the game's lookups take it (Oct 31: track loads stalled up to
   15 s, "no frame for 6 s", while the writer held the lock during its compiles).
+- **GPU starts earlier**: a game submit is split into several Metal command buffers, every `NX_SPLIT_DRAWS` draws
+  (default 80, `0` = off) between render passes, so the GPU works on the first part while the rest is encoded
+  (the GPU was ~50 % busy yet the game waited 5-8 ms per update for it).
 - **Archive lookups in parallel**: pipelines found in the archives are created on all shader threads at once
   (Oct 31: at a track start one lookup at a time under a lock, 5-15 s stalls, buttons answered 20 s late).
   `NX_ARCHIVE_LOCK=1` puts the lock back.
@@ -220,6 +223,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_ARCHIVE_LOCK` | 0 | `1` = one pipeline archive lookup at a time (old behaviour) |
 | `NX_MOVIE_WAIT_MS` | 8 | Longest wait for a menu video frame before showing the previous one |
 | `NX_FPS_MAX` | 60 | Speed first: highest frame rate drawn (20-60; `30` = never above 30) |
+| `NX_SPLIT_DRAWS` | 80 | Commit the GPU work every N draws inside a submit (0 = one command buffer per submit) |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |
