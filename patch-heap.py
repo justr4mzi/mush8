@@ -5661,3 +5661,19 @@ u = u.replace(old, '''        if wait && !super::shaders::sync_mode() && super::
 ''')
 st.write_text(u)
 print("patched", st)
+
+# Touch controls: no stick button, so MK8D's LAN Play menu (hold L + R, press
+# the left stick) could not be opened without a controller. Now: hold L and R
+# and touch the stick = left stick press.
+tc = pathlib.Path("crates/nxhost/src/gfx/touch.rs")
+t = tc.read_text()
+old = "    let held = p.held.values().fold(0, |m, b| m | b);\n    input::TOUCH_BUTTONS.store(held, Relaxed);\n"
+assert t.count(old) == 1, "touch publish not found"
+t = t.replace(old, """    let mut held = p.held.values().fold(0, |m, b| m | b);
+    if held & L != 0 && held & R != 0 && p.stick.touch.is_some() {
+        held |= input::STICK_L; // L + R + touch the stick: LAN Play menu
+    }
+    input::TOUCH_BUTTONS.store(held, Relaxed);
+""")
+tc.write_text(t)
+print("patched", tc, "(L + R + stick = stick press)")
