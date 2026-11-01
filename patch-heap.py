@@ -5488,3 +5488,172 @@ s_ = s_.replace("<= FULL", "<= full")
 assert "FULL" not in s_.split("fn speed_decide")[1].split("fn skip_frame")[0], "FULL left"
 dm.write_text(s_)
 print("patched", dm, "(NX_SPEED_TARGET)")
+
+# Bounded compile wait (NX_COMPILE_WAIT_MS, default 250). A pipeline or shader
+# first needed on a new render target used to block the render thread until it
+# was built. With the phone's RAM full (1-2 GB compressed) one build took 23 s
+# to 175 s on Rainbow Road and the whole game froze for 29 s twice. Now such a
+# compile starts at once on its own thread, the frame waits at most 250 ms for
+# it, then goes on without it (that effect pops in when ready; the same compile
+# is never waited for twice).
+sh = pathlib.Path("crates/nxhost/src/nvn/draw/shaders.rs")
+w = sh.read_text()
+old = "pub fn sync_mode() -> bool {\n"
+assert w.count(old) == 1, "sync_mode not found"
+w = w.replace(old, '''pub fn compile_wait_ms() -> u128 {
+    static W: LazyLock<u128> = LazyLock::new(|| std::env::var("NX_COMPILE_WAIT_MS").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(250));
+    *W
+}
+
+/// Render thread wants `key` for a new render target: may it keep waiting?
+pub fn may_wait<K: std::hash::Hash>(key: &K, t0: &mut Option<std::time::Instant>) -> bool {
+    use std::hash::{BuildHasher, Hasher};
+    static GAVE_UP: LazyLock<Mutex<std::collections::HashSet<u64>>> = LazyLock::new(Default::default);
+    static SEED: LazyLock<std::collections::hash_map::RandomState> = LazyLock::new(Default::default);
+    let mut h = SEED.build_hasher();
+    key.hash(&mut h);
+    let h = h.finish();
+    let t = *t0.get_or_insert_with(std::time::Instant::now);
+    if GAVE_UP.lock().unwrap().contains(&h) {
+        return false;
+    }
+    if t.elapsed().as_millis() >= compile_wait_ms() {
+        GAVE_UP.lock().unwrap().insert(h);
+        eprintln!("[gfx] compile for a new render target still running after {} ms: the game goes on, it pops in when ready", t.elapsed().as_millis());
+        return false;
+    }
+    true
+}
+
+/// Start a job right now on its own thread (not behind the queue).
+pub fn spawn_urgent(f: Box<dyn FnOnce() + Send>) {
+    let _ = std::thread::Builder::new().name("shader-urgent".into()).spawn(move || objc2::rc::autoreleasepool(|_| f()));
+}
+
+''' + old)
+old = '''            if !wait {
+                return Lookup::Pending;
+            }
+            crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+        }
+'''
+assert w.count(old) == 1, "shader wait loop not found"
+w = w.replace(old, '''            if !wait || !may_wait(&key, &mut waited) {
+                return Lookup::Pending;
+            }
+            crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+        }
+''')
+old = '''        let key = (s.hash, extra_outputs, uint_targets, sint_targets);
+        loop {
+'''
+assert w.count(old) == 1, "shader key not found"
+w = w.replace(old, '''        let key = (s.hash, extra_outputs, uint_targets, sint_targets);
+        let mut waited: Option<std::time::Instant> = None;
+        loop {
+''')
+old = '''        if wait || sync_mode() {
+            let t0 = std::time::Instant::now();
+            let r = crate::kernel::blocking(|| compile(&blob, compute, extra_outputs, uint_targets, sint_targets, hash));
+'''
+assert w.count(old) == 1, "shader sync compile not found"
+w = w.replace(old, '''        if wait && !sync_mode() && compile_wait_ms() < 100_000 {
+            self.pending.insert(key);
+            spawn_urgent(Box::new(move || {
+                let r = compile(&blob, compute, extra_outputs, uint_targets, sint_targets, hash);
+                DONE.lock().unwrap().push((key, r));
+            }));
+            let t0 = std::time::Instant::now();
+            loop {
+                for (k, r) in std::mem::take(&mut *DONE.lock().unwrap()) {
+                    self.pending.remove(&k);
+                    self.funcs.insert(k, r);
+                }
+                if let Some(f) = self.funcs.get(&key) {
+                    if t0.elapsed().as_millis() >= 5 {
+                        eprintln!("[shader] {hash:016x}: compiled while the render thread waited (new render target), {} ms", t0.elapsed().as_millis());
+                    }
+                    return f.clone().map_or(Lookup::Failed, Lookup::Ready);
+                }
+                if !may_wait(&key, &mut waited) {
+                    return Lookup::Pending;
+                }
+                crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+            }
+        }
+        if wait || sync_mode() {
+            let t0 = std::time::Instant::now();
+            let r = crate::kernel::blocking(|| compile(&blob, compute, extra_outputs, uint_targets, sint_targets, hash));
+''')
+sh.write_text(w)
+print("patched", sh)
+
+st = pathlib.Path("crates/nxhost/src/nvn/draw/state.rs")
+u = st.read_text()
+old = '''            if !wait {
+                return Err("pipeline compiling");
+            }
+            crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+        }
+        let (cs, cm, blend) = (st.color_state, st.channel_mask, st.blend);
+'''
+assert u.count(old) == 1, "pipeline wait loop not found"
+u = u.replace(old, '''            if !wait || !super::shaders::may_wait(&key, &mut waited) {
+                return Err("pipeline compiling");
+            }
+            crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+        }
+        let (cs, cm, blend) = (st.color_state, st.channel_mask, st.blend);
+''')
+old = '''            if enabled {
+                key.push(st.blend[i]);
+            }
+        }
+        loop {
+'''
+assert u.count(old) == 1, "pipeline key end not found"
+u = u.replace(old, '''            if enabled {
+                key.push(st.blend[i]);
+            }
+        }
+        let mut waited: Option<std::time::Instant> = None;
+        loop {
+''')
+old = '''        if wait || super::shaders::sync_mode() {
+            let t0 = std::time::Instant::now();
+            DEMAND.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+'''
+assert u.count(old) == 1, "pipeline sync build not found"
+u = u.replace(old, '''        if wait && !super::shaders::sync_mode() && super::shaders::compile_wait_ms() < 100_000 {
+            self.pending.insert(key);
+            DEMAND.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+            let n2 = name.clone();
+            super::shaders::spawn_urgent(Box::new(move || {
+                let p = build_pipeline(&jvs, &jfs, &jt, cs, cm, &blend, &n2);
+                DONE.lock().unwrap().push((key, p));
+                DEMAND.fetch_sub(1, std::sync::atomic::Ordering::SeqCst);
+            }));
+            let t0 = std::time::Instant::now();
+            loop {
+                for (k, p) in std::mem::take(&mut *DONE.lock().unwrap()) {
+                    self.pending.remove(&k);
+                    self.pipelines.insert(k, p);
+                }
+                if let Some(p) = self.pipelines.get(&key) {
+                    if t0.elapsed().as_millis() >= 5 {
+                        eprintln!("[gfx] pipeline {name}: built while the render thread waited (new render target), {} ms", t0.elapsed().as_millis());
+                    }
+                    return p.clone().ok_or("pipeline failed");
+                }
+                if !super::shaders::may_wait(&key, &mut waited) {
+                    return Err("pipeline compiling");
+                }
+                crate::kernel::blocking(|| std::thread::sleep(std::time::Duration::from_millis(1)));
+            }
+        }
+        if wait || super::shaders::sync_mode() {
+            let t0 = std::time::Instant::now();
+            DEMAND.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+''')
+st.write_text(u)
+print("patched", st)
