@@ -5480,7 +5480,7 @@ dm = pathlib.Path("crates/nxhost/src/nvn/draw/mod.rs")
 s_ = dm.read_text()
 old = "    const FULL: f32 = 17.4; // ms per update: 57.5 updates/s and more = full speed\n"
 assert s_.count(old) == 1
-s_ = s_.replace(old, """    static TARGET: LazyLock<f32> = LazyLock::new(|| std::env::var("NX_SPEED_TARGET").ok().and_then(|v| v.trim().parse::<f32>().ok()).unwrap_or(57.0).clamp(30.0, 60.0));
+s_ = s_.replace(old, """    static TARGET: LazyLock<f32> = LazyLock::new(|| std::env::var("NX_SPEED_TARGET").ok().and_then(|v| v.trim().parse::<f32>().ok()).unwrap_or(if matches!(std::env::var("NX_NET").as_deref(), Ok("lan" | "lanplay" | "wireless")) || std::env::var_os("NX_LAN").is_some() { 58.0 } else { 57.0 }).clamp(30.0, 60.0));
     let full: f32 = 1000.0 / *TARGET + 0.05; // ms per update counted as full speed
 """)
 n = s_.count("FULL")
@@ -5527,7 +5527,11 @@ pub fn may_wait<K: std::hash::Hash>(key: &K, t0: &mut Option<std::time::Instant>
 
 /// Start a job right now on its own thread (not behind the queue).
 pub fn spawn_urgent(f: Box<dyn FnOnce() + Send>) {
-    let _ = std::thread::Builder::new().name("shader-urgent".into()).spawn(move || objc2::rc::autoreleasepool(|_| f()));
+    let _ = std::thread::Builder::new().name("shader-urgent".into()).spawn(move || {
+        // background priority, like shader-N: the game thread keeps its core
+        unsafe { libc::pthread_set_qos_class_self_np(libc::qos_class_t::QOS_CLASS_UTILITY, 0) };
+        objc2::rc::autoreleasepool(|_| f())
+    });
 }
 
 ''' + old)

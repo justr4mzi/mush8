@@ -78,7 +78,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   15 min, only when there are new ones): before, a game that ended early lost the unwritten ones and compiled them again.
 - **Failed pipelines are retried** after 1 s and 3 s (the iOS shader compiler sometimes dies mid-build)
   instead of staying black until the next launch.
-- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10167 pipelines (Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
+- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10387 pipelines (Nov 1: +220 recorded on the iPhone on Rainbow Road / Cnsw_48 / Cnsw_54; Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
   and the Mac smoke runs): their shaders are compiled ahead of time on the build Mac, so a phone that never
   ran the game doesn't have to compile them for minutes.
 - **Full prewarm before playing**: holds the game until every known pipeline is ready, with a progress
@@ -225,7 +225,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_FPS_MAX` | 60 | Speed first: highest frame rate drawn (20-60; `30` = never above 30) |
 | `NX_SPLIT_DRAWS` | 80 | Commit the GPU work every N draws inside a submit (0 = one command buffer per submit) |
 | `NX_COMPILE_WAIT_MS` | 250 | Longest a frame waits for a shader/pipeline compile needed by a new render target; after that the game goes on and the effect pops in when ready (was: wait until done, up to 29 s freezes on Rainbow Road when RAM is full). 100000 = old behaviour |
-| `NX_SPEED_TARGET` | 57 | Game updates/s counted as full speed by the adaptive fps (60 = exact, 50 = more frames, slower race when hot) |
+| `NX_SPEED_TARGET` | 57 (58 in LAN / Online / Wireless) | Game updates/s counted as full speed by the adaptive fps (60 = exact, 50 = more frames, slower race when hot). Multiplayer defaults a bit higher so a phone never lags behind the others |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
 | `NX_SKIP_MAX` | - | `1` = always 30 fps (game may slow down when hot) |
 | `NX_SHAKE` / `NX_SHAKE_G` | 1 / 2.6 | Shake the phone = trick (R), strength needed in g |
@@ -333,6 +333,21 @@ Pass (`.nsp`) and a `Firmware` folder. Import them from the app or copy them in 
 In the launcher, under Multiplayer: **LAN** (same network, a Switch can join), **Online** (any
 lan-play.com server) or **Wireless** (nearby Mush8 players, no router). The 30 fps lock doesn't change the
 game's timing, so it's fine in multiplayer; keep both phones' shaders ready (full prewarm) to avoid freezes.
+
+#### Two iPhones together (this fork)
+Same IPA on both phones. Before the first race together:
+1. Launch the game once on each phone, alone, with **Full prewarm** on, and let it finish (on a phone that never ran
+   this build, e.g. an iPhone 14 / A15, the first prewarm compiles every pipeline on the phone: plug it in, it is
+   long only the first time; it is saved in `work/devarch`). The GPU cache of one phone cannot be copied to a
+   different chip.
+2. On both phones choose the same Multiplayer mode in the launcher: **LAN** if both are on the same Wi-Fi, or
+   **Wireless** with no router (Wi-Fi and Bluetooth on, both phones close). Allow **Local Network** when iOS asks
+   (Settings → Privacy & Security → Local Network → Mush8 if you said no).
+3. In the game: Wireless Play / LAN Play (title screen: hold L + R and press the left stick for LAN). One phone
+   creates the room, the other joins.
+The 30 fps lock / adaptive fps only skips drawing frames, the game logic stays at 60 updates/s, so phones at
+different fps play together fine. Our patches don't touch the network code (it is upstream's: Bonjour discovery +
+unicast copies of broadcasts, so it works without Apple's multicast entitlement).
 
 ### Controls
 Any controller (Switch Pro, Joy-Con, DualSense, Xbox...), touch controls on iOS when no controller is
