@@ -5810,13 +5810,13 @@ mn = pathlib.Path("crates/nxhost/src/main.rs")
 m = mn.read_text()
 old = '    if field("quiet").as_deref() == Some("true") {\n'
 assert m.count(old) == 1
-m = m.replace(old, '    if field("anti_aliasing").as_deref() == Some("true") {\n        def("NX_AA", "1");\n    }\n' + old)
+m = m.replace(old, '    if field("anti_aliasing").as_deref() != Some("false") {\n        def("NX_AA", "1");\n    }\n' + old)
 mn.write_text(m)
 sw = pathlib.Path("ios/Launcher.swift")
 w = sw.read_text()
 for a_, b_ in [
-    ("    @Published var quiet = false\n", "    @Published var quiet = false\n    @Published var antiAliasing = false\n"),
-    ('        quiet = json["quiet"] as? Bool ?? false\n', '        quiet = json["quiet"] as? Bool ?? false\n        antiAliasing = json["anti_aliasing"] as? Bool ?? false\n'),
+    ("    @Published var quiet = false\n", "    @Published var quiet = false\n    @Published var antiAliasing = true\n"),
+    ('        quiet = json["quiet"] as? Bool ?? false\n', '        quiet = json["quiet"] as? Bool ?? false\n        antiAliasing = json["anti_aliasing"] as? Bool ?? true\n'),
     ('        json["quiet"] = quiet\n', '        json["quiet"] = quiet\n        json["anti_aliasing"] = antiAliasing\n'),
     ('                    Toggle("Prewarm pipelines", isOn: $s.prewarm)\n', '                    Toggle("Anti-aliasing (smoother edges)", isOn: $s.antiAliasing)\n                    Toggle("Prewarm pipelines", isOn: $s.prewarm)\n'),
 ]:

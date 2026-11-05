@@ -53,6 +53,9 @@ if [ "$SHADERS" = 1 ] || [ ! -f "$CACHE/index.tsv" ] || [ "$(cat "$CACHE/pipelin
   echo "$STAMP" > "$CACHE/pipelines.stamp"
 fi
 
+# A15 is the oldest chip with 6 GB that runs the game (iPhone 13 Pro / 14): let the compiler use its
+# instructions, and optimize across crates (thin LTO). Only the iOS app, not the Mac build tools.
+CARGO_TARGET_AARCH64_APPLE_IOS_RUSTFLAGS="${CARGO_TARGET_AARCH64_APPLE_IOS_RUSTFLAGS:--C target-cpu=apple-a15}" CARGO_PROFILE_RELEASE_LTO="${CARGO_PROFILE_RELEASE_LTO:-thin}" \
 NX_MODULES_DIR="$PATCHED" IPHONEOS_DEPLOYMENT_TARGET=26.0 \
   cargo "+$TOOLCHAIN" build --release -p nxhost --target aarch64-apple-ios --target-dir target/ios
 
