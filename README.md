@@ -224,7 +224,7 @@ wins* below). Delete the file (or the line) to go back to the defaults.
 | `NX_MOVIE_WAIT_MS` | 8 | Longest wait for a menu video frame before showing the previous one |
 | `NX_FPS_MAX` | 60 | Speed first: highest frame rate drawn (20-60; `30` = never above 30) |
 | `NX_SPLIT_DRAWS` | 80 | Commit the GPU work every N draws inside a submit (0 = one command buffer per submit) |
-| `NX_AA` | off | `1` = anti-aliasing (FXAA + light sharpening) on the game image when it is scaled to the screen: less jagged, ~0.3 ms GPU per frame. Off by default |
+| `NX_AA` | off (launcher: Anti-aliasing) | `1` = anti-aliasing (FXAA + light sharpening) on the game image when it is scaled to the screen: less jagged, ~0.3 ms GPU per frame. Off by default |
 | `NX_COMPILE_WAIT_MS` | 250 | Longest a frame waits for a shader/pipeline compile needed by a new render target; after that the game goes on and the effect pops in when ready (was: wait until done, up to 29 s freezes on Rainbow Road when RAM is full). 100000 = old behaviour |
 | `NX_SPEED_TARGET` | 57 (58 in LAN / Online / Wireless) | Game updates/s counted as full speed by the adaptive fps (60 = exact, 50 = more frames, slower race when hot). Multiplayer defaults a bit higher so a phone never lags behind the others |
 | `NX_FPS_MIN` | 20 | Speed first: lowest frame rate drawn when the game is slow (15-30) |
@@ -334,6 +334,8 @@ Pass (`.nsp`) and a `Firmware` folder. Import them from the app or copy them in 
 In the launcher, under Multiplayer: **LAN** (same network, a Switch can join), **Online** (any
 lan-play.com server) or **Wireless** (nearby Mush8 players, no router). The 30 fps lock doesn't change the
 game's timing, so it's fine in multiplayer; keep both phones' shaders ready (full prewarm) to avoid freezes.
+
+- Nov 5 fixes: shake detection moved off the input thread (a blocking CoreMotion call froze the controls), touch controls reset when the app leaves/returns to the foreground, Anti-aliasing toggle in the launcher.
 
 #### Two iPhones together (this fork)
 Same IPA on both phones. Before the first race together:

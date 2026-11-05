@@ -5742,3 +5742,99 @@ g = g.replace(old, '''    let mut aa = std::env::var("NX_AA").is_ok_and(|v| v.tr
     let fs = lib.newFunctionWithName(&NSString::from_str(if aa { "fs_aa" } else { "fs" })).unwrap();''')
 gm.write_text(g)
 print("patched", gm, "(NX_AA)")
+
+# Controls freezing (stick stuck, A/+ doing nothing at 30 fps): the shake trick
+# read CoreMotion on the 'hid' thread, and a CoreMotion call can block in IOKit
+# (seen in the Nov 5 log): then no input reached the game. Shake detection now
+# runs on its own 'shake' thread; the input thread only reads a flag.
+im = pathlib.Path("crates/nxhost/src/input.rs")
+i_ = im.read_text()
+a = i_.index("/// Shake the phone = R for 150 ms (trick on a ramp). See patch-heap.py.\nfn shake_trick(phone: &mut Phone) -> bool {")
+b = i_.index("    st.1.is_some_and(|u| now < u)\n}\n", a) + len("    st.1.is_some_and(|u| now < u)\n}\n")
+i_ = i_[:a] + '''/// Shake the phone = R for 150 ms (trick on a ramp). See patch-heap.py.
+fn shake_trick(_phone: &mut Phone) -> bool {
+    use std::sync::atomic::{AtomicU64, Ordering::Relaxed};
+    static ON: std::sync::LazyLock<bool> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE").map_or(true, |v| v.trim() != "0"));
+    static G: std::sync::LazyLock<f32> = std::sync::LazyLock::new(|| std::env::var("NX_SHAKE_G").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(2.6f32));
+    static T0: std::sync::LazyLock<std::time::Instant> = std::sync::LazyLock::new(std::time::Instant::now);
+    static UNTIL: AtomicU64 = AtomicU64::new(0);
+    static STARTED: std::sync::Once = std::sync::Once::new();
+    if !*ON || !cfg!(target_os = "ios") {
+        return false;
+    }
+    STARTED.call_once(|| {
+        let _ = std::thread::Builder::new().name("shake".into()).spawn(|| {
+            let mut ph: Phone = Default::default();
+            let mut last: Option<std::time::Instant> = None;
+            loop {
+                std::thread::sleep(std::time::Duration::from_millis(10));
+                let Some(m) = (unsafe { phone_sample(&mut ph, 0) }) else { continue };
+                let g = (m.accel[0] * m.accel[0] + m.accel[1] * m.accel[1] + m.accel[2] * m.accel[2]).sqrt();
+                let now = std::time::Instant::now();
+                if g > *G && last.is_none_or(|t| now.duration_since(t).as_millis() > 400) {
+                    last = Some(now);
+                    UNTIL.store(now.duration_since(*T0).as_millis() as u64 + 150, Relaxed);
+                    eprintln!("[input] shake ({g:.1} g): trick");
+                }
+            }
+        });
+    });
+    (T0.elapsed().as_millis() as u64) < UNTIL.load(Relaxed)
+}
+''' + i_[b:]
+im.write_text(i_)
+print("patched", im, "(shake on its own thread)")
+
+# Touch controls: forget every finger when the app goes to the background or
+# comes back (a touch that never got its 'ended' left the stick stuck).
+tc = pathlib.Path("crates/nxhost/src/gfx/touch.rs")
+t = tc.read_text()
+old = "pub fn set_visible(visible: bool) {\n"
+assert t.count(old) == 1
+t = t.replace(old, '''pub fn reset() {
+    PAD.with(|p| {
+        let mut p = p.borrow_mut();
+        let Some(p) = p.as_mut() else { return };
+        p.held.clear();
+        for id in p.screen.drain() {
+            input::screen_touch(id, None);
+        }
+        if p.stick.touch.take().is_some() {
+            p.stick.origin = p.stick.home;
+            place(&p.stick.base, p.stick.home, p.stick.radius);
+            move_stick(&p.stick, p.stick.home);
+        }
+        publish(p);
+    });
+}
+
+''' + old)
+tc.write_text(t)
+io = pathlib.Path("crates/nxhost/src/gfx/ios.rs")
+o = io.read_text()
+for f in ("set_active(false);", "set_active(true);"):
+    old = "            " + f + "\n"
+    assert o.count(old) == 1, f
+    o = o.replace(old, old + "            super::touch::reset();\n")
+io.write_text(o)
+print("patched", tc, io, "(touch reset on background/foreground)")
+
+# Launcher: "Anti-aliasing" toggle (same as NX_AA=1), off by default.
+mn = pathlib.Path("crates/nxhost/src/main.rs")
+m = mn.read_text()
+old = '    if field("quiet").as_deref() == Some("true") {\n'
+assert m.count(old) == 1
+m = m.replace(old, '    if field("anti_aliasing").as_deref() == Some("true") {\n        def("NX_AA", "1");\n    }\n' + old)
+mn.write_text(m)
+sw = pathlib.Path("ios/Launcher.swift")
+w = sw.read_text()
+for a_, b_ in [
+    ("    @Published var quiet = false\n", "    @Published var quiet = false\n    @Published var antiAliasing = false\n"),
+    ('        quiet = json["quiet"] as? Bool ?? false\n', '        quiet = json["quiet"] as? Bool ?? false\n        antiAliasing = json["anti_aliasing"] as? Bool ?? false\n'),
+    ('        json["quiet"] = quiet\n', '        json["quiet"] = quiet\n        json["anti_aliasing"] = antiAliasing\n'),
+    ('                    Toggle("Prewarm pipelines", isOn: $s.prewarm)\n', '                    Toggle("Anti-aliasing (smoother edges)", isOn: $s.antiAliasing)\n                    Toggle("Prewarm pipelines", isOn: $s.prewarm)\n'),
+]:
+    assert w.count(a_) == 1, a_[:50]
+    w = w.replace(a_, b_)
+sw.write_text(w)
+print("patched", mn, sw, "(anti-aliasing toggle)")
