@@ -5838,3 +5838,94 @@ for a_, b_ in [
     w = w.replace(a_, b_)
 sw.write_text(w)
 print("patched", mn, sw, "(anti-aliasing toggle)")
+
+# Anti-aliasing at the game's resolution. FXAA ran on every pixel of the
+# iPhone screen (2556x1179, 3.3x the game's 1280x720): with the GPU already
+# slowed by heat, presenting waited ~15 ms per frame and the Grand Prix menu
+# took ~20 s to move on (instant without AA, Nov 5 logs). Now FXAA runs on the
+# 720p picture into a small texture, then the normal cheap scale to the screen.
+gm = pathlib.Path("crates/nxhost/src/gfx/mod.rs")
+g = gm.read_text()
+old = '''    let fs = lib.newFunctionWithName(&NSString::from_str(if aa { "fs_aa" } else { "fs" })).unwrap();'''
+assert g.count(old) == 1
+g = g.replace(old, '''    if aa {
+        if let Some(f) = lib.newFunctionWithName(&NSString::from_str("fs_aa")) {
+            let d2 = MTLRenderPipelineDescriptor::new();
+            d2.setVertexFunction(Some(&vs));
+            d2.setFragmentFunction(Some(&f));
+            unsafe { d2.colorAttachments().objectAtIndexedSubscript(0) }.setPixelFormat(MTLPixelFormat::BGRA8Unorm);
+            match device.newRenderPipelineStateWithDescriptor_error(&d2) {
+                Ok(p) => drop(AA_PSO.set(Shared(p))),
+                Err(e) => eprintln!("[gfx] anti-aliasing pipeline failed, off: {e:?}"),
+            }
+        }
+    }
+    let fs = lib.newFunctionWithName(&NSString::from_str("fs")).unwrap();''')
+old = "fn make_present_pipeline(\n"
+assert g.count(old) == 1
+g = g.replace(old, '''static AA_PSO: OnceLock<Shared<ProtocolObject<dyn MTLRenderPipelineState>>> = OnceLock::new();
+static AA_TEX: std::sync::Mutex<Option<Shared<Texture>>> = std::sync::Mutex::new(None);
+
+/// FXAA on the game picture at its own size, into a reused texture.
+fn aa_pass(cb: &ProtocolObject<dyn MTLCommandBuffer>, pso: &ProtocolObject<dyn MTLRenderPipelineState>, tex: &Texture, p: &PresentParams) -> Option<Shared<Texture>> {
+    let w = ((p.scale[0] * tex.width() as f32).round() as usize).max(1);
+    let h = ((p.scale[1] * tex.height() as f32).round() as usize).max(1);
+    let mut slot = AA_TEX.lock().unwrap();
+    if slot.as_ref().is_none_or(|t| t.0.width() != w || t.0.height() != h) {
+        let d = unsafe { MTLTextureDescriptor::texture2DDescriptorWithPixelFormat_width_height_mipmapped(MTLPixelFormat::BGRA8Unorm, w, h, false) };
+        d.setStorageMode(MTLStorageMode::Private);
+        d.setUsage(MTLTextureUsage::RenderTarget | MTLTextureUsage::ShaderRead);
+        *slot = Some(Shared(gpu().device.0.newTextureWithDescriptor(&d)?));
+    }
+    let out = slot.clone()?;
+    let desc = MTLRenderPassDescriptor::new();
+    let att = unsafe { desc.colorAttachments().objectAtIndexedSubscript(0) };
+    att.setTexture(Some(&out.0));
+    att.setLoadAction(MTLLoadAction::DontCare);
+    att.setStoreAction(MTLStoreAction::Store);
+    let enc = cb.renderCommandEncoderWithDescriptor(&desc)?;
+    enc.setRenderPipelineState(pso);
+    unsafe {
+        let pp = std::ptr::NonNull::from(p).cast();
+        enc.setVertexBytes_length_atIndex(pp, size_of::<PresentParams>(), 0);
+        enc.setFragmentBytes_length_atIndex(pp, size_of::<PresentParams>(), 0);
+        enc.setFragmentTexture_atIndex(Some(tex), 0);
+        enc.setFragmentSamplerState_atIndex(Some(&gpu().sampler.0), 0);
+        enc.drawPrimitives_vertexStart_vertexCount(MTLPrimitiveType::Triangle, 0, 3);
+    }
+    enc.endEncoding();
+    Some(out)
+}
+
+''' + old)
+old = '''    let Some(cb) = g.queue.0.commandBuffer() else { return };
+    let desc = MTLRenderPassDescriptor::new();
+    let att = unsafe { desc.colorAttachments().objectAtIndexedSubscript(0) };
+    att.setTexture(Some(&drawable.texture()));'''
+assert g.count(old) == 1, "present cb not found"
+g = g.replace(old, '''    let Some(cb) = g.queue.0.commandBuffer() else { return };
+    let (params0, aspect) = present_params(tex, flip);
+    let aa_out = AA_PSO.get().and_then(|pso| aa_pass(&cb, &pso.0, tex, &params0));
+    let (src, params): (&Texture, PresentParams) = match &aa_out {
+        Some(t) => {
+            let (w, h) = (t.0.width() as f32, t.0.height() as f32);
+            (&t.0, PresentParams { flip: 0, _pad: 0, offset: [0.0; 2], scale: [1.0; 2], lo: [0.5 / w, 0.5 / h], hi: [1.0 - 0.5 / w, 1.0 - 0.5 / h] })
+        }
+        None => (tex, params0),
+    };
+    let desc = MTLRenderPassDescriptor::new();
+    let att = unsafe { desc.colorAttachments().objectAtIndexedSubscript(0) };
+    att.setTexture(Some(&drawable.texture()));''')
+old = '''        let (params, aspect) = present_params(tex, flip);
+        ASPECT.store(aspect.to_bits(), std::sync::atomic::Ordering::Relaxed);'''
+assert g.count(old) == 1, "present params not found"
+g = g.replace(old, '''        ASPECT.store(aspect.to_bits(), std::sync::atomic::Ordering::Relaxed);''')
+# the encoder in present() samples src
+a = g.index("pub fn present(tex: &Texture, flip: bool) {")
+b = g.index("static ASPECT:", a)
+body = g[a:b]
+assert body.count("enc.setFragmentTexture_atIndex(Some(tex), 0);") == 1
+body = body.replace("enc.setFragmentTexture_atIndex(Some(tex), 0);", "enc.setFragmentTexture_atIndex(Some(src), 0);")
+g = g[:a] + body + g[b:]
+gm.write_text(g)
+print("patched", gm, "(AA at game resolution)")
