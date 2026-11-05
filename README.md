@@ -335,7 +335,7 @@ In the launcher, under Multiplayer: **LAN** (same network, a Switch can join), *
 lan-play.com server) or **Wireless** (nearby Mush8 players, no router). The 30 fps lock doesn't change the
 game's timing, so it's fine in multiplayer; keep both phones' shaders ready (full prewarm) to avoid freezes.
 
-- iOS app compiled for the A15 and newer (`-C target-cpu=apple-a15`) with thin LTO.
+- iOS app compiled for the A15 and newer (`-C target-cpu=apple-a15`).
 - Nov 5 fixes: shake detection moved off the input thread (a blocking CoreMotion call froze the controls), touch controls reset when the app leaves/returns to the foreground, Anti-aliasing toggle in the launcher.
 
 #### Two iPhones together (this fork)
