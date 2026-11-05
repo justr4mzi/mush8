@@ -5662,32 +5662,7 @@ u = u.replace(old, '''        if wait && !super::shaders::sync_mode() && super::
 st.write_text(u)
 print("patched", st)
 
-# Touch controls: no stick button, so MK8D's LAN Play menu (hold L + R, press
-# the left stick) could not be opened without a controller. Now: hold L and R
-# and touch the stick = left stick press.
-tc = pathlib.Path("crates/nxhost/src/gfx/touch.rs")
-t = tc.read_text()
-old = "    let held = p.held.values().fold(0, |m, b| m | b);\n    input::TOUCH_BUTTONS.store(held, Relaxed);\n"
-assert t.count(old) == 1, "touch publish not found"
-t = t.replace(old, """    let mut held = p.held.values().fold(0, |m, b| m | b);
-    if LR_TAP.get() && p.stick.touch.is_some() {
-        held |= input::STICK_L; // L + R held first, then touch the stick: LAN Play menu
-    }
-    input::TOUCH_BUTTONS.store(held, Relaxed);
-""")
-# Only when L and R were already held as the stick touch began (in a race you
-# steer first, then drift/use an item: that must not press the stick).
-old = "thread_local! {\n    static PAD: RefCell<Option<Pad>> = const { RefCell::new(None) };\n"
-assert t.count(old) == 1
-t = t.replace(old, old + "    static LR_TAP: std::cell::Cell<bool> = const { std::cell::Cell::new(false) };\n")
-old = "                        p.stick.touch = Some(id);\n"
-assert t.count(old) == 1
-t = t.replace(old, old + "                        let h = p.held.values().fold(0, |m, b| m | b);\n                        LR_TAP.set(h & L != 0 && h & R != 0);\n")
-old = "                    if p.stick.touch == Some(id) {\n                        p.stick.touch = None;\n"
-assert t.count(old) == 1
-t = t.replace(old, old + "                        LR_TAP.set(false);\n")
-tc.write_text(t)
-print("patched", tc, "(L + R + stick = stick press)")
+# (L + R + stick = stick press removed: the LAN Play menu shows by itself in LAN mode)
 
 # Optional anti-aliasing (NX_AA=1 in env.txt, off by default): FXAA on the game
 # image while it is scaled to the screen, plus a light sharpening so the

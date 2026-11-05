@@ -346,8 +346,7 @@ Same IPA on both phones. Before the first race together:
 2. On both phones choose the same Multiplayer mode in the launcher: **LAN** if both are on the same Wi-Fi, or
    **Wireless** with no router (Wi-Fi and Bluetooth on, both phones close). Allow **Local Network** when iOS asks
    (Settings → Privacy & Security → Local Network → Mush8 if you said no).
-3. In the game: LAN Play (main menu: hold L + R and press the left stick; with the touch controls hold L and R
-   and touch the stick). One phone
+3. In the game: LAN Play (shows by itself on the main menu when the launcher is in LAN mode). One phone
    creates the room, the other joins.
 The 30 fps lock / adaptive fps only skips drawing frames, the game logic stays at 60 updates/s, so phones at
 different fps play together fine. Our patches don't touch the network code (it is upstream's: Bonjour discovery +
