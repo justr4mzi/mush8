@@ -336,6 +336,7 @@ lan-play.com server) or **Wireless** (nearby Mush8 players, no router). The 30 f
 game's timing, so it's fine in multiplayer; keep both phones' shaders ready (full prewarm) to avoid freezes.
 
 - iOS app compiled for the A15 and newer (`-C target-cpu=apple-a15`).
+- Nov 6 fixes: sound restarted if iOS stops it (interruption), at most 2 urgent compiles at once (low-RAM crash with 8 at once).
 - Nov 5 fixes: shake detection moved off the input thread (a blocking CoreMotion call froze the controls), touch controls reset when the app leaves/returns to the foreground, Anti-aliasing toggle in the launcher.
 
 #### Two iPhones together (this fork)

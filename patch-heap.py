@@ -5915,3 +5915,68 @@ body = body.replace("enc.setFragmentTexture_atIndex(Some(tex), 0);", "enc.setFra
 g = g[:a] + body + g[b:]
 gm.write_text(g)
 print("patched", gm, "(AA at game resolution)")
+
+# Sound gone for the rest of the session (Nov 6): iOS stops the AudioQueue on an
+# audio interruption (notification, Siri, another app, media services reset) and
+# nothing restarted it. A watchdog checks it twice a second and starts it again.
+ou = pathlib.Path("crates/nxhost/src/audio/output.rs")
+o = ou.read_text()
+old = "        Ok(queue) => Output { queue, pull, stop },\n"
+assert o.count(old) == 1, "audio Ok branch not found"
+o = o.replace(old, '''        Ok(queue) => {
+            mod aq {
+                unsafe extern "C" {
+                    pub fn AudioQueueGetProperty(q: *mut std::ffi::c_void, id: u32, data: *mut std::ffi::c_void, size: *mut u32) -> i32;
+                    pub fn AudioQueueStart(q: *mut std::ffi::c_void, t: *const std::ffi::c_void) -> i32;
+                }
+            }
+            let (s, q) = (stop.clone(), queue as usize);
+            let _ = std::thread::Builder::new().name("audio-watch".into()).spawn(move || {
+                let mut down = 0u32;
+                while !s.load(Relaxed) {
+                    std::thread::sleep(Duration::from_millis(500));
+                    if s.load(Relaxed) {
+                        break;
+                    }
+                    let (mut running, mut size) = (1u32, 4u32);
+                    // kAudioQueueProperty_IsRunning = 'aqrn'
+                    let r = unsafe { aq::AudioQueueGetProperty(q as *mut _, 0x6171_726e, &mut running as *mut u32 as *mut _, &mut size) };
+                    if r != 0 || running != 0 {
+                        down = 0;
+                        continue;
+                    }
+                    let st = unsafe { aq::AudioQueueStart(q as *mut _, std::ptr::null()) };
+                    if down % 20 == 0 {
+                        eprintln!("[audio] output was stopped by iOS: restarting it ({})", if st == 0 { "ok" } else { "not yet" });
+                    }
+                    down += 1;
+                }
+            });
+            Output { queue, pull, stop }
+        }
+''')
+ou.write_text(o)
+print("patched", ou, "(audio watchdog)")
+
+# At most 2 urgent compiles at once: on Nov 6 eight new pipelines were compiled
+# together with 430 MB left, the Metal compiler service was killed (XPC
+# interrupted) and the game was closed by iOS. The rest wait in the normal queue.
+sh = pathlib.Path("crates/nxhost/src/nvn/draw/shaders.rs")
+w = sh.read_text()
+old = '''pub fn spawn_urgent(f: Box<dyn FnOnce() + Send>) {
+'''
+assert w.count(old) == 1
+w = w.replace(old, '''pub fn spawn_urgent(f: Box<dyn FnOnce() + Send>) {
+    use std::sync::atomic::{AtomicUsize, Ordering::SeqCst};
+    static RUNNING: AtomicUsize = AtomicUsize::new(0);
+    if RUNNING.fetch_add(1, SeqCst) >= 2 {
+        RUNNING.fetch_sub(1, SeqCst);
+        return spawn_job(f);
+    }
+    let f: Box<dyn FnOnce() + Send> = Box::new(move || {
+        f();
+        RUNNING.fetch_sub(1, SeqCst);
+    });
+''')
+sh.write_text(w)
+print("patched", sh, "(max 2 urgent compiles)")
