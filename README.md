@@ -78,7 +78,7 @@ the rest. A race load adds 400 to 700 MB in a few seconds, which is when iOS kil
   15 min, only when there are new ones): before, a game that ended early lost the unwritten ones and compiled them again.
 - **Failed pipelines are retried** after 1 s and 3 s (the iOS shader compiler sometimes dies mid-build)
   instead of staying black until the next launch.
-- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10387 pipelines (Nov 1: +220 recorded on the iPhone on Rainbow Road / Cnsw_48 / Cnsw_54; Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
+- **Recorded pipeline list shipped in the app** (`data/pipelines.tsv`, 10442 pipelines (Nov 6: +55 from Cnsw_32 / Cnsw_35; Nov 1: +220 recorded on the iPhone on Rainbow Road / Cnsw_48 / Cnsw_54; Oct 22: +6466 from the overnight VS sessions on 91 of the 96 tracks and 4 of the 8 battle arenas), from iPhone runs
   and the Mac smoke runs): their shaders are compiled ahead of time on the build Mac, so a phone that never
   ran the game doesn't have to compile them for minutes.
 - **Full prewarm before playing**: holds the game until every known pipeline is ready, with a progress
@@ -336,6 +336,7 @@ lan-play.com server) or **Wireless** (nearby Mush8 players, no router). The 30 f
 game's timing, so it's fine in multiplayer; keep both phones' shaders ready (full prewarm) to avoid freezes.
 
 - iOS app compiled for the A15 and newer (`-C target-cpu=apple-a15`).
+- Touch + and − must be held 250 ms (`NX_PAUSE_HOLD_MS`, 0 = instant): no accidental pause in races.
 - Nov 6 fixes: sound restarted if iOS stops it (interruption), at most 2 urgent compiles at once (low-RAM crash with 8 at once).
 - Nov 5 fixes: shake detection moved off the input thread (a blocking CoreMotion call froze the controls), touch controls reset when the app leaves/returns to the foreground, Anti-aliasing toggle in the launcher.
 

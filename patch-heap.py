@@ -5980,3 +5980,28 @@ w = w.replace(old, '''pub fn spawn_urgent(f: Box<dyn FnOnce() + Send>) {
 ''')
 sh.write_text(w)
 print("patched", sh, "(max 2 urgent compiles)")
+
+# Pause opening by accident in races (Nov 6, touch controls): the touch + and −
+# now have to be held 250 ms (NX_PAUSE_HOLD_MS, 0 = instant like before); a
+# brushing thumb no longer pauses. Controllers are not affected.
+im = pathlib.Path("crates/nxhost/src/input.rs")
+i_ = im.read_text()
+old = "        self.buttons |= TOUCH_BUTTONS.load(Relaxed);\n"
+assert i_.count(old) == 1, "touch buttons read not found"
+i_ = i_.replace(old, '''        let mut tb = TOUCH_BUTTONS.load(Relaxed);
+        {
+            static HOLD: std::sync::LazyLock<u128> = std::sync::LazyLock::new(|| std::env::var("NX_PAUSE_HOLD_MS").ok().and_then(|v| v.trim().parse().ok()).unwrap_or(250));
+            static SINCE: std::sync::Mutex<Option<std::time::Instant>> = std::sync::Mutex::new(None);
+            let mut since = SINCE.lock().unwrap();
+            if tb & (PLUS | MINUS) != 0 {
+                if since.get_or_insert_with(std::time::Instant::now).elapsed().as_millis() < *HOLD {
+                    tb &= !(PLUS | MINUS);
+                }
+            } else {
+                *since = None;
+            }
+        }
+        self.buttons |= tb;
+''')
+im.write_text(i_)
+print("patched", im, "(hold + / − 250 ms on the touch controls)")
